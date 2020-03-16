@@ -1,9 +1,13 @@
 import React from 'react'
 
+import './assets/css/App.css'
+
+import Routes from './routes'
+
 function App () {
   return (
     <div className="App">
-      <h1>Init</h1>
+      <Routes />
     </div>
   )
 }
