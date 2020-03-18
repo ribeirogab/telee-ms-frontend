@@ -1,11 +1,12 @@
 import React from 'react'
 
-import AppBar from '../components/AppBar'
+import logout from '../services/logout'
 
 export default function Home () {
   return (
     <>
-      <AppBar />
+      <h1>Home</h1>
+      <button onClick={logout}>logout</button>
     </>
   )
 }
