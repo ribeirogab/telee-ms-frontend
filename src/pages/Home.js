@@ -1,12 +1,19 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-import logout from '../services/logout'
+import AppBar from '../components/Navbar/index'
 
-export default function Home () {
+export default function Home ({ user }) {
   return (
     <>
-      <h1>Home</h1>
-      <button onClick={logout}>logout</button>
+      <AppBar user={user} />
     </>
   )
+}
+
+Home.propTypes = {
+  user: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ])
 }
