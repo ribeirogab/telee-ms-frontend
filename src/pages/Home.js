@@ -1,11 +1,19 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-import AppBar from '../components/AppBar'
+import AppBar from '../components/Navbar/index'
 
-export default function Home () {
+export default function Home ({ user }) {
   return (
     <>
-      <AppBar />
+      <AppBar user={user} />
     </>
   )
+}
+
+Home.propTypes = {
+  user: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ])
 }

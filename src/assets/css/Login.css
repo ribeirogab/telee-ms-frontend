@@ -27,6 +27,11 @@
   color: #555;
 }
 
+.container-login .header h1,
+.container-login .header span {
+  font-size: 30px;
+}
+
 .container-login .color-red {
   color: #e4605e;
 }
