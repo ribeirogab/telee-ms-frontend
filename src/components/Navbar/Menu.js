@@ -89,7 +89,7 @@ export default function Menu ({ user }) {
           <ListItemIcon><Avatar user={user}/></ListItemIcon>
           <ListItemText>
             <p className={classes.nameAndFunction}>{user.name}</p>
-            <p className={classes.nameAndFunction}>Desenvolvedor</p>
+            <p className={classes.nameAndFunction}>{user.permission < 3 ? 'Redator' : user.permission < 6 ? 'Editor' : 'Desenvolvedor'}</p>
           </ListItemText>
           <ArrowBackIosIcon className={classes.ArrowBackIosIcon} onClick={toggleDrawer('left', false)}/>
         </ListItem>

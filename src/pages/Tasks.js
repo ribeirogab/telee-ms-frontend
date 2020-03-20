@@ -2,16 +2,18 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import AppBar from '../components/Navbar/index'
+import TasksTable from '../components/Task/TasksTable'
 
-export default function Home ({ user }) {
+export default function Tasks ({ user }) {
   return (
     <>
-      <AppBar textPage="Home" user={user} />
+      <AppBar textPage="Tarefas" user={user} />
+      <TasksTable user={user} />
     </>
   )
 }
 
-Home.propTypes = {
+Tasks.propTypes = {
   user: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object

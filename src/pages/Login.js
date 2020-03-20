@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+
 import '../assets/css/Login.css'
 
 import api from '../services/api'
 
-export default function Login ({ history }) {
+export default function Login ({ history, setToken }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -13,6 +14,8 @@ export default function Login ({ history }) {
     const { data } = await api.post('/authenticate', { username, password })
 
     localStorage.setItem('token', data.token)
+    setToken(localStorage.getItem('token'))
+
     history.push('/home')
   }
 
@@ -45,5 +48,6 @@ export default function Login ({ history }) {
 }
 
 Login.propTypes = {
+  setToken: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired
 }

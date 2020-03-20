@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Navbar ({ user }) {
+export default function Navbar ({ user, textPage }) {
   const [firstName, setFirstName] = useState('')
   const classes = useStyles()
 
@@ -38,7 +38,7 @@ export default function Navbar ({ user }) {
         <Toolbar>
           <Menu user={user} />
           <Typography variant="h6" className={classes.title}>
-            Olá, {firstName}
+            {textPage === 'Home' ? `Olá, ${firstName}` : textPage}
           </Typography>
           <Button color="inherit">.</Button>
         </Toolbar>
@@ -51,5 +51,6 @@ Navbar.propTypes = {
   user: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object
-  ])
+  ]),
+  textPage: PropTypes.string
 }
