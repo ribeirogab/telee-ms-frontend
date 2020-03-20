@@ -2,16 +2,18 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import AppBar from '../components/Navbar/index'
+import WritersTable from '../components/Writer/WritersTable'
 
-export default function Home ({ user }) {
+export default function Writers ({ user }) {
   return (
     <>
-      <AppBar textPage="Home" user={user} />
+      <AppBar textPage="Redatores" user={user} />
+      <WritersTable user={user} />
     </>
   )
 }
 
-Home.propTypes = {
+Writers.propTypes = {
   user: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object

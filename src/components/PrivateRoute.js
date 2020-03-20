@@ -1,25 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Route, Redirect } from 'react-router-dom'
 
 import { isAuthenticated } from '../services/authenticate'
-import api from '../services/api'
 
-export default function PrivateRoute ({ component: Component, ...rest }) {
-  const [user, setUser] = useState('...')
-
-  useEffect(() => {
-    async function getUser () {
-      const token = localStorage.getItem('token')
-      const { data } = await api.get('/user/one', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-
-      setUser(data)
-    }
-    getUser()
-  }, [])
-
+export default function PrivateRoute ({ component: Component, user, ...rest }) {
   return (
     <Route {...rest} render={props => (
       isAuthenticated() ? (
@@ -32,5 +17,10 @@ export default function PrivateRoute ({ component: Component, ...rest }) {
   )
 }
 PrivateRoute.propTypes = {
-  component: PropTypes.func.isRequired
+  component: PropTypes.func.isRequired,
+  token: PropTypes.string,
+  user: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ])
 }
