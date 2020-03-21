@@ -1,4 +1,4 @@
-// import api from './api'
+import api from './api'
 
 export default function handleUninitiatedTasks (permission) {
   const writer = [
@@ -26,17 +26,40 @@ async function Assume (taskId) {
   // console.log(data)
 }
 
-async function Details (taskId) {
-  alert('detalhes' + taskId)
-  // const { data } = await api.a('')
+async function Details (taskId, state, modal) {
+  const { details } = modal
+  const [open, info] = details
+  const token = localStorage.getItem('token')
+  const { data } = await api.get(`/uninitiated-task/${taskId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+
+  open(true)
+  info(data)
 }
 
-async function Edit (taskId) {
-  alert('editar' + taskId)
-  // const { data } = await api.a('')
+async function Edit (taskId, state, modal) {
+  const { edit } = modal
+  const [open, info] = edit
+  const token = localStorage.getItem('token')
+  const { data } = await api.get(`/uninitiated-task/${taskId}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+
+  open(true)
+  info(data)
 }
 
-async function Delete (taskId) {
-  alert('deletar' + taskId)
-  // const { data } = await api.a('')
+async function Delete (taskId, state, modal) {
+  const [notDisplayRows, setNotDisplayRows] = state
+  if (window.confirm('Deseja realmente excluir esta tarefa?')) {
+    const token = localStorage.getItem('token')
+    const { data } = await api.delete(`/uninitiated-task/${taskId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+
+    setNotDisplayRows(notDisplayRows.filter(row => row[row.length - 1] !== taskId))
+
+    console.log(data)
+  }
 }

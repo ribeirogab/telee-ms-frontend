@@ -16,7 +16,7 @@ export default function Routes () {
   useEffect(() => {
     async function getUser () {
       if (token) {
-        const { data } = await api.get('/user/one', {
+        const { data } = await api.get('/user/u/I', {
           headers: { Authorization: `Bearer ${token}` }
         })
         setUser(data)

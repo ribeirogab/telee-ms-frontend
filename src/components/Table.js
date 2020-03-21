@@ -43,7 +43,7 @@ export default function SimpleTable ({ thead, rows }) {
         <TableBody>
           {rows.map((row, index) => (
             <TableRow className={classes.TableRow} key={index}>
-              {Object.values(row).map((td, index) => (
+              {row.map((td, index) => (
                 <TableCell className={classes.TableCell} align="center" key={index}>{td}</TableCell>
               ))}
             </TableRow>
