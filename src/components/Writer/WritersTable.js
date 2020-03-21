@@ -8,7 +8,7 @@ import AddIcon from '@material-ui/icons/Add'
 import Table from '../Table'
 import Modal from '../Modal'
 import Popper from '../Popper'
-import FormAdd from './FormAdd'
+import FormAddWriter from './FormAddWriter'
 
 import createTableRow from '../../utils/createTableRow'
 import handleWriters from '../../services/handleWriters'
@@ -43,7 +43,7 @@ export default function WritersTable ({ user }) {
         justify="flex-end"
         alignItems="center">
         <Modal
-          Component={(props) => <FormAdd {...props} state={[rows, setRows]}/>}
+          Component={(props) => <FormAddWriter {...props} state={[rows, setRows]}/>}
           Icon={AddIcon}
           text="Adicionar"
           variant="outlined"

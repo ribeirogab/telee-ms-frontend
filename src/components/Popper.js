@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state'
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 
-export default function Popper ({ user, action, id }) {
+export default function Popper ({ user, state, action, modal, id }) {
   const [menuItems, setMenuItems] = useState([])
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export default function Popper ({ user, action, id }) {
       }
     }
     handlePopper()
-  }, [user])
+  }, [user, action])
 
   return (
     <PopupState variant="popover" popupId="demo-popup-menu">
@@ -28,7 +28,7 @@ export default function Popper ({ user, action, id }) {
           <Menu {...bindMenu(popupState)}>
             {menuItems.map((item, index) => (
               <MenuItem onClick={popupState.close} key={index}>
-                <span onClick={() => item.func(id)}>{item.label.toUpperCase()}</span>
+                <span onClick={() => item.func(id, state, modal)}>{item.label.toUpperCase()}</span>
               </MenuItem>
             ))}
           </Menu>
@@ -43,6 +43,8 @@ Popper.propTypes = {
     PropTypes.string,
     PropTypes.object
   ]),
+  state: PropTypes.array,
   action: PropTypes.func,
+  modal: PropTypes.object,
   id: PropTypes.string
 }

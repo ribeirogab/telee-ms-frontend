@@ -39,13 +39,15 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function FormAddTask ({ state, setOpen }) {
-  const [keyword, setKeyword] = useState('')
-  const [subKeywords, setSubKeywords] = useState('')
-  const [website, setWebsite] = useState('')
+export default function EditTask ({ state, info, setOpen }) {
+  const [keyword, setKeyword] = useState(info.keyword ? info.keyword : '')
+  const [subKeywords, setSubKeywords] = useState(info.subKeywords ? info.subKeywords : '')
+  const [website, setWebsite] = useState(info.website ? info.website : '')
   const [newChip, setNewChip] = useState('')
-  const [chipData, setChipData] = useState([])
-  const [description, setDescription] = useState('')
+  const [chipData, setChipData] = useState(
+    info.guidelines ? info.guidelines.map((guideline, index) => ({ key: index, label: guideline })) : []
+  )
+  const [description, setDescription] = useState(info.description)
 
   const matches = useMediaQuery('(min-width:768px)')
   const classes = useStyles()
@@ -57,15 +59,18 @@ export default function FormAddTask ({ state, setOpen }) {
     const token = localStorage.getItem('token')
     const guidelines = reduceGuidelines(chipData)
 
-    const { data } = await api.post('/task',
+    const { data } = await api.put(`/uninitiated-task/${info._id}`,
       { type: 'article', keyword, subKeywords, website, guidelines, description },
       { headers: { Authorization: `Bearer ${token}` } }
     )
 
     if (!data.error) setOpen(false)
 
-    const newRow = createTableRow(data.keyword, data.subKeywords, data.website, '16/09/2020', data._id)
-    setNotDisplayRow(notDisplayRow.concat([newRow]))
+    const editedRow = createTableRow(data.keyword, data.subKeywords, data.website, '16/09/2020', data._id)
+    setNotDisplayRow(notDisplayRow.map(row => {
+      if (row[row.length - 1] === data._id) return editedRow
+      return row
+    }))
   }
 
   return (
@@ -77,7 +82,7 @@ export default function FormAddTask ({ state, setOpen }) {
         className={classes.title}
       >
         <Typography variant="h4" component="h4" gutterBottom>
-          Cadastrar Tarefa
+          Editar Tarefa
         </Typography>
       </Grid>
 
@@ -149,7 +154,7 @@ export default function FormAddTask ({ state, setOpen }) {
               Cancelar
             </Button>&nbsp;&nbsp;
             <Button color="primary" type="submit">
-              Cadastrar
+              Salvar
             </Button>
           </Grid>
         </Grid>
@@ -158,7 +163,8 @@ export default function FormAddTask ({ state, setOpen }) {
   )
 }
 
-FormAddTask.propTypes = {
+EditTask.propTypes = {
   state: PropTypes.array,
+  info: PropTypes.object,
   setOpen: PropTypes.func
 }
