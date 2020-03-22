@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
@@ -8,15 +8,22 @@ import Grid from '@material-ui/core/Grid'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
+import SaveIcon from '@material-ui/icons/Save'
+import Container from '@material-ui/core/Container'
 
-import Chip from '../Chip'
-import api from '../../services/api'
-import reduceGuidelines from '../../utils/reduceGuidelines'
-import createTableRow from '../../utils/createTableRow'
+import Chip from './Chip'
+
+import reduceGuidelines from '../utils/reduceGuidelines'
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
+  },
+  container: {
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: 4,
+    boxShadow: '5px 5px 10px #0004',
+    padding: 30
   },
   title: {
     marginBottom: 30
@@ -39,42 +46,36 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function EditTask ({ state, info, setOpen }) {
-  const [keyword, setKeyword] = useState(info.keyword ? info.keyword : '')
-  const [subKeywords, setSubKeywords] = useState(info.subKeywords ? info.subKeywords : '')
-  const [website, setWebsite] = useState(info.website ? info.website : '')
+export default function FormAddTask ({ setOpen, handleItem, isUpdate }) {
+  const [keyword, setKeyword] = useState('')
+  const [subKeywords, setSubKeywords] = useState('')
+  const [website, setWebsite] = useState('')
   const [newChip, setNewChip] = useState('')
-  const [chipData, setChipData] = useState(
-    info.guidelines ? info.guidelines.map((guideline, index) => ({ key: index, label: guideline })) : []
-  )
-  const [description, setDescription] = useState(info.description)
+  const [chipData, setChipData] = useState([])
+  const [description, setDescription] = useState('')
+
+  useEffect(() => {
+    if (isUpdate) {
+      setKeyword(isUpdate.keyword)
+      setSubKeywords(isUpdate.subKeywords)
+      setWebsite(isUpdate.website)
+      setChipData(isUpdate.guidelines.map((guideline, index) => ({ key: index, label: guideline })))
+      setDescription(isUpdate.description)
+    }
+  }, [isUpdate])
 
   const matches = useMediaQuery('(min-width:768px)')
   const classes = useStyles()
 
   async function handleSubmit (e) {
     e.preventDefault()
-    const [notDisplayRow, setNotDisplayRow] = state
-
-    const token = localStorage.getItem('token')
     const guidelines = reduceGuidelines(chipData)
-
-    const { data } = await api.put(`/uninitiated-task/${info._id}`,
-      { type: 'article', keyword, subKeywords, website, guidelines, description },
-      { headers: { Authorization: `Bearer ${token}` } }
-    )
-
-    if (!data.error) setOpen(false)
-
-    const editedRow = createTableRow(data.keyword, data.subKeywords, data.website, '16/09/2020', data._id)
-    setNotDisplayRow(notDisplayRow.map(row => {
-      if (row[row.length - 1] === data._id) return editedRow
-      return row
-    }))
+    handleItem({ type: 'article', keyword, subKeywords, website, guidelines, description })
+    setOpen(false)
   }
 
   return (
-    <>
+    <Container maxWidth="md" className={classes.container}>
       <Grid container
         direction="row"
         justify="center"
@@ -82,7 +83,7 @@ export default function EditTask ({ state, info, setOpen }) {
         className={classes.title}
       >
         <Typography variant="h4" component="h4" gutterBottom>
-          Editar Tarefa
+          {isUpdate ? 'Editar Tarefa' : 'Cadastrar Tarefa'}
         </Typography>
       </Grid>
 
@@ -153,18 +154,31 @@ export default function EditTask ({ state, info, setOpen }) {
             <Button onClick={() => setOpen(false)} color="secondary">
               Cancelar
             </Button>&nbsp;&nbsp;
-            <Button color="primary" type="submit">
+            {isUpdate ? (
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                className={classes.button}
+                startIcon={<SaveIcon />}
+              >
               Salvar
-            </Button>
+              </Button>
+            ) : (
+              <Button color="primary" type="submit">
+              Cadastrar
+              </Button>
+            )}
           </Grid>
         </Grid>
       </form>
-    </>
+    </Container>
   )
 }
 
-EditTask.propTypes = {
-  state: PropTypes.array,
-  info: PropTypes.object,
-  setOpen: PropTypes.func
+FormAddTask.propTypes = {
+  setOpen: PropTypes.func,
+  handleItem: PropTypes.func,
+  isUpdate: PropTypes.object
 }

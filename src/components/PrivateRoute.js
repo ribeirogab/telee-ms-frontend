@@ -4,7 +4,7 @@ import { Route, Redirect } from 'react-router-dom'
 
 import { isAuthenticated } from '../services/authenticate'
 
-export default function PrivateRoute ({ component: Component, user, ...rest }) {
+export default function PrivateRoute ({ component: Component, user, permission, ...rest }) {
   return (
     <Route {...rest} render={props => (
       isAuthenticated() ? (
@@ -18,9 +18,9 @@ export default function PrivateRoute ({ component: Component, user, ...rest }) {
 }
 PrivateRoute.propTypes = {
   component: PropTypes.func.isRequired,
-  token: PropTypes.string,
   user: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object
-  ])
+  ]),
+  permission: PropTypes.bool
 }

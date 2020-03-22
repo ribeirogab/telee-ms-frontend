@@ -19,37 +19,32 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function TransitionsModal ({ open, setOpen, info, Component }) {
+export default function TransitionsModal ({ open, Component }) {
   const classes = useStyles()
   if (open) {
     return (
-      <div>
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          className={classes.modal}
-          open={open}
-          onClose={() => setOpen(false)}
-          closeAfterTransition
-          BackdropComponent={Backdrop}
-          BackdropProps={{
-            timeout: 500
-          }}
-        >
-          <Fade in={open}>
-            <div className={classes.paper}>
-              <Component setOpen={setOpen} info={info} />
-            </div>
-          </Fade>
-        </Modal>
-      </div>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500
+        }}
+      >
+        <Fade in={open}>
+          <div>
+            <Component />
+          </div>
+        </Fade>
+      </Modal>
     )
   } else return <></>
 }
 
 TransitionsModal.propTypes = {
   open: PropTypes.bool,
-  setOpen: PropTypes.func,
-  info: PropTypes.object,
   Component: PropTypes.func
 }

@@ -13,7 +13,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
-import Avatar from './Avatar'
+import Avatar from '../Avatar'
 import menuRestriction from '../../utils/menuRestriction'
 
 const useStyles = makeStyles({
@@ -86,10 +86,10 @@ export default function Menu ({ user }) {
     >
       <List className={classes.profileMenu}>
         <ListItem>
-          <ListItemIcon><Avatar user={user}/></ListItemIcon>
+          <ListItemIcon><Avatar name={user.name}/></ListItemIcon>
           <ListItemText>
             <p className={classes.nameAndFunction}>{user.name}</p>
-            <p className={classes.nameAndFunction}>{user.permission < 3 ? 'Redator' : user.permission < 6 ? 'Editor' : 'Desenvolvedor'}</p>
+            <p className={classes.nameAndFunction}>{user.permission <= 3 ? 'Redator' : user.permission <= 6 ? 'Editor' : 'Desenvolvedor'}</p>
           </ListItemText>
           <ArrowBackIosIcon className={classes.ArrowBackIosIcon} onClick={toggleDrawer('left', false)}/>
         </ListItem>
