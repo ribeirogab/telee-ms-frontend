@@ -1,9 +1,11 @@
 import React from 'react'
 
-// import { Container } from './styles';
+import Container from '@material-ui/core/Container'
 
 export default function Test () {
   return (
-    <div />
+    <Container maxWidth="md">
+      <h1>Page for tests...</h1>
+    </Container>
   )
 }
