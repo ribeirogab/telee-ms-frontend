@@ -13,7 +13,7 @@ import Container from '@material-ui/core/Container'
 
 import Chip from '../Chip'
 
-import reduceGuidelines from '../../utils/reduceGuidelines'
+import reduceGuidelines from '../../utils/task/reduceGuidelines'
 
 const useStyles = makeStyles(theme => ({
   root: {
