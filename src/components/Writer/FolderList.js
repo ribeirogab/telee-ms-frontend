@@ -12,7 +12,7 @@ import { bindTrigger } from 'material-ui-popup-state'
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
 
-import Avatar from './Avatar'
+import Avatar from '../Avatar'
 
 const useStyles = makeStyles(theme => ({
   root: {

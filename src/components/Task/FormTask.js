@@ -11,9 +11,9 @@ import Button from '@material-ui/core/Button'
 import SaveIcon from '@material-ui/icons/Save'
 import Container from '@material-ui/core/Container'
 
-import Chip from './Chip'
+import Chip from '../Chip'
 
-import reduceGuidelines from '../utils/reduceGuidelines'
+import reduceGuidelines from '../../utils/reduceGuidelines'
 
 const useStyles = makeStyles(theme => ({
   root: {

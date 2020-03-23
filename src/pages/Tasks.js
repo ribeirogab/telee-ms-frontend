@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 import RestTable from '../templates/RestTable/RestTable'
 
 import AppBar from '../components/Navbar/index'
-import AssumeTask from '../components/AssumeTask'
-import FormTask from '../components/FormTask'
+import AssumeTask from '../components/Task/AssumeTask'
+import FormTask from '../components/Task/FormTask'
 
 import formatTaskDetails from '../utils/formatTaskDetails'
 import selectTaskData from '../utils/selectTaskData'

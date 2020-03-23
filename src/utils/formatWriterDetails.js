@@ -1,6 +1,7 @@
 export default function formatWriterDetails (writer) {
   return {
-    Nome: writer.name,
-    Usuário: writer.username
+    username: writer.username,
+    name: writer.name,
+    permission: writer.permission
   }
 }

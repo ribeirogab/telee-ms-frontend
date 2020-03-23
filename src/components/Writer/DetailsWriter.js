@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: 16,
     boxShadow: '4px 4px 8px #0003',
-    padding: '10%'
+    padding: '7%'
   },
   nameFunc: {
     padding: 0,
@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export default function Test ({ setOpen }) {
+export default function DetailsWriter ({ data: writer, setOpen }) {
   const classes = useStyles()
   return (
     <Container maxWidth="md">
@@ -51,20 +51,12 @@ export default function Test ({ setOpen }) {
                 <ImageIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="Gabriel" secondary="Desenvolvedor" />
+            <ListItemText primary={writer.name} secondary={`Redator ${writer.permission}`} />
           </ListItem>
           <TextField
             className={classes.textField}
             label="Usuário"
-            defaultValue="Hello World"
-            InputProps={{
-              readOnly: true
-            }}
-          />
-          <TextField
-            className={classes.textField}
-            label="Nome"
-            defaultValue="Hello World"
+            defaultValue={writer.username}
             InputProps={{
               readOnly: true
             }}
@@ -72,7 +64,7 @@ export default function Test ({ setOpen }) {
           <TextField
             className={classes.textField}
             label="E-mail"
-            defaultValue="Hello World"
+            defaultValue="Em breve"
             InputProps={{
               readOnly: true
             }}
@@ -80,7 +72,7 @@ export default function Test ({ setOpen }) {
           <TextField
             className={classes.textField}
             label="Permissão"
-            defaultValue="Hello World"
+            defaultValue={writer.permission}
             InputProps={{
               readOnly: true
             }}
@@ -96,6 +88,7 @@ export default function Test ({ setOpen }) {
   )
 }
 
-Test.propTypes = {
+DetailsWriter.propTypes = {
+  data: PropTypes.object,
   setOpen: PropTypes.func
 }

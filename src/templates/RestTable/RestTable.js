@@ -7,7 +7,7 @@ import Root from './components/Root'
 
 import api from '../../services/api'
 
-export default function RestTable ({ user, thead, Form, formatDetails, selectData, additionalToPopper, routes, customTable }) {
+export default function RestTable ({ user, thead, Form, CustomizedDetails, formatDetails, selectData, additionalToPopper, routes, customTable }) {
   const [rows, setRows] = useState([])
 
   useEffect(() => {
@@ -30,6 +30,7 @@ export default function RestTable ({ user, thead, Form, formatDetails, selectDat
         thead={thead}
         rows={rows}
         Form={Form}
+        CustomizedDetails={CustomizedDetails}
         formatDetails={formatDetails}
         selectData={selectData}
         additionalToPopper={additionalToPopper}
@@ -48,6 +49,7 @@ RestTable.propTypes = {
   ]),
   thead: PropTypes.array,
   Form: PropTypes.func,
+  CustomizedDetails: PropTypes.func,
   formatDetails: PropTypes.func,
   selectData: PropTypes.func,
   additionalToPopper: PropTypes.array,
