@@ -4,11 +4,12 @@ import PropTypes from 'prop-types'
 import RestTable from '../templates/RestTable/RestTable'
 
 import AppBar from '../components/Navbar/index'
-import AssumeTask from '../components/AssumeTask'
-import FormTask from '../components/FormTask'
+import AssumeTask from '../components/Task/AssumeTask'
+import FormTask from '../components/Task/FormTask'
+import DetailsTask from '../components/Task/DetailsTask'
 
-import formatTaskDetails from '../utils/formatTaskDetails'
-import selectTaskData from '../utils/selectTaskData'
+import formatTaskDetails from '../utils/task/formatTaskDetails'
+import selectTaskData from '../utils/task/selectTaskData'
 
 export default function Test ({ user }) {
   const thead = ['Keyword', 'KW Secundárias', 'Site', 'Data']
@@ -29,6 +30,7 @@ export default function Test ({ user }) {
         user={user}
         thead={thead}
         Form={FormTask}
+        CustomizedDetails={DetailsTask}
         formatDetails={formatTaskDetails}
         selectData={selectTaskData}
         additionalToPopper={additionalComponent}

@@ -5,11 +5,12 @@ import RestTable from '../templates/RestTable/RestTable'
 
 import AppBar from '../components/Navbar/index'
 import LayoutFrom from '../components/LayoutForm'
-import FormWriter from '../components/FormWriter'
-import FolderList from '../components/FolderList'
+import FormWriter from '../components/Writer/FormWriter'
+import FolderList from '../components/Writer/FolderList'
+import DetailsWriter from '../components/Writer/DetailsWriter'
 
-import formatWriterDetails from '../utils/formatWriterDetails'
-import selectWriterData from '../utils/selectWriterData'
+import formatWriterDetails from '../utils/writer/formatWriterDetails'
+import selectWriterData from '../utils/writer/selectWriterData'
 
 export default function Test ({ user }) {
   return (
@@ -19,6 +20,7 @@ export default function Test ({ user }) {
         user={user}
         thead={[]}
         Form={(props) => <LayoutFrom {...props} Form={() => <FormWriter {...props}/>} />}
+        CustomizedDetails={DetailsWriter}
         formatDetails={formatWriterDetails}
         selectData={selectWriterData}
         additionalToPopper={[]}

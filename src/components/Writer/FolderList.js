@@ -12,7 +12,7 @@ import { bindTrigger } from 'material-ui-popup-state'
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
 
-import Avatar from './Avatar'
+import Avatar from '../Avatar'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,6 +25,12 @@ const useStyles = makeStyles(theme => ({
     width: '90%',
     backgroundColor: theme.palette.background.paper,
     boxShadow: '2px 2px 4px #0001'
+  },
+  empty: {
+    marginTop: 30,
+    margin: '0 auto',
+    fontSize: '25px',
+    fontWeight: 'lighter'
   }
 }))
 
@@ -42,33 +48,37 @@ export default function FolderList ({ user, setModalAdd, thead, rows, setId, add
         <Button onClick={() => setModalAdd(true)} variant="outlined" color="secondary" startIcon={<AddIcon />}>Adicionar</Button>
       </Grid>
       <Grid container>
-        {rows.map((row, index) => (
-          <Grid item xs={matches ? 6 : 12} className={classes.root} key={index}>
-            <ListItem className={classes.item}>
+        {rows.length === 0
+          ? <h1 className={classes.empty}>
+            Nenhum redator cadastrado...
+          </h1>
+          : rows.map((row, index) => (
+            <Grid item xs={matches ? 6 : 12} className={classes.root} key={index}>
+              <ListItem className={classes.item}>
 
-              <ListItemAvatar>
-                <Avatar name={row[0]}/>
-              </ListItemAvatar>
-              <ListItemText primary={row[0]} secondary={row[1]} />
+                <ListItemAvatar>
+                  <Avatar name={row[0]}/>
+                </ListItemAvatar>
+                <ListItemText primary={row[0]} secondary={row[1]} />
 
-              <Popper
-                user={user}
-                id={row[row.length - 1]}
-                setId={setId}
-                additionals={additionals}
-                setAdditionals={setAdditionals}
-                setModalEdit={setModalEdit}
-                setModalDelete={setAlertDelete}
-                setModalDetails={setModalDetails}
-                PopperButton={(props) => (
+                <Popper
+                  user={user}
+                  id={row[row.length - 1]}
+                  setId={setId}
+                  additionals={additionals}
+                  setAdditionals={setAdditionals}
+                  setModalEdit={setModalEdit}
+                  setModalDelete={setAlertDelete}
+                  setModalDetails={setModalDetails}
+                  PopperButton={(props) => (
                   // eslint-disable-next-line react/prop-types
-                  <MoreVertIcon style={{ cursor: 'pointer' }} {...bindTrigger(props.popupState)}/>
-                )}
-              />
+                    <MoreVertIcon style={{ cursor: 'pointer' }} {...bindTrigger(props.popupState)}/>
+                  )}
+                />
 
-            </ListItem>
-          </Grid>
-        ))}
+              </ListItem>
+            </Grid>
+          ))}
       </Grid>
     </Container>
   )

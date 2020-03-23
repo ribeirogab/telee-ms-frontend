@@ -13,7 +13,7 @@ import Update from './rest/Update'
 import Destroy from './rest/Destroy'
 import Show from './rest/Show'
 
-export default function Root ({ user, thead, rows, Form, formatDetails, selectData, additionalToPopper, routes, state, customTable }) {
+export default function Root ({ user, thead, rows, Form, CustomizedDetails, formatDetails, selectData, additionalToPopper, routes, state, customTable }) {
   const [SelectTable, setSelectTable] = useState(() => DefaultTable)
   const [id, setId] = useState(null)
   const [additionals, setAdditionals] = useState(
@@ -67,7 +67,7 @@ export default function Root ({ user, thead, rows, Form, formatDetails, selectDa
       />
       <Modal
         open={modalDetails}
-        Component={() => <Show setOpen={setModalDetails} id={id} route={routes.show} formatDetails={formatDetails} />}
+        Component={() => <Show setOpen={setModalDetails} id={id} route={routes.show} formatDetails={formatDetails} CustomizedDetails={CustomizedDetails} />}
       />
 
       <SelectTable
@@ -95,6 +95,7 @@ Root.propTypes = {
   thead: PropTypes.array,
   rows: PropTypes.array,
   Form: PropTypes.func,
+  CustomizedDetails: PropTypes.func,
   formatDetails: PropTypes.func,
   selectData: PropTypes.func,
   additionalToPopper: PropTypes.array,
