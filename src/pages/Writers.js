@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 import RestTable from '../templates/RestTable/RestTable'
 
 import AppBar from '../components/Navbar/index'
-import FormTask from '../components/FormTask'
+import LayoutFrom from '../components/LayoutForm'
+import FormWriter from '../components/FormWriter'
 import FolderList from '../components/FolderList'
 
 import formatWriterDetails from '../utils/formatWriterDetails'
@@ -17,7 +18,7 @@ export default function Test ({ user }) {
       <RestTable
         user={user}
         thead={[]}
-        Form={FormTask}
+        Form={(props) => <LayoutFrom {...props} Form={() => <FormWriter {...props}/>} />}
         formatDetails={formatWriterDetails}
         selectData={selectWriterData}
         additionalToPopper={[]}
