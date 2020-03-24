@@ -6,6 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
+import api from '../../services/api'
+
 export default function Destroy ({ index, additionals, setAdditionals, id, route, state }) {
   function closeComponent () {
     setAdditionals(additionals.map((additional, i) => {
@@ -14,6 +16,20 @@ export default function Destroy ({ index, additionals, setAdditionals, id, route
       }
       return additional
     }))
+  }
+
+  async function assumeTask () {
+    try {
+      const token = localStorage.getItem('token')
+      const { data } = await api.put(`/writer/task/${id}`, { status: 1 }, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const [rows, setRows] = state
+      setRows(rows.filter(row => row[row.length - 1] !== id))
+      console.log(data)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -34,6 +50,7 @@ export default function Destroy ({ index, additionals, setAdditionals, id, route
         </Button>
         <Button
           onClick={() => {
+            assumeTask()
             closeComponent()
           }}
           color="primary" autoFocus>
