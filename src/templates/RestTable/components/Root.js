@@ -59,7 +59,7 @@ export default function Root ({ user, thead, rows, Form, CustomizedDetails, form
       />
       <Modal
         open={modalEdit}
-        Component={() => <Update setOpen={setModalEdit} id={id} route={routes.put} state={state} Form={Form} selectData={selectData} />}
+        Component={() => <Update setOpen={setModalEdit} id={id} routePut={routes.put} routeShow={routes.show} state={state} Form={Form} selectData={selectData} />}
       />
       <Dialog
         open={alertDelete}

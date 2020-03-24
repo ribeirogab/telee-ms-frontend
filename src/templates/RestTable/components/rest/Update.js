@@ -3,20 +3,20 @@ import PropTypes from 'prop-types'
 
 import { handleUpdate, handleShow } from '../../services/handle'
 
-export default function Update ({ setOpen, id, route, state, Form, selectData }) {
+export default function Update ({ setOpen, id, routePut, routeShow, state, Form, selectData }) {
   const [data, setData] = useState(null)
 
   useEffect(() => {
     async function getData () {
-      const data = await handleShow(id, route)
+      const data = await handleShow(id, routeShow)
       setData(data)
     }
     getData()
-  }, [id, route])
+  }, [id, routeShow])
 
   async function updateItem (updatedItems) {
     const [rows, setRows] = state
-    const data = await handleUpdate(updatedItems, id, route, state)
+    const data = await handleUpdate(updatedItems, id, routePut, state)
     const selectedData = selectData(data)
     setRows(rows.map(row => row[row.length - 1] === data._id ? selectedData : row))
   }
@@ -35,7 +35,8 @@ export default function Update ({ setOpen, id, route, state, Form, selectData })
 Update.propTypes = {
   setOpen: PropTypes.func,
   id: PropTypes.string,
-  route: PropTypes.string,
+  routePut: PropTypes.string,
+  routeShow: PropTypes.string,
   state: PropTypes.array,
   Form: PropTypes.func,
   selectData: PropTypes.func

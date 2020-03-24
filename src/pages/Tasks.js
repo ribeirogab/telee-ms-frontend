@@ -35,11 +35,11 @@ export default function Test ({ user }) {
         selectData={selectTaskData}
         additionalToPopper={additionalComponent}
         routes = {{
-          index: '/uninitiated-task',
-          show: '/uninitiated-task/:id',
-          store: '/uninitiated-task',
-          put: '/uninitiated-task/:id',
-          destroy: '/uninitiated-task/:id'
+          index: '/task/uninitiated',
+          show: '/task/u/:id',
+          store: '/task',
+          put: '/task/:id',
+          destroy: '/task/:id'
         }}
         customTable={false}
       />

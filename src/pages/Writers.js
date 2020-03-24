@@ -25,11 +25,11 @@ export default function Test ({ user }) {
         selectData={selectWriterData}
         additionalToPopper={[]}
         routes = {{
-          index: '/writer',
-          show: '/writer/u/:id',
-          store: '/writer',
-          put: '/writer/u/:id',
-          destroy: '/writer/u/:id'
+          index: '/user/writer',
+          show: '/user/u/:id',
+          store: '/user/writer',
+          put: '/user/u/writer/:id',
+          destroy: '/user/u/:id'
         }}
         customTable={FolderList}
       />

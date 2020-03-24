@@ -11,7 +11,7 @@ export default function Login ({ history, setToken }) {
 
   async function handleSubmit (e) {
     e.preventDefault()
-    const { data } = await api.post('/authenticate', { username, password })
+    const { data } = await api.post('/sessions', { username, password })
 
     localStorage.setItem('token', data.token)
     setToken(localStorage.getItem('token'))
