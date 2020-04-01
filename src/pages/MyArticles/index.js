@@ -1,15 +1,15 @@
 import React from 'react'
 
 import { FiMoreHorizontal } from 'react-icons/fi'
-import { FaStar, FaEdit, FaSpinner, FaUndo, FaCheck, FaTimes } from 'react-icons/fa'
+import { FaEdit, FaSpinner, FaUndo, FaCheck, FaTimes } from 'react-icons/fa'
 
 import Container from '@material-ui/core/Container'
 
-import { ArticlesContainer, ArticleBox, ArticleStatus, ArticleHeader, ArticleMoreOptions, ArticleBody, ArticleFooter, Avatar } from './styles'
+import { ArticlesContainer, ArticleBox, ArticleStatus, ArticleHeader, ArticleMoreOptions, ArticleBody, ArticleFooter, AuditButton } from './styles'
 
-import Header from '../../components/Header/index'
+import Header from '../../components/global/Header/index'
 
-export default function MyArticles () {
+export default function Audit () {
   return (
 
     <>
@@ -18,15 +18,15 @@ export default function MyArticles () {
         <ArticlesContainer>
 
           {[
-            { status: <FaEdit />, bgcolor: '#ddd5' },
-            { status: <FaSpinner />, bgcolor: '#fb05' },
-            { status: <FaUndo />, bgcolor: '#37f5' },
-            { status: <FaCheck />, bgcolor: '#1965' },
-            { status: <FaTimes />, bgcolor: '#e565' }
+            { statusIcon: <FaEdit />, statusText: 'Escrevendo', color: '#666' },
+            { statusIcon: <FaSpinner />, statusText: 'Pendente', color: '#d90' },
+            { statusIcon: <FaUndo />, statusText: 'Retornado', color: '#37f' },
+            { statusIcon: <FaCheck />, statusText: 'Aceito', color: '#196' },
+            { statusIcon: <FaTimes />, statusText: 'Recusado', color: '#e56' }
           ].map((item, index) => (
             <ArticleBox key={index}>
-              <ArticleHeader>
-                <ArticleStatus bgcolor={item.bgcolor}>{item.status}</ArticleStatus>
+              <ArticleHeader color={item.color}>
+                <ArticleStatus color={item.color}>{item.statusIcon}</ArticleStatus>
                 <div>
                   <strong>Keywords</strong>
                   <span>subkeywords</span>
@@ -37,35 +37,24 @@ export default function MyArticles () {
               </ArticleHeader>
 
               <ArticleBody>
-                <div><strong>Pautas:</strong> Fazer tal coisa, e mais isso e blabla bla...</div>
                 <div className="group">
-                  <div><strong>Assumido:</strong> 31/03/2020</div>
-                  <div><strong>Editado:</strong> 31/03/2020</div>
+                  <div><strong>Redator:</strong> Patrick Perdigao</div>
+                  <div><strong>Criador:</strong> Gabriel Ribeiro</div>
+                </div>
+                <div className="group">
+                  <div><strong>Assumido:</strong> 31/03/2020 às 10:30</div>
+                  <div><strong>Entregue:</strong> 31/03/2020 às 16:45</div>
                 </div>
                 <div><strong>Destino:</strong> www.assinesky.com.br</div>
               </ArticleBody>
 
-              <ArticleFooter>
+              <ArticleFooter color={item.color}>
                 <div className="values">
                   <strong>R$ 60,52</strong>
                   <span>1008 palavras</span>
                 </div>
-                <div className="info-audit">
-                  <div className="editor">
-                    <Avatar>GR</Avatar>
-                    <div className="info-editor">
-                      <strong>Gabriel Ribeiro</strong>
-                      <small>Desenvolvedor</small>
-                      <span>04/04/2020</span>
-                    </div>
-                  </div>
-                  <div className="stars">
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                    <FaStar />
-                  </div>
+                <div className="audit">
+                  <AuditButton color={item.color}>{item.statusText}</AuditButton>
                 </div>
               </ArticleFooter>
             </ArticleBox>

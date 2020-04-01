@@ -23,7 +23,12 @@ export const AddButton = styled.button`
   }
 `
 
+export const TableContainer = styled.div`
+  overflow-x: auto;
+`
+
 export const Table = styled.table`
+  min-width: 768px;
   border-collapse: separate;
   border-spacing: 0 16px;
   margin-top: -8px;

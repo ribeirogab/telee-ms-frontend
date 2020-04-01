@@ -1,8 +1,6 @@
 import React from 'react'
 
 import AppsIcon from '@material-ui/icons/Apps'
-import DashboardIcon from '@material-ui/icons/Dashboard'
-import InsertChartIcon from '@material-ui/icons/InsertChart'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks'
 import PageviewIcon from '@material-ui/icons/Pageview'
@@ -12,8 +10,6 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 export default function menuItems () {
   const headerMenu = [
     { icon: <AppsIcon />, text: 'Home', path: '/', permissionMinMax: [1, 99] },
-    { icon: <DashboardIcon />, text: 'Dashboard', path: '/dashboard', permissionMinMax: [1, 99] },
-    { icon: <InsertChartIcon />, text: 'Relatórios', path: '/relatorios', permissionMinMax: [1, 99] },
     { icon: <AssignmentIcon />, text: 'Tarefas', path: '/tarefas', permissionMinMax: [1, 99] },
     { icon: <LibraryBooksIcon />, text: 'Meus artigos', path: '/artigos', permissionMinMax: [1, 3] }
   ]

@@ -5,7 +5,7 @@ import Container from '@material-ui/core/Container'
 
 import { ToolsBar, AddButton, WritersContainer, BoxWriter } from './styles'
 
-import Header from '../../components/Header/index'
+import Header from '../../components/global/Header/index'
 
 export default function Writers () {
   return (

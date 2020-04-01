@@ -2,8 +2,6 @@ import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 import Home from './pages/Home'
-import Dashboard from './pages/Dashboard'
-import Reports from './pages/Reports'
 import Tasks from './pages/Tasks'
 import MyArticles from './pages/MyArticles'
 import Audit from './pages/Audit'
@@ -14,8 +12,6 @@ export default function Routes () {
     <BrowserRouter>
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/relatorios" component={Reports} />
         <Route path="/tarefas" component={Tasks} />
         <Route path="/artigos" component={MyArticles} />
         <Route path="/auditoria" component={Audit} />
