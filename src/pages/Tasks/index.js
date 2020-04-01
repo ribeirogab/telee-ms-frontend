@@ -2,9 +2,9 @@ import React from 'react'
 import { FiPlus, FiMoreHorizontal } from 'react-icons/fi'
 import Container from '@material-ui/core/Container'
 
-import { AddButton, ToolsBar, Table } from './styles'
+import { AddButton, ToolsBar, TableContainer, Table } from './styles'
 
-import Header from '../../components/Header/index'
+import Header from '../../components/global/Header/index'
 
 export default function Tasks () {
   const tasks = [
@@ -25,28 +25,30 @@ export default function Tasks () {
           </AddButton>
         </ToolsBar>
 
-        <Table>
-          <thead>
-            <tr>
-              <th>Keyword</th>
-              <th>KW Secundárias</th>
-              <th>Site</th>
-              <th>Data</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tasks.map((task, index) => (
-              <tr key={index}>
-                <td>{task.keyword}</td>
-                <td>{task.subKeywords}</td>
-                <td>{task.website}</td>
-                <td>{task.date}</td>
-                <td><FiMoreHorizontal style={{ cursor: 'pointer' }} size={20}/></td>
+        <TableContainer>
+          <Table>
+            <thead>
+              <tr>
+                <th>Keyword</th>
+                <th>KW Secundárias</th>
+                <th>Site</th>
+                <th>Data</th>
+                <th>Ações</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {tasks.map((task, index) => (
+                <tr key={index}>
+                  <td>{task.keyword}</td>
+                  <td>{task.subKeywords}</td>
+                  <td>{task.website}</td>
+                  <td>{task.date}</td>
+                  <td><FiMoreHorizontal style={{ cursor: 'pointer' }} size={20}/></td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </TableContainer>
       </Container>
     </>
   )

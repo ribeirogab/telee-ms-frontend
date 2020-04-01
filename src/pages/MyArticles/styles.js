@@ -11,11 +11,12 @@ export const ArticleBox = styled.div`
   margin-bottom: 25px;
   background-color: #fff;
   border-radius: 4px;
-  box-shadow: 2px 2px 4px #0001;
+  border: solid 1px #0002;
+  box-shadow: 2px 2px 4px #0002;
   transition: box-shadow 0.5s;
 
   &:hover {
-    box-shadow: 4px 4px 8px #0002;
+    box-shadow: 4px 4px 8px #0005;
   }
   
   @media screen and (max-width: 1140px) {
@@ -41,6 +42,7 @@ export const ArticleHeader = styled.div`
     strong {
       font-size: 25px;
       margin-left: 10px;
+      color: ${props => props.color};
     }
 
     span {
@@ -61,7 +63,7 @@ export const ArticleStatus = styled.div`
   height: 80px;
   border: solid 1px #0001;
   box-shadow: 1px 1px 2px #0003;
-  background-color: ${props => props.bgcolor};
+  background-color: ${props => props.color}9;
   border-radius: 100%;
   text-transform: uppercase;
   font-weight: bold;
@@ -78,6 +80,7 @@ export const ArticleMoreOptions = styled.div`
 export const ArticleBody = styled.div`
   padding: 10px 10px;
   border-bottom: solid 1px #0001;
+  color: #333;
 
   div {
     padding:  7px;
@@ -88,6 +91,7 @@ export const ArticleBody = styled.div`
 
     strong {
       font-size: 14px;
+      color: #222;
     }
   }
 
@@ -109,6 +113,7 @@ export const ArticleBody = styled.div`
 
       strong {
         font-size: 14px;
+        color: #222;
       }
     }
   }
@@ -126,49 +131,40 @@ export const ArticleFooter = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 35%;
+    width: 49%;
     border-right: solid 1px #0001;
 
     strong {
-      font-size: 21px;
+      font-size: 25px;
       line-height: 45px;
-      color: green;
+      color: ${props => props.color};
     }
-    span { font-size: 13px; }
+    span { font-size: 16px; color: #444; }
   }
 
-  .info-audit {
+  .audit {
+    width: 49%;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    width: 64%;
-
-    .editor {
-      display: flex;
-
-      .info-editor{
-        margin-left: 10px;
-        display: flex;
-        flex-direction: column;
-        
-        strong { font-size: 15px; }
-        small, span { font-size: 12px; color: #666; }
-      }
-    }
-
-    .stars {
-      margin-top: 10px;
-      color: #000;
-      svg { margin: 0 3px; }
-    }
   }
 `
-export const Avatar = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  height: 50px;
-  background-color: gray;
-  border-radius: 100%
+
+export const AuditButton = styled.button`
+  cursor: pointer;
+  width: 100%;
+  padding: 15px 0;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
+  border: solid 1px ${props => props.color};
+  background-color: transparent;
+  color: ${props => props.color};
+  transition: color 0.3s;  
+  transition: background-color 0.3s;  
+  
+  &:hover{
+    background-color: ${props => props.color};
+    color: #fff;
+  }
 `
