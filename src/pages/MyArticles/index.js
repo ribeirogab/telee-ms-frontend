@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { FaEdit, FaSpinner, FaUndo, FaCheck, FaTimes } from 'react-icons/fa'
 
@@ -10,6 +11,7 @@ import Header from '../../components/global/Header/index'
 
 export default function Audit () {
   return (
+
     <>
       <Header textPage="Artigos" />
       <Container maxWidth="lg">

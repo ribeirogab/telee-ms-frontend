@@ -1,5 +1,7 @@
 import React from 'react'
+
 import { FiPlus, FiMoreHorizontal } from 'react-icons/fi'
+
 import Container from '@material-ui/core/Container'
 
 import { AddButton, ToolsBar, TableContainer, Table } from './styles'
