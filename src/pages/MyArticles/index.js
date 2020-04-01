@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { FaStar, FaEdit, FaSpinner, FaUndo, FaCheck, FaTimes } from 'react-icons/fa'
 
@@ -10,6 +11,7 @@ import Header from '../../components/Header/index'
 
 export default function MyArticles () {
   return (
+
     <>
       <Header textPage="Artigos" />
       <Container maxWidth="lg">
