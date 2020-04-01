@@ -1,6 +1,7 @@
 import React from 'react'
 
-import { FiPlus } from 'react-icons/fi'
+import { FiPlus, FiMoreHorizontal } from 'react-icons/fi'
+
 import Container from '@material-ui/core/Container'
 
 import { AddButton, ToolsBar, Table } from './styles'
@@ -43,7 +44,7 @@ export default function Tasks () {
                 <td>{task.subKeywords}</td>
                 <td>{task.website}</td>
                 <td>{task.date}</td>
-                <td>...</td>
+                <td><FiMoreHorizontal style={{ cursor: 'pointer' }} size={20}/></td>
               </tr>
             ))}
           </tbody>
