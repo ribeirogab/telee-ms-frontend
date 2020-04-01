@@ -21,7 +21,7 @@ export default function Home () {
         </LastAcess>
         <News>
           <h1>Novidades</h1>
-          <p>Está no ar a versão <version>1.25.18</version>, com correções, melhorias e algumas novidades que você pode conferir a baixo.</p>
+          <p>Está no ar a versão <span className="version">1.25.18</span>, com correções, melhorias e algumas novidades que você pode conferir a baixo.</p>
           <ContainerNews>
             {[1, 2, 3, 4, 5].map((item, index) => (
               <BoxNews key={index}>

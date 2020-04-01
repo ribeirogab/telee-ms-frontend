@@ -49,7 +49,7 @@ export const News = styled.div`
 
   p {
     color: #555;
-    version {
+    .version {
       font-size: 20px;
       color: #29f;
       font-weight: bold;
@@ -57,7 +57,7 @@ export const News = styled.div`
       transition: color 0.2s;
       transition: text-decoration 0.2s;
     }
-    version:hover {
+    .version:hover {
       color: #29f8;
       text-decoration: underline;
     }
@@ -72,6 +72,15 @@ export const ContainerNews = styled.div`
 export const BoxNews = styled.div`
   width: 31.3333333333%;
   margin: 1%;
+
+  @media screen and (max-width: 991px){
+    width: 48%;
+  }
+
+  @media screen and (max-width: 767px){
+    width: 100%;
+    margin: 10px 0;
+  }
 
   .box {
     line-height: 24px;
