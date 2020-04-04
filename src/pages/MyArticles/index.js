@@ -1,13 +1,13 @@
 import React from 'react'
 
-import { FiMoreHorizontal } from 'react-icons/fi'
 import { FaEdit, FaSpinner, FaUndo, FaCheck, FaTimes } from 'react-icons/fa'
+import { FiArrowRight } from 'react-icons/fi'
 
 import Container from '@material-ui/core/Container'
 
-import { ArticlesContainer, ArticleBox, ArticleStatus, ArticleHeader, ArticleMoreOptions, ArticleBody, ArticleFooter, AuditButton } from './styles'
-
 import Header from '../../components/Header'
+
+import { ArticlesContainer, ArticleBox, ArticleStatus, ArticleHeader, ArticleBody, ArticleFooter, AuditButton } from './styles'
 
 export default function Audit () {
   return (
@@ -18,11 +18,11 @@ export default function Audit () {
         <ArticlesContainer>
 
           {[
-            { statusIcon: <FaEdit />, statusText: 'Escrevendo', color: '#666' },
-            { statusIcon: <FaSpinner />, statusText: 'Pendente', color: '#d90' },
-            { statusIcon: <FaUndo />, statusText: 'Retornado', color: '#37f' },
-            { statusIcon: <FaCheck />, statusText: 'Aceito', color: '#196' },
-            { statusIcon: <FaTimes />, statusText: 'Recusado', color: '#e56' }
+            { statusIcon: <FaEdit />, statusText: 'Escrever', color: '#666', disabled: false },
+            { statusIcon: <FaSpinner />, statusText: 'Pendente', color: '#d90', disabled: true },
+            { statusIcon: <FaUndo />, statusText: 'Revisar', color: '#37f', disabled: false },
+            { statusIcon: <FaCheck />, statusText: 'Aceito', color: '#196', disabled: true },
+            { statusIcon: <FaTimes />, statusText: 'Recusado', color: '#e56', disabled: true }
           ].map((item, index) => (
             <ArticleBox key={index}>
               <ArticleHeader color={item.color}>
@@ -31,9 +31,6 @@ export default function Audit () {
                   <strong>Keywords</strong>
                   <span>subkeywords</span>
                 </div>
-                <ArticleMoreOptions>
-                  <FiMoreHorizontal size={30}/>
-                </ArticleMoreOptions>
               </ArticleHeader>
 
               <ArticleBody>
@@ -54,7 +51,11 @@ export default function Audit () {
                   <span>1008 palavras</span>
                 </div>
                 <div className="audit">
-                  <AuditButton color={item.color}>{item.statusText}</AuditButton>
+                  <AuditButton color={item.color} disabled={item.disabled}>
+                    {item.statusText} {item.disabled ? false : (
+                      <FiArrowRight className="icon" size={20} />
+                    )}
+                  </AuditButton>
                 </div>
               </ArticleFooter>
             </ArticleBox>
