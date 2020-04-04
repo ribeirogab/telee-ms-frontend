@@ -1,27 +1,67 @@
-import React from 'react'
-
+import React, { useState, useEffect } from 'react'
 import { FiPlus, FiMoreHorizontal } from 'react-icons/fi'
-
 import Container from '@material-ui/core/Container'
+import EditIcon from '@material-ui/icons/Edit'
+import DeleteIcon from '@material-ui/icons/Delete'
+import DetailsIcon from '@material-ui/icons/Details'
+import GetAppIcon from '@material-ui/icons/GetApp'
+
+import Header from '../../components/global/Header/'
+import Popover from '../../components/global/Popover'
+import PopUp from '../../components/PopUp'
 
 import { AddButton, ToolsBar, TableContainer, Table } from './styles'
 
-import Header from '../../components/global/Header/index'
-
 export default function Tasks () {
-  const tasks = [
-    { keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' },
-    { keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' },
-    { keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' },
-    { keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' }
-  ]
+  const [id, setId] = useState(-1)
+  const [open, setOpen] = useState(false)
+  const [choicePopUp, setChoicePopUp] = useState(undefined)
+
+  const [tasks, setTasks] = useState([
+    { id: 1, keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' },
+    { id: 2, keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' },
+    { id: 3, keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' },
+    { id: 4, keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' }
+  ])
 
   return (
     <>
       <Header textPage="Tarefas" />
       <Container maxWidth="lg">
+
+        <PopUp
+          choice={choicePopUp}
+          openState={[open, setOpen]}
+          componentState={[tasks, setTasks] }
+          id={id}
+          endPoint={
+            choicePopUp === 'add' ? '/add'
+              : choicePopUp === 'edit' ? '/edit'
+                : choicePopUp === 'details' ? '/details'
+                  : choicePopUp === 'delete' ? '/delete' : false
+          }
+          Component={(props) =>
+            choicePopUp === 'add' ? (
+              <FormAdd {...props} />
+            ) : choicePopUp === 'edit' ? (
+              <FormEdit {...props} id={id} />
+            ) : choicePopUp === 'details' ? (
+              <BoxDetails {...props} />
+            ) : false
+          } />
+
+        {/* <Alert
+          title="Tem certeza que deseja assmir esta tarefa?"
+          text="A operação não poderá ser desfeita!"
+          buttonConfirm={{ text: 'Assumir', color: 'primary' }}
+          openState={[openAssumeAlert, setOpenAssumeAlert]}
+          handle={handleAssume}/>  */}
+
         <ToolsBar>
-          <AddButton>
+          <AddButton onClick={() => {
+            setChoicePopUp('add')
+            setOpen(true)
+          }}>
             <FiPlus size={18} />
             &nbsp;&nbsp;&nbsp;Adicionar
           </AddButton>
@@ -45,7 +85,53 @@ export default function Tasks () {
                   <td>{task.subKeywords}</td>
                   <td>{task.website}</td>
                   <td>{task.date}</td>
-                  <td><FiMoreHorizontal style={{ cursor: 'pointer' }} size={20}/></td>
+                  <td>
+                    <Popover
+                      items={[
+                        {
+                          permissionRequired: [1, 99],
+                          label: 'Editar',
+                          Icon: EditIcon,
+                          action: () => {
+                            setId(task.id)
+                            setChoicePopUp('edit')
+                            setOpen(true)
+                          }
+                        },
+                        {
+                          permissionRequired: [1, 99],
+                          label: 'Excluir',
+                          Icon: DeleteIcon,
+                          action: () => {
+                            setId(task.id)
+                            setChoicePopUp('delete')
+                            setOpen(true)
+                          }
+                        },
+                        {
+                          permissionRequired: [1, 99],
+                          label: 'Detalhes',
+                          Icon: DetailsIcon,
+                          action: () => {
+                            setId(task.id)
+                            setChoicePopUp('details')
+                            setOpen(true)
+                          }
+                        },
+                        {
+                          permissionRequired: [1, 99],
+                          label: 'Assumir',
+                          Icon: GetAppIcon,
+                          action: () => {
+                            setId(task.id)
+                            setChoicePopUp('assume')
+                            setOpen(true)
+                          }
+                        }
+                      ]}
+                      Button={(props) => <FiMoreHorizontal {...props} style={{ cursor: 'pointer' }} size={20}/>}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -53,5 +139,60 @@ export default function Tasks () {
         </TableContainer>
       </Container>
     </>
+  )
+}
+
+function FormAdd ({ handle }) {
+  const [id, setId] = useState('')
+  const [keyword, setKeyword] = useState('')
+  const [subKeywords, setSubKeywords] = useState('')
+  const [website, setWebsite] = useState('')
+  const [date, setDate] = useState('')
+  return (
+    <form>
+      <input value={id} onChange={e => setId(e.target.value)}/>
+      <input value={keyword} onChange={e => setKeyword(e.target.value)}/>
+      <input value={subKeywords} onChange={e => setSubKeywords(e.target.value)}/>
+      <input value={website} onChange={e => setWebsite(e.target.value)}/>
+      <input value={date} onChange={e => setDate(e.target.value)}/>
+      <button onClick={(e) => handle(e, { id, keyword, subKeywords, website, date })}>
+        Adicionar
+      </button>
+    </form>
+  )
+}
+
+function FormEdit ({ handle, id }) {
+  const [keyword, setKeyword] = useState('')
+  const [subKeywords, setSubKeywords] = useState('')
+  const [website, setWebsite] = useState('')
+  const [date, setDate] = useState('')
+  return (
+    <form>
+      <input value={keyword} onChange={e => setKeyword(e.target.value)}/>
+      <input value={subKeywords} onChange={e => setSubKeywords(e.target.value)}/>
+      <input value={website} onChange={e => setWebsite(e.target.value)}/>
+      <input value={date} onChange={e => setDate(e.target.value)}/>
+      <button onClick={(e) => handle(e, { id, keyword, subKeywords, website, date })}>
+        Adicionar
+      </button>
+    </form>
+  )
+}
+
+function BoxDetails ({ handle }) {
+  const [info, setInfo] = useState('')
+
+  useEffect(() => {
+    async function getInfo () {
+      setInfo(await handle())
+    }
+    getInfo()
+  }, [handle])
+
+  return (
+    <div>
+      <h1>{info}</h1>
+    </div>
   )
 }
