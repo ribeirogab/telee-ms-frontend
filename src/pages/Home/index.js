@@ -4,7 +4,7 @@ import Container from '@material-ui/core/Container'
 
 import { LastAcess, News, ContainerNews, BoxNews } from './styles'
 
-import Header from '../../components/global/Header/index'
+import Header from '../../components/Header'
 
 export default function Home () {
   return (

@@ -1,10 +1,11 @@
 import React, { useState, forwardRef } from 'react'
+import PropTypes from 'prop-types'
 
-import Alert from './feedback/Alert'
-import Modal from './utility/Modal'
-import Snackbar from './feedback/Snackbar'
+import Alert from '../feedback/Alert'
+import Modal from '../utility/Modal'
+import Snackbar from '../feedback/Snackbar'
 
-import handleApi from '../services/handle'
+import handleApi from '../../services/handleApi'
 
 export default function PopUp ({ choice, openState, componentState, id, endPoint, Component }) {
   const [openSnackbar, setOpenSnackbar] = useState(false)
@@ -68,6 +69,13 @@ export default function PopUp ({ choice, openState, componentState, id, endPoint
         text={propertySnackbar.text}/>
     </>
   )
+} PopUp.propTypes = {
+  choice: PropTypes.string.isRequired,
+  openState: PropTypes.array.isRequired,
+  componentState: PropTypes.array.isRequired,
+  id: PropTypes.string,
+  endPoint: PropTypes.string.isRequired,
+  Component: PropTypes.func
 }
 
 function DeletePopUp ({ openState, handle }) {
@@ -79,6 +87,9 @@ function DeletePopUp ({ openState, handle }) {
       openState={openState}
       handle={handle}/>
   )
+} DeletePopUp.propTypes = {
+  openState: PropTypes.array.isRequired,
+  handle: PropTypes.func.isRequired
 }
 
 function AddPopUp ({ openState, handle, PopUpComponent }) {
@@ -89,6 +100,10 @@ function AddPopUp ({ openState, handle, PopUpComponent }) {
         return <PopUpComponent handle={handle} />
       })} />
   )
+} AddPopUp.propTypes = {
+  openState: PropTypes.array.isRequired,
+  handle: PropTypes.func.isRequired,
+  PopUpComponent: PropTypes.func.isRequired
 }
 
 function EditPopUp ({ openState, handle, PopUpComponent }) {
@@ -99,6 +114,10 @@ function EditPopUp ({ openState, handle, PopUpComponent }) {
         return <PopUpComponent handle={handle} />
       })} />
   )
+} EditPopUp.propTypes = {
+  openState: PropTypes.array.isRequired,
+  handle: PropTypes.func.isRequired,
+  PopUpComponent: PropTypes.func.isRequired
 }
 
 function DetailsPopUp ({ openState, handle, PopUpComponent }) {
@@ -109,4 +128,8 @@ function DetailsPopUp ({ openState, handle, PopUpComponent }) {
         return <PopUpComponent handle={handle} />
       })} />
   )
+} DetailsPopUp.propTypes = {
+  openState: PropTypes.array.isRequired,
+  handle: PropTypes.func.isRequired,
+  PopUpComponent: PropTypes.func.isRequired
 }

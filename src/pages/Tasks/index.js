@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
+
 import { FiPlus, FiMoreHorizontal } from 'react-icons/fi'
 import Container from '@material-ui/core/Container'
 import EditIcon from '@material-ui/icons/Edit'
@@ -6,22 +8,22 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import DetailsIcon from '@material-ui/icons/Details'
 import GetAppIcon from '@material-ui/icons/GetApp'
 
-import Header from '../../components/global/Header/'
-import Popover from '../../components/global/Popover'
-import PopUp from '../../components/PopUp'
+import Header from '../../components/Header'
+import Popover from '../../components/utility/Popover'
+import HookPopUp from '../../components/functional/HookPopUp'
 
 import { AddButton, ToolsBar, TableContainer, Table } from './styles'
 
 export default function Tasks () {
-  const [id, setId] = useState(-1)
+  const [id, setId] = useState('')
   const [open, setOpen] = useState(false)
-  const [choicePopUp, setChoicePopUp] = useState(undefined)
+  const [choicePopUp, setChoicePopUp] = useState('')
 
   const [tasks, setTasks] = useState([
-    { id: 1, keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' },
-    { id: 2, keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' },
-    { id: 3, keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' },
-    { id: 4, keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' }
+    { id: '1', keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' },
+    { id: '2', keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' },
+    { id: '3', keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' },
+    { id: '4', keyword: 'SKY TV', subKeywords: 'TV, assistir SKY', website: 'www.assinesky.com.br', date: '20/03/2020' }
   ])
 
   return (
@@ -29,7 +31,7 @@ export default function Tasks () {
       <Header textPage="Tarefas" />
       <Container maxWidth="lg">
 
-        <PopUp
+        <HookPopUp
           choice={choicePopUp}
           openState={[open, setOpen]}
           componentState={[tasks, setTasks] }
@@ -38,7 +40,7 @@ export default function Tasks () {
             choicePopUp === 'add' ? '/add'
               : choicePopUp === 'edit' ? '/edit'
                 : choicePopUp === 'details' ? '/details'
-                  : choicePopUp === 'delete' ? '/delete' : false
+                  : choicePopUp === 'delete' ? '/delete' : '/'
           }
           Component={(props) =>
             choicePopUp === 'add' ? (
@@ -160,6 +162,8 @@ function FormAdd ({ handle }) {
       </button>
     </form>
   )
+} FormAdd.propTypes = {
+  handle: PropTypes.func.isRequired
 }
 
 function FormEdit ({ handle, id }) {
@@ -178,6 +182,9 @@ function FormEdit ({ handle, id }) {
       </button>
     </form>
   )
+} FormEdit.propTypes = {
+  handle: PropTypes.func.isRequired,
+  id: PropTypes.string.isRequired
 }
 
 function BoxDetails ({ handle }) {
@@ -195,4 +202,6 @@ function BoxDetails ({ handle }) {
       <h1>{info}</h1>
     </div>
   )
+} BoxDetails.propTypes = {
+  handle: PropTypes.func.isRequired
 }

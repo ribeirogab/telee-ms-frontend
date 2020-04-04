@@ -6,7 +6,7 @@ import Container from '@material-ui/core/Container'
 
 import { ArticlesContainer, ArticleBox, ArticleStatus, ArticleHeader, ArticleMoreOptions, ArticleBody, ArticleFooter, AuditButton } from './styles'
 
-import Header from '../../components/global/Header/index'
+import Header from '../../components/Header'
 
 export default function Audit () {
   return (
