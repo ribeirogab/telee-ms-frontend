@@ -70,13 +70,6 @@ export const ArticleStatus = styled.div`
   svg { font-size: 30px; }
 `
 
-export const ArticleMoreOptions = styled.div`
-  margin-top: 5px;
-  margin-bottom: auto;
-  margin-left: auto;
-  cursor: pointer;
-`
-
 export const ArticleBody = styled.div`
   padding: 10px 10px;
   border-bottom: solid 1px #0001;
@@ -151,20 +144,31 @@ export const ArticleFooter = styled.div`
 `
 
 export const AuditButton = styled.button`
-  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: ${props => props.disabled ? 'normal' : 'pointer'};
   width: 100%;
   padding: 15px 0;
   text-transform: uppercase;
   font-weight: bold;
   letter-spacing: 1px;
   border: solid 1px ${props => props.color};
-  background-color: transparent;
-  color: ${props => props.color};
+  background-color: ${props => props.disabled ? props.color : 'transparent'};
+  color: ${props => props.disabled ? '#fff' : props.color};
   transition: color 0.3s;  
-  transition: background-color 0.3s;  
+  transition: background-color 0.3s;
+
+  .icon {
+    margin-left: 7px;
+    transition: margin-left 0.3s;
+  }
   
   &:hover{
     background-color: ${props => props.color};
     color: #fff;
+    .icon {
+      margin-left: 15px;
+    }
   }
 `

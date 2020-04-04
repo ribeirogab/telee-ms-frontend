@@ -1,10 +1,10 @@
 import React from 'react'
-import { FiMoreHorizontal } from 'react-icons/fi'
+import { FiArrowRight } from 'react-icons/fi'
 import { FaSpinner } from 'react-icons/fa'
 
 import Container from '@material-ui/core/Container'
 
-import { ArticlesContainer, ArticleBox, ArticleStatus, ArticleHeader, ArticleMoreOptions, ArticleBody, ArticleFooter, AuditButton } from './styles'
+import { ArticlesContainer, ArticleBox, ArticleStatus, ArticleHeader, ArticleBody, ArticleFooter, AuditButton } from './styles'
 
 import Header from '../../components/Header'
 
@@ -28,9 +28,6 @@ export default function Audit () {
                   <strong>Keywords</strong>
                   <span>subkeywords</span>
                 </div>
-                <ArticleMoreOptions>
-                  <FiMoreHorizontal size={30}/>
-                </ArticleMoreOptions>
               </ArticleHeader>
 
               <ArticleBody>
@@ -51,7 +48,10 @@ export default function Audit () {
                   <span>1008 palavras</span>
                 </div>
                 <div className="audit">
-                  <AuditButton>Auditar</AuditButton>
+                  <AuditButton>
+                    Auditar
+                    <FiArrowRight className="icon" size={20} />
+                  </AuditButton>
                 </div>
               </ArticleFooter>
             </ArticleBox>

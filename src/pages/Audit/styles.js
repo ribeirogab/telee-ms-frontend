@@ -69,14 +69,6 @@ export const ArticleStatus = styled.div`
   font-weight: bold;
   svg { font-size: 30px; }
 `
-
-export const ArticleMoreOptions = styled.div`
-  margin-top: 5px;
-  margin-bottom: auto;
-  margin-left: auto;
-  cursor: pointer;
-`
-
 export const ArticleBody = styled.div`
   padding: 10px 10px;
   border-bottom: solid 1px #0001;
@@ -151,6 +143,9 @@ export const ArticleFooter = styled.div`
 `
 
 export const AuditButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   width: 100%;
   padding: 15px 0;
@@ -162,9 +157,17 @@ export const AuditButton = styled.button`
   color: #C49106;
   transition: color 0.3s;  
   transition: background-color 0.3s;  
+
+  .icon {
+    margin-left: 7px;
+    transition: margin-left 0.3s;
+  }
   
   &:hover{
     background-color: #C49106;
-    color: #fff;
+    color: #fff; 
+    .icon {
+      margin-left: 15px;
+    }
   }
 `
