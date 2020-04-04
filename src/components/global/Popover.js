@@ -47,7 +47,7 @@ export default function SimplePopover ({ items, Button }) {
         {items.map((item, index) => (
           <ListItem button key={index} onClick={() => {
             handleClose()
-            item.action(true)
+            item.action(item.id)
           }}>
             <item.Icon className={classes.iconList} />
             <ListItemText primary={item.label} />

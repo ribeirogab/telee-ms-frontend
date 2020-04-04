@@ -10,16 +10,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  paper: {
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3)
   }
 }))
 
-export default function ModalDetails ({ state }) {
+export default function SimpleModal ({ state, Component }) {
   const [open, setOpen] = state
   const classes = useStyles()
 
@@ -37,15 +31,13 @@ export default function ModalDetails ({ state }) {
       }}
     >
       <Fade in={open}>
-        <div className={classes.paper}>
-          <h2 id="transition-modal-title">Modal Details</h2>
-          <p id="transition-modal-description">...</p>
-        </div>
+        <Component />
       </Fade>
     </Modal>
   )
 }
 
-ModalDetails.propTypes = {
-  state: PropTypes.array.isRequired
+SimpleModal.propTypes = {
+  state: PropTypes.array.isRequired,
+  Component: PropTypes.object.isRequired
 }
