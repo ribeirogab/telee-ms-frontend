@@ -12,8 +12,9 @@ import TextField from '@material-ui/core/TextField'
 import Header from '../../components/Header'
 import Popover from '../../components/utility/Popover'
 import HookPopUp from '../../components/functional/HookPopUp'
+import { DefaultForm, InputGroup, ButtonGroup } from '../../components/DefaultForm'
 
-import { AddButton, ToolsBar, TableContainer, Table, DefaultForm, InputGroup, ButtonGroup } from './styles'
+import { AddButton, ToolsBar, TableContainer, Table } from './styles'
 
 export default function Tasks () {
   const [id, setId] = useState('')
@@ -144,7 +145,7 @@ function FormAddTask ({ handle, setOpen }) {
   const [website, setWebsite] = useState('')
   const [date, setDate] = useState('')
   return (
-    <DefaultForm onSubmit={(e) => handle(e, { id: 1, keyword, subKeywords, website, date })}>
+    <DefaultForm handleSubmit={(e) => handle(e, { id: 1, keyword, subKeywords, website, date })}>
       <h2>Cadastrar Tarefa</h2>
       <InputGroup>
         <TextField className="input" label="Palavra-chave" variant="outlined" value={keyword} onChange={e => setKeyword(e.target.value)} />
@@ -169,7 +170,7 @@ function FormEditTask ({ handle, id, setOpen }) {
   const [website, setWebsite] = useState('a')
   const [date, setDate] = useState('a')
   return (
-    <DefaultForm onSubmit={(e) => handle(e, { id, keyword, subKeywords, website, date })}>
+    <DefaultForm handleSubmit={(e) => handle(e, { id, keyword, subKeywords, website, date })}>
       <h2>Editar Tarefa</h2>
       <InputGroup>
         <TextField className="input" label="Palavra-chave" variant="outlined" value={keyword} onChange={e => setKeyword(e.target.value)} />

@@ -6,12 +6,14 @@ import Container from '@material-ui/core/Container'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
 import DetailsIcon from '@material-ui/icons/Details'
+import TextField from '@material-ui/core/TextField'
 
 import { ToolsBar, AddButton, WritersContainer, BoxWriter } from './styles'
 
 import Header from '../../components/Header'
 import Popover from '../../components/utility/Popover'
 import HookPopUp from '../../components/functional/HookPopUp'
+import { DefaultForm, ButtonGroup } from '../../components/DefaultForm'
 
 export default function Writers () {
   const [id, setId] = useState('')
@@ -44,9 +46,9 @@ export default function Writers () {
           }
           Component={(props) =>
             choicePopUp === 'add' ? (
-              <FormAdd {...props} />
+              <FormAdd {...props} setOpen={setOpen} />
             ) : choicePopUp === 'edit' ? (
-              <FormEdit {...props} id={id} />
+              <FormEdit {...props} id={id} setOpen={setOpen} />
             ) : choicePopUp === 'details' ? (
               <BoxDetails {...props} />
             ) : false
@@ -118,39 +120,43 @@ export default function Writers () {
   )
 }
 
-function FormAdd ({ handle }) {
-  const [id, setId] = useState('')
+function FormAdd ({ handle, setOpen }) {
   const [username, setUsername] = useState('')
   const [name, setName] = useState('')
   return (
-    <form>
-      <input value={id} onChange={e => setId(e.target.value)}/>
-      <input value={username} onChange={e => setUsername(e.target.value)}/>
-      <input value={name} onChange={e => setName(e.target.value)}/>
-      <button onClick={(e) => handle(e, { id, username, name })}>
-        Adicionar
-      </button>
-    </form>
+    <DefaultForm handleSubmit={(e) => handle(e, { id: 1, username, name })}>
+      <h2>Cadastrar Usuário</h2>
+      <TextField className="input" label="Usuário" variant="outlined" value={username} onChange={e => setUsername(e.target.value)}/>
+      <TextField className="input" label="Nome" variant="outlined" value={name} onChange={e => setName(e.target.value)}/>
+      <ButtonGroup>
+        <button type="button" onClick={() => setOpen(false)}>Cancelar</button>
+        <button type="submit">Adicionar</button>
+      </ButtonGroup>
+    </DefaultForm>
   )
 } FormAdd.propTypes = {
-  handle: PropTypes.func.isRequired
+  handle: PropTypes.func.isRequired,
+  setOpen: PropTypes.func.isRequired
 }
 
-function FormEdit ({ handle, id }) {
+function FormEdit ({ handle, id, setOpen }) {
   const [username, setUsername] = useState('')
   const [name, setName] = useState('')
   return (
-    <form>
-      <input value={username} onChange={e => setUsername(e.target.value)}/>
-      <input value={name} onChange={e => setName(e.target.value)}/>
-      <button onClick={(e) => handle(e, { id, username, name })}>
-        Adicionar
-      </button>
-    </form>
+    <DefaultForm handleSubmit={(e) => handle(e, { id, username, name })}>
+      <h2>Editar Usuário</h2>
+      <TextField className="input" label="Usuário" variant="outlined" value={username} onChange={e => setUsername(e.target.value)}/>
+      <TextField className="input" label="Nome" variant="outlined" value={name} onChange={e => setName(e.target.value)}/>
+      <ButtonGroup>
+        <button type="button" onClick={() => setOpen(false)}>Cancelar</button>
+        <button type="submit">Salvar</button>
+      </ButtonGroup>
+    </DefaultForm>
   )
 } FormEdit.propTypes = {
   handle: PropTypes.func.isRequired,
-  id: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
+  setOpen: PropTypes.func.isRequired
 }
 
 function BoxDetails ({ handle }) {
