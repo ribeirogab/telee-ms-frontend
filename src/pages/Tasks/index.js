@@ -7,12 +7,13 @@ import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
 import DetailsIcon from '@material-ui/icons/Details'
 import GetAppIcon from '@material-ui/icons/GetApp'
+import TextField from '@material-ui/core/TextField'
 
 import Header from '../../components/Header'
 import Popover from '../../components/utility/Popover'
 import HookPopUp from '../../components/functional/HookPopUp'
 
-import { AddButton, ToolsBar, TableContainer, Table } from './styles'
+import { AddButton, ToolsBar, TableContainer, Table, DefaultForm, InputGroup, ButtonGroup } from './styles'
 
 export default function Tasks () {
   const [id, setId] = useState('')
@@ -44,20 +45,13 @@ export default function Tasks () {
           }
           Component={(props) =>
             choicePopUp === 'add' ? (
-              <FormAdd {...props} />
+              <FormAddTask {...props} setOpen={setOpen}/>
             ) : choicePopUp === 'edit' ? (
-              <FormEdit {...props} id={id} />
+              <FormEditTask {...props} id={id} setOpen={setOpen} />
             ) : choicePopUp === 'details' ? (
               <BoxDetails {...props} />
             ) : false
           } />
-
-        {/* <Alert
-          title="Tem certeza que deseja assmir esta tarefa?"
-          text="A operação não poderá ser desfeita!"
-          buttonConfirm={{ text: 'Assumir', color: 'primary' }}
-          openState={[openAssumeAlert, setOpenAssumeAlert]}
-          handle={handleAssume}/>  */}
 
         <ToolsBar>
           <AddButton onClick={() => {
@@ -144,47 +138,55 @@ export default function Tasks () {
   )
 }
 
-function FormAdd ({ handle }) {
-  const [id, setId] = useState('')
+function FormAddTask ({ handle, setOpen }) {
   const [keyword, setKeyword] = useState('')
   const [subKeywords, setSubKeywords] = useState('')
   const [website, setWebsite] = useState('')
   const [date, setDate] = useState('')
   return (
-    <form>
-      <input value={id} onChange={e => setId(e.target.value)}/>
-      <input value={keyword} onChange={e => setKeyword(e.target.value)}/>
-      <input value={subKeywords} onChange={e => setSubKeywords(e.target.value)}/>
-      <input value={website} onChange={e => setWebsite(e.target.value)}/>
-      <input value={date} onChange={e => setDate(e.target.value)}/>
-      <button onClick={(e) => handle(e, { id, keyword, subKeywords, website, date })}>
-        Adicionar
-      </button>
-    </form>
+    <DefaultForm onSubmit={(e) => handle(e, { id: 1, keyword, subKeywords, website, date })}>
+      <h2>Cadastrar Tarefa</h2>
+      <InputGroup>
+        <TextField className="input" label="Palavra-chave" variant="outlined" value={keyword} onChange={e => setKeyword(e.target.value)} />
+        <TextField className="input" label="Site" variant="outlined" value={website} onChange={e => setWebsite(e.target.value)} />
+      </InputGroup>
+      <TextField className="input" label="Palavra-chaves secundárias" variant="outlined" value={subKeywords} onChange={e => setSubKeywords(e.target.value)} />
+      <TextField className="input" label="Pautas" variant="outlined" value={date} onChange={e => setDate(e.target.value)} />
+      <ButtonGroup>
+        <button type="button" onClick={() => setOpen(false)}>Cancelar</button>
+        <button type="submit">Adicionar</button>
+      </ButtonGroup>
+    </DefaultForm>
   )
-} FormAdd.propTypes = {
-  handle: PropTypes.func.isRequired
+} FormAddTask.propTypes = {
+  handle: PropTypes.func.isRequired,
+  setOpen: PropTypes.func.isRequired
 }
 
-function FormEdit ({ handle, id }) {
-  const [keyword, setKeyword] = useState('')
-  const [subKeywords, setSubKeywords] = useState('')
-  const [website, setWebsite] = useState('')
-  const [date, setDate] = useState('')
+function FormEditTask ({ handle, id, setOpen }) {
+  const [keyword, setKeyword] = useState('a')
+  const [subKeywords, setSubKeywords] = useState('a')
+  const [website, setWebsite] = useState('a')
+  const [date, setDate] = useState('a')
   return (
-    <form>
-      <input value={keyword} onChange={e => setKeyword(e.target.value)}/>
-      <input value={subKeywords} onChange={e => setSubKeywords(e.target.value)}/>
-      <input value={website} onChange={e => setWebsite(e.target.value)}/>
-      <input value={date} onChange={e => setDate(e.target.value)}/>
-      <button onClick={(e) => handle(e, { id, keyword, subKeywords, website, date })}>
-        Adicionar
-      </button>
-    </form>
+    <DefaultForm onSubmit={(e) => handle(e, { id, keyword, subKeywords, website, date })}>
+      <h2>Editar Tarefa</h2>
+      <InputGroup>
+        <TextField className="input" label="Palavra-chave" variant="outlined" value={keyword} onChange={e => setKeyword(e.target.value)} />
+        <TextField className="input" label="Site" variant="outlined" value={website} onChange={e => setWebsite(e.target.value)} />
+      </InputGroup>
+      <TextField className="input" label="Palavra-chaves secundárias" variant="outlined" value={subKeywords} onChange={e => setSubKeywords(e.target.value)} />
+      <TextField className="input" label="Pautas" variant="outlined" value={date} onChange={e => setDate(e.target.value)} />
+      <ButtonGroup>
+        <button type="button" onClick={() => setOpen(false)}>Cancelar</button>
+        <button type="submit">Salvar</button>
+      </ButtonGroup>
+    </DefaultForm>
   )
-} FormEdit.propTypes = {
+} FormEditTask.propTypes = {
   handle: PropTypes.func.isRequired,
-  id: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
+  setOpen: PropTypes.func.isRequired
 }
 
 function BoxDetails ({ handle }) {
