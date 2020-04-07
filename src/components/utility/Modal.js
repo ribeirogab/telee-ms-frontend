@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function SimpleModal ({ openState, Component }) {
-  const [open, setOpen] = openState
+  const open = openState[0]
   const classes = useStyles()
 
   return (
@@ -23,7 +23,6 @@ export default function SimpleModal ({ openState, Component }) {
       aria-describedby="transition-modal-description"
       className={classes.modal}
       open={open}
-      onClose={() => setOpen(false)}
       closeAfterTransition
       BackdropComponent={Backdrop}
       BackdropProps={{
@@ -31,7 +30,7 @@ export default function SimpleModal ({ openState, Component }) {
       }}
     >
       <Fade in={open}>
-        <Component />
+        <Component/>
       </Fade>
     </Modal>
   )
