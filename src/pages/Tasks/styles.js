@@ -50,13 +50,19 @@ export const Table = styled.table`
 `
 export const DefaultForm = styled.form`
   width: 100%;
-  padding: 3%;
+  padding: 2%;
   max-width: 768px;
   background-color: #fff;
   display: flex;
   flex-direction: column;
   border-radius: 4px;
   box-shadow: 4px 4px 16px #0006;
+
+  @media screen and (max-width: 500px) {
+    justify-content: center;
+    height: 100%;
+    padding: 10px;
+  }
 
   h2 {
     color: #333;
@@ -77,6 +83,13 @@ export const InputGroup = styled.div`
   .input {
     width: 49%;
   }
+
+  @media screen and (max-width: 500px) {
+    flex-direction: column;
+      .input {
+        width: 100%;
+      }
+  }
 `
 
 export const ButtonGroup = styled.div`
@@ -86,7 +99,8 @@ export const ButtonGroup = styled.div`
   button {
     margin-top: 20px;
     border: none;
-    padding: 10px 25px;
+    height: 46px;
+    padding: 0 25px;
     background-color: #666;
     color: #fff;
     text-transform: uppercase;
