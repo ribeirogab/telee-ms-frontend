@@ -50,7 +50,7 @@ export default function Tasks () {
             ) : choicePopUp === 'edit' ? (
               <FormEditTask {...props} id={id} setOpen={setOpen} />
             ) : choicePopUp === 'details' ? (
-              <BoxDetails {...props} />
+              <BoxDetails {...props} setOpen={setOpen} />
             ) : false
           } />
 
@@ -148,11 +148,11 @@ function FormAddTask ({ handle, setOpen }) {
     <DefaultForm handleSubmit={(e) => handle(e, { id: 1, keyword, subKeywords, website, date })}>
       <h2>Cadastrar Tarefa</h2>
       <InputGroup>
-        <TextField className="input" label="Palavra-chave" variant="outlined" value={keyword} onChange={e => setKeyword(e.target.value)} />
-        <TextField className="input" label="Site" variant="outlined" value={website} onChange={e => setWebsite(e.target.value)} />
+        <TextField className="input" required label="Palavra-chave" variant="outlined" value={keyword} onChange={e => setKeyword(e.target.value)} />
+        <TextField className="input" required label="Site" variant="outlined" value={website} onChange={e => setWebsite(e.target.value)} />
       </InputGroup>
-      <TextField className="input" label="Palavra-chaves secundárias" variant="outlined" value={subKeywords} onChange={e => setSubKeywords(e.target.value)} />
-      <TextField className="input" label="Pautas" variant="outlined" value={date} onChange={e => setDate(e.target.value)} />
+      <TextField className="input" required label="Palavra-chaves secundárias" variant="outlined" value={subKeywords} onChange={e => setSubKeywords(e.target.value)} />
+      <TextField className="input" required label="Pautas" variant="outlined" value={date} onChange={e => setDate(e.target.value)} />
       <ButtonGroup>
         <button type="button" onClick={() => setOpen(false)}>Cancelar</button>
         <button type="submit">Adicionar</button>
@@ -173,11 +173,20 @@ function FormEditTask ({ handle, id, setOpen }) {
     <DefaultForm handleSubmit={(e) => handle(e, { id, keyword, subKeywords, website, date })}>
       <h2>Editar Tarefa</h2>
       <InputGroup>
-        <TextField className="input" label="Palavra-chave" variant="outlined" value={keyword} onChange={e => setKeyword(e.target.value)} />
-        <TextField className="input" label="Site" variant="outlined" value={website} onChange={e => setWebsite(e.target.value)} />
+        <TextField required className="input" label="Palavra-chave" variant="outlined"
+          value={keyword} onChange={e => setKeyword(e.target.value)}
+        />
+        <TextField
+          className="input" required label="Site" variant="outlined"
+          value={website} onChange={e => setWebsite(e.target.value)}
+        />
       </InputGroup>
-      <TextField className="input" label="Palavra-chaves secundárias" variant="outlined" value={subKeywords} onChange={e => setSubKeywords(e.target.value)} />
-      <TextField className="input" label="Pautas" variant="outlined" value={date} onChange={e => setDate(e.target.value)} />
+      <TextField required className="input" label="Palavra-chaves secundárias" variant="outlined"
+        value={subKeywords} onChange={e => setSubKeywords(e.target.value)}
+      />
+      <TextField required multiline className="input" label="Pautas" variant="outlined"
+        value={date} onChange={e => setDate(e.target.value)}
+      />
       <ButtonGroup>
         <button type="button" onClick={() => setOpen(false)}>Cancelar</button>
         <button type="submit">Salvar</button>
@@ -190,8 +199,9 @@ function FormEditTask ({ handle, id, setOpen }) {
   setOpen: PropTypes.func.isRequired
 }
 
-function BoxDetails ({ handle }) {
+function BoxDetails ({ handle, setOpen }) {
   const [info, setInfo] = useState('')
+  console.log(info)
 
   useEffect(() => {
     async function getInfo () {
@@ -201,10 +211,22 @@ function BoxDetails ({ handle }) {
   }, [handle])
 
   return (
-    <div>
-      <h1>{info}</h1>
-    </div>
+    <DefaultForm handleSubmit={() => console.log('')}>
+      <h2>Detalhes da Tarefa</h2>
+      <InputGroup>
+        <TextField className="input" disabled label="Palavra-chave" variant="standard" value={'keyword'} />
+        <TextField className="input" disabled label="Site" variant="standard" value={'website'} />
+      </InputGroup>
+      <TextField
+        className="input" disabled label="Palavra-chaves secundárias" variant="standard" value={'subKeywords'} />
+      <TextField className="input" disabled label="Pautas" variant="standard" value={'date'} />
+      <ButtonGroup>
+        <span></span>
+        <button type="button" onClick={() => setOpen(false)}>Fechar</button>
+      </ButtonGroup>
+    </DefaultForm>
   )
 } BoxDetails.propTypes = {
-  handle: PropTypes.func.isRequired
+  handle: PropTypes.func.isRequired,
+  setOpen: PropTypes.func.isRequired
 }
