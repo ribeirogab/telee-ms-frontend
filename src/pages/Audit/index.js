@@ -1,7 +1,7 @@
 import React from 'react'
+
 import { FiArrowRight } from 'react-icons/fi'
 import { FaSpinner } from 'react-icons/fa'
-
 import Container from '@material-ui/core/Container'
 
 import { ArticlesContainer, ArticleBox, ArticleStatus, ArticleHeader, ArticleBody, ArticleFooter, AuditButton } from './styles'

@@ -6,6 +6,7 @@ import Tasks from './pages/Tasks'
 import MyArticles from './pages/MyArticles'
 import Audit from './pages/Audit'
 import Writers from './pages/Writers'
+import Article from './pages/Article'
 
 export default function Routes () {
   return (
@@ -16,6 +17,7 @@ export default function Routes () {
         <Route path="/artigos" component={MyArticles} />
         <Route path="/auditoria" component={Audit} />
         <Route path="/redatores" component={Writers} />
+        <Route path="/artigo/:id" component={Article} />
       </Switch>
     </BrowserRouter>
   )
