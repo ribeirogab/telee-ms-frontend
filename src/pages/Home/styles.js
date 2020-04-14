@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const LastAcess = styled.div`
+  margin-top: 40px;
   max-width: 100%;
   padding: 30px;
   border-radius: 16px;

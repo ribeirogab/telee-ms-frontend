@@ -1,28 +1,36 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-import { FaEdit, FaSpinner, FaUndo, FaCheck, FaTimes } from 'react-icons/fa'
 import { FiArrowRight } from 'react-icons/fi'
 
 import Container from '@material-ui/core/Container'
 
 import Header from '../../components/Header'
 
-import { ArticlesContainer, ArticleBox, ArticleStatus, ArticleHeader, ArticleBody, ArticleFooter, AuditButton } from './styles'
+import {
+  ArticlesContainer,
+  ArticleBox,
+  ArticleStatus,
+  ArticleHeader,
+  ArticleBody,
+  ArticleFooter,
+  AuditButton
+} from './styles'
+
+import taskStatus from '../../utils/taskStatus'
 
 export default function Audit () {
   return (
-
     <>
       <Header textPage="Artigos" />
       <Container maxWidth="lg">
         <ArticlesContainer>
-
           {[
-            { statusIcon: <FaEdit />, statusText: 'Escrever', color: '#666', disabled: false },
-            { statusIcon: <FaSpinner />, statusText: 'Pendente', color: '#d90', disabled: true },
-            { statusIcon: <FaUndo />, statusText: 'Revisar', color: '#37f', disabled: false },
-            { statusIcon: <FaCheck />, statusText: 'Aceito', color: '#196', disabled: true },
-            { statusIcon: <FaTimes />, statusText: 'Recusado', color: '#e56', disabled: true }
+            { id: 1, ...taskStatus(1) },
+            { id: 2, ...taskStatus(2) },
+            { id: 3, ...taskStatus(3) },
+            { id: 4, ...taskStatus(4) },
+            { id: 5, ...taskStatus(5) }
           ].map((item, index) => (
             <ArticleBox key={index}>
               <ArticleHeader color={item.color}>
@@ -52,9 +60,11 @@ export default function Audit () {
                 </div>
                 <div className="audit">
                   <AuditButton color={item.color} disabled={item.disabled}>
-                    {item.statusText} {item.disabled ? false : (
-                      <FiArrowRight className="icon" size={20} />
-                    )}
+                    <Link to={item.link ? `/artigo/${item.id}` : false}>
+                      {item.statusText} {item.disabled ? false : (
+                        <FiArrowRight className="icon" size={20} />
+                      )}
+                    </Link>
                   </AuditButton>
                 </div>
               </ArticleFooter>

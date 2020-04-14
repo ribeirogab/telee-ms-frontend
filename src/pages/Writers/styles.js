@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const ToolsBar = styled.div`
+  margin-top: 40px;
   display: flex;
   justify-content: flex-end;
   padding-bottom: 15px;
