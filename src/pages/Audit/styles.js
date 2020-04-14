@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const ArticlesContainer = styled.div`
+  margin-top: 40px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;

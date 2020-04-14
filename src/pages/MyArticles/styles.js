@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const ArticlesContainer = styled.div`
+  margin-top: 40px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -144,27 +145,32 @@ export const ArticleFooter = styled.div`
 `
 
 export const AuditButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: ${props => props.disabled ? 'normal' : 'pointer'};
   width: 100%;
-  padding: 15px 0;
-  text-transform: uppercase;
-  font-weight: bold;
-  letter-spacing: 1px;
-  border: solid 1px ${props => props.color};
-  background-color: ${props => props.disabled ? props.color : 'transparent'};
-  color: ${props => props.disabled ? '#fff' : props.color};
-  transition: color 0.3s;  
-  transition: background-color 0.3s;
+
+  a {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: ${props => props.disabled ? 'default' : 'pointer'};
+    width: 100%;
+    padding: 15px 0;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border: solid 1px ${props => props.color};
+    background-color: ${props => props.disabled ? props.color : '#fff'};
+    color: ${props => props.disabled ? '#fff' : props.color};
+    transition: color 0.3s;  
+    transition: background-color 0.3s;
+  }
 
   .icon {
     margin-left: 7px;
     transition: margin-left 0.3s;
   }
   
-  &:hover{
+  & a:hover{
     background-color: ${props => props.color};
     color: #fff;
     .icon {

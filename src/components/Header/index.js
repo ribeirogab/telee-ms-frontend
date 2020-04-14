@@ -11,8 +11,7 @@ import Menu from './Menu'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
-    marginBottom: 40
+    flexGrow: 1
   },
   appBar: {
     backgroundColor: '#E75656'
