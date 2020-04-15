@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import Container from '@material-ui/core/Container'
@@ -38,7 +39,7 @@ export default function Article ({ match }) {
       <ToolsBar fixed={scroll}>
         <div>
           <FiInfo size={25} />
-          <FiEdit size={25} />
+          <Link to={`/editar/${articleId}`}><FiEdit size={25} /></Link>
           {scroll ? (<FiArrowUp size={25} onClick={backToTop} />) : (<FiArrowDown size={25} onClick={goToArticle} />)}
         </div>
       </ToolsBar>
