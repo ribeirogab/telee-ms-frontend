@@ -148,6 +148,7 @@ export const AuditButton = styled.button`
   width: 100%;
 
   a {
+    font-size: 15px;
     text-decoration: none;
     display: flex;
     justify-content: center;

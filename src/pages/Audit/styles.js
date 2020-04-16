@@ -144,6 +144,7 @@ export const ArticleFooter = styled.div`
 `
 
 export const AuditButton = styled.button`
+  font-size: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
