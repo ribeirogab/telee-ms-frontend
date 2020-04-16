@@ -5,17 +5,18 @@ export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   position: fixed;
-
-  @media screen and (max-width: 1350px) {
-    background-color: #fff;
-  }
+  z-index: 99;
+  background-color: #fff;
+  box-shadow: 2px 2px 4px #0001;
 `
 
 export const HeaderLeft = styled.div`
   display: flex;
-  padding: 20px;
+  padding: 15px 20px;
+  align-items: center;
 
   a {
+    font-size: 14px;
     padding-right: 10px;
     border-right: solid 1px #0002;
     display: flex;
@@ -31,6 +32,7 @@ export const HeaderLeft = styled.div`
   }
 
   span {
+    font-size: 14px;
     margin-left: 10px;
   }
 `
@@ -41,10 +43,11 @@ export const Status = styled.span`
 
 export const HeaderRight = styled.div`
   display: flex;
+  padding: 15px 20px;
   align-items: center;
-  padding: 20px;
 
   span {
+    font-size: 14px;
     padding-right: 10px;
     border-right: solid 1px #0002;
     display: flex;
@@ -83,6 +86,7 @@ export const Values = styled.div`
 
   @media screen and (max-width: 1100px) {
     background-color: #fff;
+    box-shadow: 2px 2px 10px #0004;
   }
 `
 
