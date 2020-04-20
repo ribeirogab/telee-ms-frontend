@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import './custom.css'
-
 import { FiChevronLeft, FiChevronDown, FiSettings, FiChevronRight } from 'react-icons/fi'
 import Container from '@material-ui/core/Container'
 import ReactQuill from '../../components/ReactQuill'

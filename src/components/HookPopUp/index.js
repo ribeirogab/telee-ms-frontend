@@ -1,9 +1,9 @@
 import React, { useState, forwardRef } from 'react'
 import PropTypes from 'prop-types'
 
-import Alert from '../feedback/Alert'
-import Modal from '../utility/Modal'
-import Snackbar from '../feedback/Snackbar'
+import Alert from '../Alert'
+import Modal from '../Modal'
+import Snackbar from '../Snackbar'
 
 import handleApi from '../../services/handleApi'
 

@@ -11,8 +11,8 @@ import TextField from '@material-ui/core/TextField'
 import { ToolsBar, AddButton, WritersContainer, BoxWriter } from './styles'
 
 import Header from '../../components/Header'
-import Popover from '../../components/utility/Popover'
-import HookPopUp from '../../components/functional/HookPopUp'
+import Popover from '../../components/Popover'
+import HookPopUp from '../../components/HookPopUp'
 import { DefaultForm, ButtonGroup } from '../../components/DefaultForm'
 
 export default function Writers () {
