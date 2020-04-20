@@ -11,9 +11,9 @@ export default function ReactQuillComponent ({ setWords }) {
   useEffect(() => {
     function isWord (word) {
       console.log(word)
-      return word.length >= 2 && /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/.test(word)
+      return word.length >= 2 && /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]+$/.test(word)
     }
-    const splitValue = value.replace(/<[^>]*>?/gm, '').replace(/[^a-z0-9]/gi, ' ').split(' ')
+    const splitValue = value.replace(/<[^>]*>?/gm, ' ').replace(/[^a-z0-9]/gi, ' ').replace('\n', ' ').split(' ')
 
     const numberOfWords = splitValue.reduce((accumulator, currentWord) =>
       isWord(currentWord) ? accumulator + 1 : accumulator + 0, 0)
@@ -24,7 +24,7 @@ export default function ReactQuillComponent ({ setWords }) {
   const modules = {
     toolbar: [
       [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
-      [{ header: 1 }, { header: 2 }],
+      [{ header: [1, 2, 3, 4, 5, 6, true] }],
       ['bold', 'italic', 'underline', 'strike'], // toggled buttons
       ['blockquote'],
       [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],

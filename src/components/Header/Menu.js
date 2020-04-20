@@ -13,7 +13,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
-import Avatar from '../dataDisplay/Avatar'
+import Avatar from '../Avatar'
 import menuItems from '../../utils/menuItems'
 
 const useStyles = makeStyles({
