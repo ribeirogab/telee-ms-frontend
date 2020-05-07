@@ -1,1 +1,1 @@
-# Telee MS (FRONT-END)
+# Telee Management System (front-end)
