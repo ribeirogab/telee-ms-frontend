@@ -1,4 +1,9 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
+interface PopoverProps {
+  open: boolean;
+  index: number;
+}
 
 export const ToolsBar = styled.div`
   margin-top: 40px;
@@ -57,6 +62,47 @@ export const Table = styled.table`
 
     &:hover {
       opacity: 0.5;
+    }
+  }
+
+  .close-popover {
+    color: #e75656;
+  }
+`;
+
+export const Popover = styled.div<PopoverProps>`
+  position: absolute;
+  right: 5%;
+  display: none;
+  flex-direction: column;
+  background: #fff;
+  box-shadow: 2px 2px 8px #0004;
+
+  ${props =>
+    props.open &&
+    css`
+      &.popover-${props.index} {
+        display: flex;
+      }
+    `}
+
+  button + button {
+    border-top: solid 1px #0001;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    padding: 10px 20px;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background: #0001;
+    }
+
+    svg {
+      margin-right: 5px;
     }
   }
 `;
