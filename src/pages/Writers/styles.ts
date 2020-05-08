@@ -53,7 +53,7 @@ export const BoxWriter = styled.div`
     background-color: #fff;
     box-shadow: 2px 2px 4px #0001;
   }
-  .box div:first-child {
+  .box .avatar {
     background-color: #f4434b;
     padding: 13px;
     border-radius: 100%;

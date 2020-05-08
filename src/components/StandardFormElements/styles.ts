@@ -1,31 +1,39 @@
 import styled from 'styled-components';
 
-export const Form = styled.form`
+export const ContainerFormElement = styled.div`
   width: 100%;
-  padding: 2%;
-  max-width: 768px;
-  background-color: #fff;
+  height: 100%;
   display: flex;
-  flex-direction: column;
-  border-radius: 4px;
-  box-shadow: 4px 4px 16px #0006;
-  @media screen and (max-width: 500px) {
-    justify-content: center;
-    height: 100%;
-    padding: 10px;
-  }
-  h2 {
-    color: #333;
-    font-size: 22px;
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  .input {
-    margin: 10px 0;
+  align-items: center;
+  justify-content: center;
+
+  form {
+    width: 100%;
+    padding: 2%;
+    max-width: 768px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    box-shadow: 4px 4px 16px #0006;
+    @media screen and (max-width: 500px) {
+      justify-content: center;
+      height: 100%;
+      padding: 10px;
+    }
+    h2 {
+      color: #333;
+      font-size: 22px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .input {
+      margin: 10px 0;
+    }
   }
 `;
 
-export const InputGroup = styled.div`
+export const InputGroupElement = styled.div`
   display: flex;
   justify-content: space-between;
   .input {
@@ -39,7 +47,7 @@ export const InputGroup = styled.div`
   }
 `;
 
-export const ButtonGroup = styled.div`
+export const ButtonGroupElement = styled.div`
   display: flex;
   justify-content: flex-end;
   button {
@@ -53,7 +61,6 @@ export const ButtonGroup = styled.div`
     border-radius: 4px;
     cursor: pointer;
     transition: opacity 0.3s;
-    font-size: 16px;
   }
   button:hover {
     opacity: 0.8;

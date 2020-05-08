@@ -4,7 +4,6 @@ import TextField from '@material-ui/core/TextField';
 
 import {
   ContainerForm,
-  InputGroup,
   ButtonGroup,
 } from '../../../components/StandardFormElements';
 
@@ -13,16 +12,12 @@ interface FormEditProps {
 }
 
 const FormEdit = ({ setOpen }: FormEditProps): JSX.Element => {
-  const [keyword, setKeyword] = useState('');
-  const [website, setWebsite] = useState('');
-  const [subKeywords, setSubKeywords] = useState('');
-  const [date, setDate] = useState('');
+  const [user, setUser] = useState('');
+  const [name, setName] = useState('');
 
   useEffect(() => {
-    setKeyword('a');
-    setWebsite('a');
-    setSubKeywords('a');
-    setDate('a');
+    setUser('a');
+    setName('a');
   }, []);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
@@ -38,41 +33,23 @@ const FormEdit = ({ setOpen }: FormEditProps): JSX.Element => {
   return (
     <ContainerForm>
       <form onSubmit={handleSubmit}>
-        <h2>Editar Tarefa</h2>
-        <InputGroup>
-          <TextField
-            required
-            className="input"
-            label="Palavra-chave"
-            variant="outlined"
-            value={keyword}
-            onChange={e => setKeyword(e.target.value)}
-          />
-          <TextField
-            className="input"
-            required
-            label="Site"
-            variant="outlined"
-            value={website}
-            onChange={e => setWebsite(e.target.value)}
-          />
-        </InputGroup>
+        <h2>Editar Usuário</h2>
         <TextField
           required
           className="input"
-          label="Palavra-chaves secundárias"
+          label="Usuário"
           variant="outlined"
-          value={subKeywords}
-          onChange={e => setSubKeywords(e.target.value)}
+          value={user}
+          onChange={e => setUser(e.target.value)}
         />
         <TextField
           required
           multiline
           className="input"
-          label="Pautas"
+          label="Nome"
           variant="outlined"
-          value={date}
-          onChange={e => setDate(e.target.value)}
+          value={name}
+          onChange={e => setName(e.target.value)}
         />
         <ButtonGroup>
           <button type="button" onClick={handleClose}>

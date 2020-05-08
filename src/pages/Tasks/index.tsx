@@ -3,29 +3,25 @@ import React, { useState } from 'react';
 import Container from '@material-ui/core/Container';
 
 import {
-  FiMoreHorizontal,
   FiPlus,
-  FiXCircle,
   FiEdit3,
   FiDelete,
   FiInfo,
   FiCornerDownLeft,
 } from 'react-icons/fi';
 
-import { ToolsBar, Table, Popover } from './styles';
+import { ToolsBar, Table } from './styles';
 
 import Header from '../../components/Header';
 import Modal from '../../components/Modal';
 import Alert from '../../components/Alert';
+import Popover from '../../components/Popover';
 
 import FormAdd from './FormAdd';
 import FormEdit from './FormEdit';
 import ModalInfo from './ModalInfo';
 
 const Tasks: React.FC = () => {
-  const [openPopover, setOpenPopover] = useState(false);
-  const [popoverIndex, setPopoverIndex] = useState(-1);
-
   const [idForApiRequest, setIdForApiRequest] = useState<string | null>(null);
 
   const [modalAddOpen, setModalAddOpen] = useState(false);
@@ -34,11 +30,6 @@ const Tasks: React.FC = () => {
 
   const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
   const [alertAssumeOpen, setAlertAssumeOpen] = useState(false);
-
-  function handlePopover(index: number): void {
-    setPopoverIndex(index);
-    setOpenPopover(!openPopover);
-  }
 
   const tasks = [
     {
@@ -94,26 +85,14 @@ const Tasks: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {tasks.map((task, index) => (
+              {tasks.map(task => (
                 <tr key={task.id}>
                   <td>{task.keyword}</td>
                   <td>{task.subKeywords}</td>
                   <td>{task.website}</td>
                   <td>{task.date}</td>
                   <td>
-                    <button type="button" onClick={() => handlePopover(index)}>
-                      {index === popoverIndex && openPopover ? (
-                        <FiXCircle className="close-popover" size={25} />
-                      ) : (
-                        <FiMoreHorizontal size={25} />
-                      )}
-                    </button>
-                    <Popover
-                      open={openPopover}
-                      index={popoverIndex}
-                      className={`popover-${index}`}
-                      onClick={() => setOpenPopover(false)}
-                    >
+                    <Popover>
                       <button
                         type="button"
                         onClick={() => {
