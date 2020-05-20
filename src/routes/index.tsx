@@ -1,6 +1,9 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
+import PrivateRoute from './PrivateRoute';
+
+import Login from '../pages/Login';
 import Home from '../pages/Home';
 import Tasks from '../pages/Tasks';
 import MyArticles from '../pages/MyArticles';
@@ -13,13 +16,18 @@ const Routes: React.FC = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/tarefas" component={Tasks} />
-        <Route path="/artigos" component={MyArticles} />
-        <Route path="/auditoria" component={Audit} />
-        <Route path="/redatores" component={Writers} />
-        <Route path="/artigo/:articleId" component={Article} />
-        <Route path="/editar/artigo/:articleId" component={Edit} />
+        <Route exact path="/" component={Login} />
+        <PrivateRoute
+          path="/dashboard"
+          permissions={['writer', 'editor', 'administrator']}
+          component={Home}
+        />
+        <PrivateRoute path="/tarefas" component={Tasks} />
+        <PrivateRoute path="/artigos" component={MyArticles} />
+        <PrivateRoute path="/auditoria" component={Audit} />
+        <PrivateRoute path="/redatores" component={Writers} />
+        <PrivateRoute path="/artigo/:articleId" component={Article} />
+        <PrivateRoute path="/editar/artigo/:articleId" component={Edit} />
       </Switch>
     </BrowserRouter>
   );
