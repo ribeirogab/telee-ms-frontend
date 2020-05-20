@@ -1,23 +1,55 @@
 import React, { useState } from 'react';
 
 import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import {
   ContainerForm,
+  InputGroup,
   ButtonGroup,
 } from '../../../components/StandardFormElements';
 
-interface FormAddProps {
-  setOpen?: Function;
+import api from '../../../services/api';
+
+interface Writer {
+  id: string;
+  name: string;
+  username: string;
 }
 
-const FormAdd = ({ setOpen }: FormAddProps): JSX.Element => {
-  const [user, setUser] = useState('');
-  const [name, setName] = useState('');
+interface FormAddProps {
+  setOpen?: Function;
+  writers: Writer[];
+  setWriters: Function;
+}
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
+const FormAdd = ({
+  setOpen,
+  writers,
+  setWriters,
+}: FormAddProps): JSX.Element => {
+  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
+  const [permission, setPermission] = useState('');
+  const [password, setPassword] = useState('');
+
+  async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+  ): Promise<void> {
     event.preventDefault();
-    console.log('FormAdd enviado'); // eslint-disable-line
+
+    const { data: writer } = await api.post(
+      '/users',
+      { name, username, password, permission },
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      },
+    );
+
+    setWriters([...writers, writer]);
+
     if (setOpen) setOpen(false);
   }
 
@@ -31,14 +63,6 @@ const FormAdd = ({ setOpen }: FormAddProps): JSX.Element => {
         <h2>Adicionar Usuário</h2>
         <TextField
           required
-          className="input"
-          label="Usuário"
-          variant="outlined"
-          value={user}
-          onChange={e => setUser(e.target.value)}
-        />
-        <TextField
-          required
           multiline
           className="input"
           label="Nome"
@@ -46,6 +70,42 @@ const FormAdd = ({ setOpen }: FormAddProps): JSX.Element => {
           value={name}
           onChange={e => setName(e.target.value)}
         />
+
+        <InputGroup>
+          <TextField
+            required
+            className="input"
+            label="Usuário"
+            variant="outlined"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+          />
+          <TextField
+            required
+            id="outlined-select-currency"
+            select
+            className="input"
+            label="Permissão"
+            value={permission}
+            onChange={e => setPermission(e.target.value)}
+            variant="outlined"
+          >
+            <MenuItem value="writer">Redator</MenuItem>
+          </TextField>
+        </InputGroup>
+
+        <TextField
+          required
+          id="standard-password-input"
+          label="Senha"
+          type="password"
+          autoComplete="current-password"
+          className="input"
+          variant="outlined"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+        />
+
         <ButtonGroup>
           <button type="button" onClick={handleClose}>
             Cancelar

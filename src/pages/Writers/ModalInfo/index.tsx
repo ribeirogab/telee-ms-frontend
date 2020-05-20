@@ -7,22 +7,36 @@ import {
   ButtonGroup,
 } from '../../../components/StandardFormElements';
 
+import toCapitalize from '../../../utils/toCapitalize';
+import api from '../../../services/api';
+
 interface ModalInfoProps {
   setOpen?: Function;
+  writerId: string;
 }
 
-const ModalInfo = ({ setOpen }: ModalInfoProps): JSX.Element => {
-  const [user, setUser] = useState('');
+const ModalInfo = ({ setOpen, writerId }: ModalInfoProps): JSX.Element => {
+  const [username, setUsername] = useState('');
   const [name, setName] = useState('');
-
-  useEffect(() => {
-    setUser('a');
-    setName('a');
-  }, []);
+  const [permission, setPermission] = useState('');
 
   function handleClose(): void {
     if (setOpen) setOpen(false);
   }
+
+  useEffect(() => {
+    api
+      .get(`/users/${writerId}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then(response => {
+        setUsername(response.data.username);
+        setName(response.data.name);
+        setPermission(response.data.permission);
+      });
+  }, [writerId]);
 
   return (
     <ContainerForm>
@@ -33,8 +47,7 @@ const ModalInfo = ({ setOpen }: ModalInfoProps): JSX.Element => {
           className="input"
           label="Usuário"
           variant="standard"
-          value={user}
-          onChange={e => setUser(e.target.value)}
+          value={username}
         />
         <TextField
           disabled
@@ -42,8 +55,15 @@ const ModalInfo = ({ setOpen }: ModalInfoProps): JSX.Element => {
           className="input"
           label="Nome"
           variant="standard"
-          value={name}
-          onChange={e => setName(e.target.value)}
+          value={toCapitalize(name)}
+        />
+        <TextField
+          disabled
+          multiline
+          className="input"
+          label="Permissão"
+          variant="standard"
+          value={toCapitalize(permission)}
         />
         <ButtonGroup>
           <button type="button" onClick={handleClose}>

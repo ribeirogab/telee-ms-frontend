@@ -1,14 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Container from '@material-ui/core/Container';
 
-import {
-  FiMoreVertical,
-  FiPlus,
-  FiEdit3,
-  FiDelete,
-  FiInfo,
-} from 'react-icons/fi';
+import { FiMoreVertical, FiPlus, FiDelete, FiInfo } from 'react-icons/fi';
 
 import { ToolsBar, WritersContainer, BoxWriter } from './styles';
 
@@ -18,25 +12,47 @@ import Alert from '../../components/Alert';
 import Popover from '../../components/Popover';
 
 import FormAdd from './FormAdd';
-import FormEdit from './FormEdit';
 import ModalInfo from './ModalInfo';
 
+import toCapitalize from '../../utils/toCapitalize';
+import getInitialLetters from '../../utils/getInitialLetters';
+import api from '../../services/api';
+import PermissionService from '../../services/PermissionService';
+
+interface Writer {
+  id: string;
+  name: string;
+  username: string;
+}
+
 const Writers: React.FC = () => {
-  const [idForApiRequest, setIdForApiRequest] = useState<string | null>(null);
+  const [idForApiRequest, setIdForApiRequest] = useState<string>('');
 
   const [modalAddOpen, setModalAddOpen] = useState(false);
-  const [modalEditOpen, setModalEditOpen] = useState(false);
   const [modalInfoOpen, setModalInfoOpen] = useState(false);
 
   const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
 
-  const writers = [
-    { id: '1', username: 'gabriel.ribeiro', name: 'Gabriel Ribeiro' },
-    { id: '2', username: 'gabriel.ribeiro', name: 'Gabriel Ribeiro' },
-    { id: '3', username: 'gabriel.ribeiro', name: 'Gabriel Ribeiro' },
-    { id: '4', username: 'gabriel.ribeiro', name: 'Gabriel Ribeiro' },
-    { id: '5', username: 'gabriel.ribeiro', name: 'Gabriel Ribeiro' },
-  ];
+  const [writers, setWriters] = useState<Writer[]>([]);
+
+  async function handleDeleteWriter(): Promise<void> {
+    await api.delete(`/users/${idForApiRequest}`, {
+      headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
+    });
+
+    setWriters(writers.filter(writer => writer.id !== idForApiRequest));
+  }
+
+  useEffect(() => {
+    api
+      .get('/users', {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+          permission: 'writer',
+        },
+      })
+      .then(response => setWriters(response.data));
+  }, []);
 
   return (
     <>
@@ -53,33 +69,26 @@ const Writers: React.FC = () => {
           {writers.map(writer => (
             <BoxWriter key={writer.id}>
               <div className="box">
-                <div className="avatar">GR</div>
+                <div className="avatar">{getInitialLetters(writer.name)}</div>
                 <div>
-                  <span>{writer.name}</span>
+                  <span>{toCapitalize(writer.name)}</span>
                   <small>{writer.username}</small>
                 </div>
                 <div>
                   <Popover ElementOpenIcon={FiMoreVertical}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIdForApiRequest(writer.id);
-                        setModalEditOpen(true);
-                      }}
-                    >
-                      <FiEdit3 />
-                      <span>Editar</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIdForApiRequest(writer.id);
-                        setAlertDeleteOpen(true);
-                      }}
-                    >
-                      <FiDelete />
-                      <span>Excluir</span>
-                    </button>
+                    {PermissionService(['administrator']) && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIdForApiRequest(writer.id);
+                          setAlertDeleteOpen(true);
+                        }}
+                      >
+                        <FiDelete />
+                        <span>Excluir</span>
+                      </button>
+                    )}
+
                     <button
                       type="button"
                       onClick={() => {
@@ -101,17 +110,20 @@ const Writers: React.FC = () => {
       <Modal
         open={modalAddOpen}
         setOpen={setModalAddOpen}
-        Component={<FormAdd setOpen={setModalAddOpen} />}
-      />
-      <Modal
-        open={modalEditOpen}
-        setOpen={setModalEditOpen}
-        Component={<FormEdit setOpen={setModalEditOpen} />}
+        Component={
+          <FormAdd
+            setOpen={setModalAddOpen}
+            writers={writers}
+            setWriters={setWriters}
+          />
+        }
       />
       <Modal
         open={modalInfoOpen}
         setOpen={setModalInfoOpen}
-        Component={<ModalInfo setOpen={setModalInfoOpen} />}
+        Component={
+          <ModalInfo setOpen={setModalInfoOpen} writerId={idForApiRequest} />
+        }
       />
       <Alert
         open={alertDeleteOpen}
@@ -119,10 +131,9 @@ const Writers: React.FC = () => {
         title="Realmente deseja remover esta usuário?"
         text="Após a exclusão a operação não poderá ser desfeita."
         textAcceptButton="Excluir"
-        // ifAccepted={{
-        //   id: idForApiRequest,
-        //     execute: ();
-        // }}
+        ifAccepted={{
+          execute: handleDeleteWriter,
+        }}
       />
     </>
   );
