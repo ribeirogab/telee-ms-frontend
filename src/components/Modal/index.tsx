@@ -5,19 +5,12 @@ import ModalUi from '@material-ui/core/Modal';
 import { Container } from './styles';
 
 interface ModalProps {
-  idForApiRequest?: string | null;
   open: boolean;
   setOpen: Function;
   Component: JSX.Element;
 }
 
-const Modal = ({
-  idForApiRequest,
-  open,
-  setOpen,
-  Component,
-}: ModalProps): JSX.Element => {
-  if (idForApiRequest && open) console.log(`Req: ${idForApiRequest}`); // eslint-disable-line
+const Modal = ({ open, setOpen, Component }: ModalProps): JSX.Element => {
   return (
     <ModalUi
       open={open}

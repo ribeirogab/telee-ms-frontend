@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -7,19 +7,26 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import { FiMenu, FiChevronLeft } from 'react-icons/fi';
+import { FiMenu, FiChevronLeft, FiLogOut } from 'react-icons/fi';
 
 import { Sidebar, Menu, SidebarHeader } from './styles';
 
 import menuItems from '../../utils/menuItems';
+import PermissionService from '../../services/PermissionService';
 
 interface MenuDrawerProps {
   textPage?: string;
 }
 
 const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
+  const history = useHistory();
   const [state, setState] = React.useState({ left: false });
   const [headerMenu, bodyMenu, footerMenu] = menuItems();
+
+  function handleLogout(): void {
+    localStorage.clear();
+    history.push('/');
+  }
 
   const toggleDrawer = (open: boolean) => (
     event: React.KeyboardEvent | React.MouseEvent,
@@ -49,36 +56,52 @@ const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
       </SidebarHeader>
 
       <List>
-        {headerMenu.map(item => (
-          <Link to={item.path} key={item.text}>
-            <ListItem button>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          </Link>
-        ))}
+        {headerMenu.map(
+          item =>
+            PermissionService(item.permissions) && (
+              <Link to={item.path} key={item.text}>
+                <ListItem button>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItem>
+              </Link>
+            ),
+        )}
       </List>
       <Divider />
       <List>
-        {bodyMenu.map(item => (
-          <Link to={item.path} key={item.text}>
-            <ListItem button>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          </Link>
-        ))}
+        {bodyMenu.map(
+          item =>
+            PermissionService(item.permissions) && (
+              <Link to={item.path} key={item.text}>
+                <ListItem button>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItem>
+              </Link>
+            ),
+        )}
       </List>
       <Divider />
       <List>
-        {footerMenu.map(item => (
-          <Link to={item.path} key={item.text}>
-            <ListItem button>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-          </Link>
-        ))}
+        {footerMenu.map(
+          item =>
+            PermissionService(item.permissions) && (
+              <Link to={item.path} key={item.text}>
+                <ListItem button>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItem>
+              </Link>
+            ),
+        )}
+
+        <ListItem button onClick={handleLogout}>
+          <ListItemIcon>
+            <FiLogOut />
+          </ListItemIcon>
+          <ListItemText primary="Sair" />
+        </ListItem>
       </List>
     </Sidebar>
   );

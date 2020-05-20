@@ -104,13 +104,11 @@ const Writers: React.FC = () => {
         Component={<FormAdd setOpen={setModalAddOpen} />}
       />
       <Modal
-        idForApiRequest={idForApiRequest}
         open={modalEditOpen}
         setOpen={setModalEditOpen}
         Component={<FormEdit setOpen={setModalEditOpen} />}
       />
       <Modal
-        idForApiRequest={idForApiRequest}
         open={modalInfoOpen}
         setOpen={setModalInfoOpen}
         Component={<ModalInfo setOpen={setModalInfoOpen} />}
@@ -121,10 +119,10 @@ const Writers: React.FC = () => {
         title="Realmente deseja remover esta usuário?"
         text="Após a exclusão a operação não poderá ser desfeita."
         textAcceptButton="Excluir"
-        ifAccepted={{
-          id: idForApiRequest,
-            execute: (id: string) => console.log(id), // eslint-disable-line
-        }}
+        // ifAccepted={{
+        //   id: idForApiRequest,
+        //     execute: ();
+        // }}
       />
     </>
   );

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { Container } from './styles';
 
 import api from '../../services/api';
 
 const Login: React.FC = () => {
+  const history = useHistory();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -14,6 +16,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     const { data } = await api.post('/sessions', { username, password });
     localStorage.setItem('token', data.token);
+    history.push('/dashboard');
   }
 
   return (
