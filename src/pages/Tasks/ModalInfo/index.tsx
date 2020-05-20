@@ -8,26 +8,35 @@ import {
   ButtonGroup,
 } from '../../../components/StandardFormElements';
 
+import api from '../../../services/api';
+
 interface ModalInfoProps {
   setOpen?: Function;
+  taskId: string;
 }
 
-const ModalInfo = ({ setOpen }: ModalInfoProps): JSX.Element => {
+const ModalInfo = ({ setOpen, taskId }: ModalInfoProps): JSX.Element => {
   const [keyword, setKeyword] = useState('');
   const [website, setWebsite] = useState('');
   const [subKeywords, setSubKeywords] = useState('');
-  const [date, setDate] = useState('');
 
   function handleClose(): void {
     if (setOpen) setOpen(false);
   }
 
   useEffect(() => {
-    setKeyword('a');
-    setWebsite('a');
-    setSubKeywords('a');
-    setDate('a');
-  }, []);
+    api
+      .get(`/tasks/${taskId}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then(response => {
+        setKeyword(response.data.keyword);
+        setWebsite(response.data.website);
+        setSubKeywords(response.data.sub_keywords);
+      });
+  }, [taskId]);
 
   return (
     <ContainerForm>
@@ -58,15 +67,6 @@ const ModalInfo = ({ setOpen }: ModalInfoProps): JSX.Element => {
           variant="standard"
           value={subKeywords}
           onChange={e => setSubKeywords(e.target.value)}
-        />
-        <TextField
-          disabled
-          multiline
-          className="input"
-          label="Pautas"
-          variant="standard"
-          value={date}
-          onChange={e => setDate(e.target.value)}
         />
         <ButtonGroup>
           <button type="button" onClick={handleClose}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Container from '@material-ui/core/Container';
 
@@ -21,8 +21,19 @@ import FormAdd from './FormAdd';
 import FormEdit from './FormEdit';
 import ModalInfo from './ModalInfo';
 
+import api from '../../services/api';
+import PermissionService from '../../services/PermissionService';
+
+interface Task {
+  id: string;
+  keyword: string;
+  sub_keywords: string;
+  website: string;
+  created_at: string;
+}
+
 const Tasks: React.FC = () => {
-  const [idForApiRequest, setIdForApiRequest] = useState<string | null>(null);
+  const [idForApiRequest, setIdForApiRequest] = useState<string>('');
 
   const [modalAddOpen, setModalAddOpen] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false);
@@ -31,36 +42,46 @@ const Tasks: React.FC = () => {
   const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
   const [alertAssumeOpen, setAlertAssumeOpen] = useState(false);
 
-  const tasks = [
-    {
-      id: '1',
-      keyword: 'SKY TV',
-      subKeywords: 'TV, assistir SKY',
-      website: 'www.assinesky.com.br',
-      date: '20/03/2020',
-    },
-    {
-      id: '2',
-      keyword: 'SKY TV',
-      subKeywords: 'TV, assistir SKY',
-      website: 'www.assinesky.com.br',
-      date: '20/03/2020',
-    },
-    {
-      id: '3',
-      keyword: 'SKY TV',
-      subKeywords: 'TV, assistir SKY',
-      website: 'www.assinesky.com.br',
-      date: '20/03/2020',
-    },
-    {
-      id: '4',
-      keyword: 'SKY TV',
-      subKeywords: 'TV, assistir SKY',
-      website: 'www.assinesky.com.br',
-      date: '20/03/2020',
-    },
-  ];
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  async function handleDeleteTask(): Promise<void> {
+    await api.delete(`/tasks/${idForApiRequest}`, {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+
+    setTasks(tasks.filter(task => task.id !== idForApiRequest));
+  }
+
+  async function handleAssumeTask(): Promise<void> {
+    await api.patch(
+      `/tasks/article/${idForApiRequest}`,
+      {
+        writerId: '1b701427-8f31-4944-b599-bc025fee85ed',
+        words: '10',
+        article: 'lalalal',
+      },
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      },
+    );
+
+    setTasks(tasks.filter(task => task.id !== idForApiRequest));
+  }
+
+  useEffect(() => {
+    api
+      .get('/tasks', {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+          status: 'available',
+        },
+      })
+      .then(response => setTasks(response.data));
+  }, []);
 
   return (
     <>
@@ -88,51 +109,68 @@ const Tasks: React.FC = () => {
               {tasks.map(task => (
                 <tr key={task.id}>
                   <td>{task.keyword}</td>
-                  <td>{task.subKeywords}</td>
+                  <td>{task.sub_keywords}</td>
                   <td>{task.website}</td>
-                  <td>{task.date}</td>
+                  <td>
+                    {new Date(task.created_at).toLocaleDateString('pt-br')}
+                  </td>
                   <td>
                     <Popover>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIdForApiRequest(task.id);
-                          setModalEditOpen(true);
-                        }}
-                      >
-                        <FiEdit3 />
-                        <span>Editar</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIdForApiRequest(task.id);
-                          setAlertDeleteOpen(true);
-                        }}
-                      >
-                        <FiDelete />
-                        <span>Excluir</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIdForApiRequest(task.id);
-                          setModalInfoOpen(true);
-                        }}
-                      >
-                        <FiInfo />
-                        <span>Detalhes</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIdForApiRequest(task.id);
-                          setAlertAssumeOpen(true);
-                        }}
-                      >
-                        <FiCornerDownLeft />
-                        <span>Assumir</span>
-                      </button>
+                      {PermissionService(['editor', 'administrator']) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIdForApiRequest(task.id);
+                            setModalEditOpen(true);
+                          }}
+                        >
+                          <FiEdit3 />
+                          <span>Editar</span>
+                        </button>
+                      )}
+
+                      {PermissionService(['editor', 'administrator']) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIdForApiRequest(task.id);
+                            setAlertDeleteOpen(true);
+                          }}
+                        >
+                          <FiDelete />
+                          <span>Excluir</span>
+                        </button>
+                      )}
+
+                      {PermissionService([
+                        'writer',
+                        'editor',
+                        'administrator',
+                      ]) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIdForApiRequest(task.id);
+                            setModalInfoOpen(true);
+                          }}
+                        >
+                          <FiInfo />
+                          <span>Detalhes</span>
+                        </button>
+                      )}
+
+                      {PermissionService(['writer', 'administrator']) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIdForApiRequest(task.id);
+                            setAlertAssumeOpen(true);
+                          }}
+                        >
+                          <FiCornerDownLeft />
+                          <span>Assumir</span>
+                        </button>
+                      )}
                     </Popover>
                   </td>
                 </tr>
@@ -144,19 +182,32 @@ const Tasks: React.FC = () => {
         <Modal
           open={modalAddOpen}
           setOpen={setModalAddOpen}
-          Component={<FormAdd setOpen={setModalAddOpen} />}
+          Component={
+            <FormAdd
+              setOpen={setModalAddOpen}
+              tasks={tasks}
+              setTasks={setTasks}
+            />
+          }
         />
         <Modal
-          idForApiRequest={idForApiRequest}
           open={modalEditOpen}
           setOpen={setModalEditOpen}
-          Component={<FormEdit setOpen={setModalEditOpen} />}
+          Component={
+            <FormEdit
+              setOpen={setModalEditOpen}
+              taskId={idForApiRequest}
+              tasks={tasks}
+              setTasks={setTasks}
+            />
+          }
         />
         <Modal
-          idForApiRequest={idForApiRequest}
           open={modalInfoOpen}
           setOpen={setModalInfoOpen}
-          Component={<ModalInfo setOpen={setModalInfoOpen} />}
+          Component={
+            <ModalInfo setOpen={setModalInfoOpen} taskId={idForApiRequest} />
+          }
         />
         <Alert
           open={alertDeleteOpen}
@@ -165,8 +216,7 @@ const Tasks: React.FC = () => {
           text="Após a exclusão a operação não poderá ser desfeita."
           textAcceptButton="Excluir"
           ifAccepted={{
-            id: idForApiRequest,
-            execute: (id: string) => console.log(id), // eslint-disable-line
+            execute: handleDeleteTask,
           }}
         />
         <Alert
@@ -176,8 +226,7 @@ const Tasks: React.FC = () => {
           text="A operação não poderá ser desfeita."
           textAcceptButton="Assumir"
           ifAccepted={{
-            id: idForApiRequest,
-            execute: (id: string) => console.log(id), // eslint-disable-line
+            execute: handleAssumeTask,
           }}
         />
       </Container>

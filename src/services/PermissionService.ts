@@ -7,7 +7,7 @@ interface TokenPayload {
   sub: string;
 }
 
-export default function AuthenticateService(permissions: string[]): boolean {
+export default function PermissionService(permissions: string[]): boolean {
   const token = localStorage.getItem('token');
 
   if (!token) {
@@ -18,17 +18,8 @@ export default function AuthenticateService(permissions: string[]): boolean {
   try {
     const decoded = verify(token, process.env.REACT_APP_SECRET as string);
     const { permission } = decoded as TokenPayload;
-
-    const userHasPermission = permissions.includes(permission);
-
-    if (!userHasPermission) {
-      localStorage.clear();
-      return false;
-    }
-
-    return true;
+    return permissions.includes(permission);
   } catch {
-    localStorage.clear();
     return false;
   }
 }

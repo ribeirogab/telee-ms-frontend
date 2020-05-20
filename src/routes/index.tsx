@@ -22,12 +22,36 @@ const Routes: React.FC = () => {
           permissions={['writer', 'editor', 'administrator']}
           component={Home}
         />
-        <PrivateRoute path="/tarefas" component={Tasks} />
-        <PrivateRoute path="/artigos" component={MyArticles} />
-        <PrivateRoute path="/auditoria" component={Audit} />
-        <PrivateRoute path="/redatores" component={Writers} />
-        <PrivateRoute path="/artigo/:articleId" component={Article} />
-        <PrivateRoute path="/editar/artigo/:articleId" component={Edit} />
+        <PrivateRoute
+          path="/tarefas"
+          component={Tasks}
+          permissions={['writer', 'editor', 'administrator']}
+        />
+        <PrivateRoute
+          path="/artigos"
+          component={MyArticles}
+          permissions={['writer']}
+        />
+        <PrivateRoute
+          path="/auditoria"
+          component={Audit}
+          permissions={['editor', 'administrator']}
+        />
+        <PrivateRoute
+          path="/redatores"
+          component={Writers}
+          permissions={['editor', 'administrator']}
+        />
+        <PrivateRoute
+          path="/artigo/:articleId"
+          component={Article}
+          permissions={['writer', 'editor', 'administrator']}
+        />
+        <PrivateRoute
+          path="/editar/artigo/:articleId"
+          component={Edit}
+          permissions={['writer', 'editor', 'administrator']}
+        />
       </Switch>
     </BrowserRouter>
   );

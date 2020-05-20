@@ -13,7 +13,6 @@ interface AlertProps {
   text: string;
   textAcceptButton: string;
   ifAccepted?: {
-    id: string | null;
     execute: Function;
   };
 }
@@ -30,8 +29,8 @@ const Alert = ({
     setOpen(false);
 
     if (ifAccepted) {
-      const { id, execute } = ifAccepted;
-      execute(id);
+      const { execute } = ifAccepted;
+      execute();
     }
   }
 

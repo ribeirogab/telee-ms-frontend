@@ -6,14 +6,14 @@ import {
   FiBook,
   FiCheckSquare,
   FiUsers,
-  FiLogOut,
 } from 'react-icons/fi';
 
 interface MenuLabel {
   icon: JSX.Element;
   text: string;
   path: string;
-  permissionMinMax: number[];
+  permissions: string[];
+  functionOnClick?: Function;
 }
 
 const menuItems = (): Array<MenuLabel[]> => {
@@ -22,19 +22,19 @@ const menuItems = (): Array<MenuLabel[]> => {
       icon: <FiGrid size={18} />,
       text: 'Home',
       path: '/',
-      permissionMinMax: [1, 99],
+      permissions: ['writer', 'editor', 'administrator'],
     },
     {
       icon: <FiClipboard size={18} />,
       text: 'Tarefas',
       path: '/tarefas',
-      permissionMinMax: [1, 99],
+      permissions: ['writer', 'editor', 'administrator'],
     },
     {
       icon: <FiBook size={18} />,
       text: 'Meus artigos',
       path: '/artigos',
-      permissionMinMax: [1, 3],
+      permissions: ['writer'],
     },
   ];
 
@@ -43,24 +43,17 @@ const menuItems = (): Array<MenuLabel[]> => {
       icon: <FiCheckSquare size={18} />,
       text: 'Auditoria',
       path: '/auditoria',
-      permissionMinMax: [4, 99],
+      permissions: ['editor', 'administrator'],
     },
     {
       icon: <FiUsers size={18} />,
       text: 'Redatores',
       path: '/redatores',
-      permissionMinMax: [4, 99],
+      permissions: ['editor', 'administrator'],
     },
   ];
 
-  const footerMenu = [
-    {
-      icon: <FiLogOut size={18} />,
-      text: 'Sair',
-      path: '#',
-      permissionMinMax: [1, 99],
-    },
-  ];
+  const footerMenu: any = []; // eslint-disable-line
 
   return [headerMenu, bodyMenu, footerMenu];
 };

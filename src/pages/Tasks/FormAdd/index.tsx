@@ -8,19 +8,43 @@ import {
   ButtonGroup,
 } from '../../../components/StandardFormElements';
 
-interface FormAddProps {
-  setOpen?: Function;
+import api from '../../../services/api';
+
+interface Task {
+  id: string;
+  keyword: string;
+  sub_keywords: string;
+  website: string;
+  created_at: string;
 }
 
-const FormAdd = ({ setOpen }: FormAddProps): JSX.Element => {
+interface FormAddProps {
+  setOpen?: Function;
+  tasks: Task[];
+  setTasks: Function;
+}
+const FormAdd = ({ setOpen, tasks, setTasks }: FormAddProps): JSX.Element => {
   const [keyword, setKeyword] = useState('');
   const [website, setWebsite] = useState('');
   const [subKeywords, setSubKeywords] = useState('');
-  const [date, setDate] = useState('');
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
+  async function handleSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+  ): Promise<void> {
     event.preventDefault();
-    console.log('FormAdd enviado'); // eslint-disable-line
+
+    const { data } = await api.post(
+      '/tasks',
+      { keyword, website, subKeywords },
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      },
+    );
+
+    setTasks([...tasks, data]);
+
     if (setOpen) setOpen(false);
   }
 
@@ -58,20 +82,11 @@ const FormAdd = ({ setOpen }: FormAddProps): JSX.Element => {
           value={subKeywords}
           onChange={e => setSubKeywords(e.target.value)}
         />
-        <TextField
-          required
-          multiline
-          className="input"
-          label="Pautas"
-          variant="outlined"
-          value={date}
-          onChange={e => setDate(e.target.value)}
-        />
         <ButtonGroup>
           <button type="button" onClick={handleClose}>
             Cancelar
           </button>
-          <button type="submit">Salvar</button>
+          <button type="submit">Adicionar</button>
         </ButtonGroup>
       </form>
     </ContainerForm>
