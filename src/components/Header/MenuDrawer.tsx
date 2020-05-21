@@ -12,6 +12,9 @@ import { FiMenu, FiChevronLeft, FiLogOut } from 'react-icons/fi';
 import { Sidebar, Menu, SidebarHeader } from './styles';
 
 import menuItems from '../../utils/menuItems';
+import getInitialLetters from '../../utils/getInitialLetters';
+import getInfoUserByToken from '../../utils/getInfoUserByToken';
+import toCapitalize from '../../utils/toCapitalize';
 import PermissionService from '../../services/PermissionService';
 
 interface MenuDrawerProps {
@@ -20,6 +23,7 @@ interface MenuDrawerProps {
 
 const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
   const history = useHistory();
+  const userInfo = getInfoUserByToken();
   const [state, setState] = React.useState({ left: false });
   const [headerMenu, bodyMenu, footerMenu] = menuItems();
 
@@ -45,10 +49,10 @@ const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
   const list = (): JSX.Element => (
     <Sidebar>
       <SidebarHeader>
-        <div className="avatar">GR</div>
+        <div className="avatar">{getInitialLetters(userInfo.name)}</div>
         <div className="user-info">
-          <span>Gabriel Ribeiro</span>
-          <small>Desenvolvedor</small>
+          <span>{userInfo.name}</span>
+          <small>{toCapitalize(userInfo.permission)}</small>
         </div>
         <button type="button" onClick={toggleDrawer(false)}>
           <FiChevronLeft size={20} />

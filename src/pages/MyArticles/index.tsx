@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { FiArrowRight } from 'react-icons/fi';
@@ -16,74 +16,126 @@ import {
 } from './styles';
 
 import Header from '../../components/Header';
-import taskStatus from '../../utils/taskStatus';
+
+import {
+  statusColor,
+  statusIcon,
+  statusText,
+  isDisabled,
+  isLink,
+} from '../../utils/taskStatus';
+import formatValue from '../../utils/formatValue';
+
+import api from '../../services/api';
+
+interface User {
+  id: string;
+  name: string;
+  username: string;
+  permission: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Task {
+  id: string;
+  keyword: string;
+  sub_keywords: string;
+  website: string;
+  status: string;
+  assumed: string;
+  delivered: string | null;
+  value: number | null;
+  words: number | null;
+  article: string | null;
+  created_at: string;
+  updated_at: string;
+  author: User;
+  writer: User;
+}
 
 const MyArticles: React.FC = () => {
+  const [tasks, setTasks] = useState<Task[] | null>(null);
+
+  useEffect(() => {
+    api
+      .get('/tasks-writer', {
+        headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
+      })
+      .then(response => setTasks(response.data));
+  }, []);
+
   return (
     <>
       <Header textPage="Artigos" />
       <Container maxWidth="lg">
         <ArticlesContainer>
-          {[
-            { id: 1, ...taskStatus(1) },
-            { id: 2, ...taskStatus(2) },
-            { id: 3, ...taskStatus(3) },
-            { id: 4, ...taskStatus(4) },
-            { id: 5, ...taskStatus(5) },
-          ].map(item => (
-            <ArticleBox key={item.id}>
-              <ArticleHeader color={item.color}>
-                <ArticleStatus color={item.color}>
-                  {item.statusIcon}
-                </ArticleStatus>
-                <div>
-                  <strong>Keywords</strong>
-                  <span>subkeywords</span>
-                </div>
-              </ArticleHeader>
+          {tasks ? (
+            tasks.map(item => (
+              <ArticleBox key={item.id}>
+                <ArticleHeader color={statusColor(item.status)}>
+                  <ArticleStatus color={statusColor(item.status)}>
+                    {statusIcon(item.status)}
+                  </ArticleStatus>
+                  <div>
+                    <strong>{item.keyword}</strong>
+                    <span>{item.sub_keywords}</span>
+                  </div>
+                </ArticleHeader>
 
-              <ArticleBody>
-                <div className="group">
-                  <div>
-                    <strong>Redator:</strong> Patrick Perdigao
+                <ArticleBody>
+                  <div className="group">
+                    <div>
+                      <strong>Redator:</strong> {item.writer.name}
+                    </div>
+                    <div>
+                      <strong>Criador:</strong> {item.author.name}
+                    </div>
+                  </div>
+                  <div className="group">
+                    <div>
+                      <strong>Assumido:</strong>{' '}
+                      {new Date(item.assumed).toLocaleDateString('pt-br')}
+                    </div>
+                    <div>
+                      <strong>Entregue:</strong> {item.delivered || '...'}
+                    </div>
                   </div>
                   <div>
-                    <strong>Criador:</strong> Gabriel Ribeiro
+                    <strong>Destino:</strong> {item.website}
                   </div>
-                </div>
-                <div className="group">
-                  <div>
-                    <strong>Assumido:</strong> 31/03/2020 às 10:30
-                  </div>
-                  <div>
-                    <strong>Entregue:</strong> 31/03/2020 às 16:45
-                  </div>
-                </div>
-                <div>
-                  <strong>Destino:</strong> www.assinesky.com.br
-                </div>
-              </ArticleBody>
+                </ArticleBody>
 
-              <ArticleFooter color={item.color}>
-                <div className="values">
-                  <strong>R$ 60,52</strong>
-                  <span>1008 palavras</span>
-                </div>
-                <div className="audit">
-                  <AuditButton color={item.color} disabled={item.disabled}>
-                    <Link to={item.link ? `/artigo/${item.id}` : '#'}>
-                      {item.statusText}{' '}
-                      {item.disabled ? (
-                        false
-                      ) : (
-                        <FiArrowRight className="icon" size={20} />
-                      )}
-                    </Link>
-                  </AuditButton>
-                </div>
-              </ArticleFooter>
-            </ArticleBox>
-          ))}
+                <ArticleFooter color={statusColor(item.status)}>
+                  <div className="values">
+                    <strong>
+                      {formatValue(item.words ? item.words * 0.06 : 0)}
+                    </strong>
+                    <span>{item.words || '0'} palavras</span>
+                  </div>
+                  <div className="audit">
+                    <AuditButton
+                      color={statusColor(item.status)}
+                      disabled={isDisabled(item.status)}
+                    >
+                      <Link
+                        to={isLink(item.status) ? `/artigo/${item.id}` : '#'}
+                      >
+                        {statusText(item.status)}{' '}
+                        {isDisabled(item.status) ? (
+                          false
+                        ) : (
+                          <FiArrowRight className="icon" size={20} />
+                        )}
+                      </Link>
+                    </AuditButton>
+                  </div>
+                </ArticleFooter>
+              </ArticleBox>
+            ))
+          ) : (
+            <h3>Carregando...</h3>
+          )}
         </ArticlesContainer>
       </Container>
     </>
