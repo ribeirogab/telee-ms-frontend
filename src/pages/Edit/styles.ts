@@ -1,7 +1,11 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 interface ValuesProps {
   open: boolean;
+}
+
+interface HeaderRightProps {
+  save: boolean;
 }
 
 export const Header = styled.div`
@@ -42,21 +46,39 @@ export const Status = styled.span`
   color: ${props => props.color};
 `;
 
-export const HeaderRight = styled.div`
+export const HeaderRight = styled.div<HeaderRightProps>`
   display: flex;
   padding: 15px 20px;
   align-items: center;
+
   span {
+    color: #999;
+    font-size: 14px;
+    margin-right: 10px;
+    opacity: 0;
+    transition: opacity 0.5s;
+    ${props =>
+      props.save &&
+      css`
+        & {
+          opacity: 1;
+        }
+      `}
+  }
+
+  button {
     font-size: 14px;
     padding-right: 10px;
-    border-right: solid 1px #0002;
+    /* border-right: solid 1px #0002; */
+    border: none;
+    background: none;
     display: flex;
     align-items: center;
     color: #4dc0ff;
     cursor: pointer;
     transition: color 0.2s;
   }
-  span:hover {
+  button:hover {
     color: #2da0ef;
   }
   .settings {

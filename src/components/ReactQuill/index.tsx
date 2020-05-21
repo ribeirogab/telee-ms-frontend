@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -6,18 +6,25 @@ import { Container } from './styles';
 
 interface ReactQuillProps {
   setWords: Function;
+  setMoney: Function;
+  setValue: Function;
+  value: string;
 }
 
-const ReactQuillComponent = ({ setWords }: ReactQuillProps): JSX.Element => {
-  const [value, setValue] = useState('');
+const ReactQuillComponent = ({
+  setWords,
+  setMoney,
+  setValue,
+  value,
+}: ReactQuillProps): JSX.Element => {
+  function isWord(word: string): boolean {
+    return (
+      word.length >= 2 &&
+      /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]+$/.test(word)
+    );
+  }
 
   useEffect(() => {
-    function isWord(word: string): boolean {
-      return (
-        word.length >= 2 &&
-        /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]+$/.test(word)
-      );
-    }
     const splitValue = value
       .replace(/<[^>]*>?/gm, ' ')
       .replace(/[^a-z0-9]/gi, ' ')
@@ -31,7 +38,8 @@ const ReactQuillComponent = ({ setWords }: ReactQuillProps): JSX.Element => {
     );
 
     setWords(numberOfWords);
-  }, [value, setWords]);
+    setMoney(numberOfWords * 0.06);
+  }, [value, setMoney, setWords]);
 
   const modules = {
     toolbar: [
@@ -53,7 +61,7 @@ const ReactQuillComponent = ({ setWords }: ReactQuillProps): JSX.Element => {
         theme="snow"
         modules={modules}
         value={value}
-        onChange={setValue}
+        onChange={html => setValue(html)}
       />
     </Container>
   );

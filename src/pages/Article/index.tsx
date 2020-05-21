@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useRouteMatch, useHistory } from 'react-router-dom';
+import htmlReactParser from 'html-react-parser';
 
 import Container from '@material-ui/core/Container';
 
 import {
-  FiInfo,
+  FiInfo, // eslint-disable-line
   FiEdit,
   FiArrowDown,
   FiArrowUp,
   FiSend,
-  FiMessageSquare,
+  FiMessageSquare, // eslint-disable-line
   FiFileText,
 } from 'react-icons/fi';
 
@@ -19,8 +20,8 @@ import {
   PreviewTop,
   PreviewBottom,
   User,
-  Comments,
-  Chat,
+  Comments, // eslint-disable-line
+  Chat, // eslint-disable-line
   ArticleBox,
   Status,
   Money,
@@ -30,13 +31,36 @@ import {
 
 import Header from '../../components/Header';
 
+import formatValue from '../../utils/formatValue';
+import getInitialLetters from '../../utils/getInitialLetters';
+import { statusColor } from '../../utils/taskStatus';
+
+import api from '../../services/api';
+
 interface ArticleParams {
-  articleId: string;
+  taskId: string;
+}
+
+interface Task {
+  keyword: string;
+  subKeywords: string;
+  website: string;
+  status: string;
+  words: number;
+  updatedAt: string;
+  article: string;
+  writer: {
+    name: string;
+    username: string;
+  };
 }
 
 const Article: React.FC = () => {
+  const isMounted = useRef(true);
+  const history = useHistory();
   const { params } = useRouteMatch<ArticleParams>();
   const [scroll, setScroll] = useState(window.scrollY >= 64);
+  const [task, setTask] = useState<Task | null>(null);
 
   window.onscroll = () => setScroll(window.scrollY >= 64);
 
@@ -45,14 +69,38 @@ const Article: React.FC = () => {
   const goToArticle = (): void =>
     window.scrollTo({ top: 1113, behavior: 'smooth' });
 
+  useEffect(() => {
+    api
+      .get(`/tasks/${params.taskId}`, {
+        headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
+      })
+      .then(response => {
+        setTask({
+          keyword: response.data.keyword,
+          subKeywords: response.data.sub_keywords,
+          website: response.data.website,
+          status: response.data.status,
+          words: response.data.words || 0,
+          updatedAt: response.data.updated_at,
+          article: response.data.article || '',
+          writer: {
+            name: response.data.writer.name,
+            username: response.data.writer.username,
+          },
+        });
+        isMounted.current = false;
+      })
+      .catch(() => history.push('/artigos'));
+  }, [params.taskId, history]);
+
   return (
     <>
-      <Header textPage={`Artigo ${params.articleId}`} />
+      <Header textPage={`Artigo ${params.taskId}`} />
 
       <ToolsBar fixed={scroll}>
         <div>
-          <FiInfo size={25} />
-          <Link to={`/editar/artigo/${params.articleId}`}>
+          {/* <FiInfo size={25} /> */}
+          <Link to={`/editar/artigo/${params.taskId}`}>
             <FiEdit size={25} />
           </Link>
           {scroll ? (
@@ -65,39 +113,50 @@ const Article: React.FC = () => {
 
       <Container maxWidth="lg">
         <PreviewContainer>
-          <PreviewTop>
-            <div className="info">
-              <h2>Palavra-chave</h2>
-              <p>Palavras-chaves secundárias</p>
-              <div className="destiny">
-                <FiSend />
-                <span>www.assinesky.com.br</span>
-              </div>
-            </div>
-            <div className="values">
-              <Money border color="#C93" padding="5px 20px" size={24}>
-                R$ 62,50
-              </Money>
-              <Words border color="#5CB" size={16} padding="5px 20px">
-                1200 palavras
-              </Words>
-            </div>
-          </PreviewTop>
-          <PreviewBottom>
-            <div className="bar-container">
-              <div className="bar">
-                <User>
-                  <div className="avatar">GR</div>
-                  <strong>gabriel.ribeiro</strong>
-                </User>
-                <Status>Pendente</Status>
-                <small>Última edição às 16:01 09/04/2020</small>
-              </div>
-            </div>
-          </PreviewBottom>
+          {task && (
+            <>
+              <PreviewTop>
+                <div className="info">
+                  <h2>{task.keyword}</h2>
+                  <p>{task.subKeywords}</p>
+                  <div className="destiny">
+                    <FiSend />
+                    <span>{task.website}</span>
+                  </div>
+                </div>
+                <div className="values">
+                  <Money border color="#C93" padding="5px 20px" size={24}>
+                    {formatValue(task.words * 0.06)}
+                  </Money>
+                  <Words border color="#5CB" size={16} padding="5px 20px">
+                    {task.words} palavras
+                  </Words>
+                </div>
+              </PreviewTop>
+              <PreviewBottom>
+                <div className="bar-container">
+                  <div className="bar">
+                    <User>
+                      <div className="avatar">
+                        {getInitialLetters(task.writer.name)}
+                      </div>
+                      <strong>{task.writer.username}</strong>
+                    </User>
+                    <Status color={statusColor(task.status)}>
+                      {task.status}
+                    </Status>
+                    <small>
+                      Última edição:{' '}
+                      {new Date(task.updatedAt).toLocaleDateString('pt-br')}
+                    </small>
+                  </div>
+                </div>
+              </PreviewBottom>
+            </>
+          )}
         </PreviewContainer>
 
-        <Comments>
+        {/* <Comments>
           <h2>
             Comentários <FiMessageSquare />
           </h2>
@@ -108,48 +167,34 @@ const Article: React.FC = () => {
               <button type="button">COMENTAR</button>
             </div>
           </div>
-        </Comments>
+        </Comments> */}
 
         <ArticleBox>
           <h2>
             Artigo <FiFileText />
           </h2>
-          <div className="article-container">
-            <div className="info-container">
-              <div className="info">
-                <Money color="#C93" size={21}>
-                  R$ 62,50
-                </Money>
-                <Words color="#5CB" size={21}>
-                  1200 palavras
-                </Words>
-                <small>Última edição às 16:01 09/04/2020</small>
+          {task && (
+            <div className="article-container">
+              <div className="info-container">
+                <div className="info">
+                  <Money color="#C93" size={21}>
+                    {formatValue(task.words * 0.06)}
+                  </Money>
+                  <Words color="#5CB" size={21}>
+                    {task.words} palavras
+                  </Words>
+                  <small>
+                    {' '}
+                    Última edição:{' '}
+                    {new Date(task.updatedAt).toLocaleDateString('pt-br')}
+                  </small>
+                </div>
               </div>
+              <ArticleContent className="ql-editor">
+                {htmlReactParser(task.article)}
+              </ArticleContent>
             </div>
-            <ArticleContent>
-              <h1>Titulo</h1>
-              <p>
-                asdkjak alskdlkasldajsdkjask kasjdkja asdkjak
-                alskdlkasldajsdkjask kasjdkja asdkjak alskdlkasld
-              </p>
-              <p>
-                asdkjak alskdlkasldajsdkjask kasjdkja asdkjak
-                alskdlkasldajsdkjask kasjdkja asdkjak alskdlkasld
-              </p>
-              <p>
-                asdkjak alskdlkasldajsdkjask kasjdkja asdkjak
-                alskdlkasldajsdkjask kasjdkja asdkjak alskdlkasld
-              </p>
-              <p>
-                asdkjak alskdlkasldajsdkjask kasjdkja asdkjak
-                alskdlkasldajsdkjask kasjdkja asdkjak alskdlkasld
-              </p>
-              <p>
-                asdkjak alskdlkasldajsdkjask kasjdkja asdkjak
-                alskdlkasldajsdkjask kasjdkja asdkjak alskdlkasld
-              </p>
-            </ArticleContent>
-          </div>
+          )}
         </ArticleBox>
       </Container>
     </>
