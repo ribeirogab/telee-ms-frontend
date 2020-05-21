@@ -21,7 +21,7 @@ const menuItems = (): Array<MenuLabel[]> => {
     {
       icon: <FiGrid size={18} />,
       text: 'Home',
-      path: '/',
+      path: '/dashboard',
       permissions: ['writer', 'editor', 'administrator'],
     },
     {

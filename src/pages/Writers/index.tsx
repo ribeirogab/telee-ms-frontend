@@ -59,10 +59,12 @@ const Writers: React.FC = () => {
       <Header textPage="Redatores" />
       <Container maxWidth="md">
         <ToolsBar>
-          <button type="button" onClick={() => setModalAddOpen(true)}>
-            <FiPlus />
-            <span>ADICIONAR</span>
-          </button>
+          {PermissionService(['editor', 'administrator']) && (
+            <button type="button" onClick={() => setModalAddOpen(true)}>
+              <FiPlus />
+              <span>ADICIONAR</span>
+            </button>
+          )}
         </ToolsBar>
 
         <WritersContainer>

@@ -88,10 +88,12 @@ const Tasks: React.FC = () => {
       <Header textPage="Tarefas" />
       <Container maxWidth="lg">
         <ToolsBar>
-          <button type="button" onClick={() => setModalAddOpen(true)}>
-            <FiPlus />
-            <span>ADICIONAR</span>
-          </button>
+          {PermissionService(['editor', 'administrator']) && (
+            <button type="button" onClick={() => setModalAddOpen(true)}>
+              <FiPlus />
+              <span>ADICIONAR</span>
+            </button>
+          )}
         </ToolsBar>
 
         <div style={{ overflowX: 'auto' }}>
@@ -159,7 +161,7 @@ const Tasks: React.FC = () => {
                         </button>
                       )}
 
-                      {PermissionService(['writer', 'administrator']) && (
+                      {PermissionService(['writer']) && (
                         <button
                           type="button"
                           onClick={() => {

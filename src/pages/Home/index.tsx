@@ -6,10 +6,16 @@ import { LastAcess, News, ContainerNews, BoxNews } from './styles';
 
 import Header from '../../components/Header';
 
+import getInfoUserByToken from '../../utils/getInfoUserByToken';
+import toCapitalize from '../../utils/toCapitalize';
+
 const Home: React.FC = () => {
+  const userInfo = getInfoUserByToken();
+  const userFirstName = userInfo.name.split(' ')[0];
+
   return (
     <>
-      <Header textPage="Olá, Gabriel" />
+      <Header textPage={`Olá, ${toCapitalize(userFirstName)}`} />
       <Container maxWidth="lg">
         <LastAcess>
           <h1>Último acesso</h1>
