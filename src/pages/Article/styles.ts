@@ -149,9 +149,9 @@ export const PreviewBottom = styled.div`
 `;
 
 export const Status = styled.div`
-  border: solid 2px #c39234;
-  background-color: #c933;
-  color: #c39234;
+  border: solid 2px ${props => props.color};
+  background-color: ${props => props.color}3;
+  color: ${props => props.color};
   padding: 5px 20px;
   text-transform: uppercase;
 `;
