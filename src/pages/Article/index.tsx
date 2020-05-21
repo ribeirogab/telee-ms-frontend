@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useRouteMatch, useHistory } from 'react-router-dom';
 import htmlReactParser from 'html-react-parser';
 
@@ -56,7 +56,6 @@ interface Task {
 }
 
 const Article: React.FC = () => {
-  const isMounted = useRef(true);
   const history = useHistory();
   const { params } = useRouteMatch<ArticleParams>();
   const [scroll, setScroll] = useState(window.scrollY >= 64);
@@ -88,7 +87,6 @@ const Article: React.FC = () => {
             username: response.data.writer.username,
           },
         });
-        isMounted.current = false;
       })
       .catch(() => history.push('/artigos'));
   }, [params.taskId, history]);
