@@ -56,7 +56,7 @@ const Tasks: React.FC = () => {
 
   async function handleAssumeTask(): Promise<void> {
     await api.patch(
-      `/tasks/article/${idForApiRequest}`,
+      `/tasks-writer/${idForApiRequest}`,
       {
         writerId: '1b701427-8f31-4944-b599-bc025fee85ed',
         words: '10',
