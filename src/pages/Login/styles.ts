@@ -1,57 +1,43 @@
 import styled from 'styled-components';
+import { shade } from 'polished';
+import signInBackground from '../../assets/login-background.jpg';
 
 export const Container = styled.div`
-  width: 100%;
   height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: stretch;
+`;
+
+export const Content = styled.div`
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-
+  align-items: center;
+  width: 100%;
+  max-width: 700px;
   form {
-    max-width: 300px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: 30px 50px;
-    background-color: #fff;
-    box-shadow: 2px 2px 8px #0002;
-    border-radius: 8px;
-
-    h1 {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #fe4762;
-      letter-spacing: 2px;
-    }
-
-    input + input {
-      margin-top: 10px;
-    }
-
-    input {
-      height: 40px;
-      padding: 0 10px;
-      font-size: 16px;
-      color: #333;
-      border: none;
-      box-shadow: 2px 2px 8px #0003;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 25px;
-      height: 45px;
-      font-size: 16px;
-      background-color: #fe4762;
-      color: #fff;
-      font-weight: bold;
-      letter-spacing: 2px;
-      box-shadow: 2px 2px 8px #0003;
-      transition: background-color 0.3s;
-
-      &:hover {
-        background-color: #de2742;
-      }
+    margin: 80px 0;
+    width: 340px;
+    text-align: center;
+  }
+  h1 {
+    color: #333;
+    margin-bottom: 24px;
+  }
+  a {
+    color: #797979;
+    display: block;
+    margin-top: 24px;
+    text-decoration: none;
+    transition: color 0.2s;
+    &:hover {
+      color: ${shade(0.2, '#656565')};
     }
   }
+`;
+
+export const Background = styled.div`
+  flex: 1;
+  background: url(${signInBackground}) no-repeat center;
+  background-size: cover;
 `;
