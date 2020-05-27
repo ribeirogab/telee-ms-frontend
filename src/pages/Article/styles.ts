@@ -39,6 +39,11 @@ export const ToolsBar = styled.div<ToolsBarProps>`
       color: #e75656;
     }
   }
+
+  button {
+    background: none;
+    border: none;
+  }
 `;
 
 export const PreviewContainer = styled.div`

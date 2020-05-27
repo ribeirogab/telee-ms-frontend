@@ -41,7 +41,7 @@ export const isDisabled = (status: string): boolean => {
 export const isLink = (status: string): boolean => {
   if (status === 'writing') return true;
   if (status === 'pending') return false;
-  if (status === 'returned') return false;
+  if (status === 'returned') return true;
   if (status === 'accepted') return false;
   if (status === 'recused') return false;
   return false;

@@ -52,7 +52,13 @@ const Login: React.FC = () => {
           <h1>Faça seu logon</h1>
 
           <Input name="username" icon={FiUser} placeholder="Usuário" required />
-          <Input name="password" icon={FiLock} placeholder="Senha" required />
+          <Input
+            name="password"
+            type="password"
+            icon={FiLock}
+            placeholder="Senha"
+            required
+          />
 
           <Button type="submit">Entrar</Button>
 

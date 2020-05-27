@@ -1,9 +1,5 @@
 import styled from 'styled-components';
 
-interface ArticleStatusProps {
-  bgcolor: string;
-}
-
 export const ArticlesContainer = styled.div`
   margin-top: 40px;
   display: flex;
@@ -44,7 +40,7 @@ export const ArticleHeader = styled.div`
     strong {
       font-size: 25px;
       margin-left: 10px;
-      color: #b48100;
+      color: ${props => props.color};
     }
     span {
       color: #666;
@@ -53,7 +49,7 @@ export const ArticleHeader = styled.div`
   }
 `;
 
-export const ArticleStatus = styled.div<ArticleStatusProps>`
+export const ArticleStatus = styled.div`
   position: relative;
   left: -15px;
   top: -15px;
@@ -64,7 +60,7 @@ export const ArticleStatus = styled.div<ArticleStatusProps>`
   height: 80px;
   border: solid 1px #0001;
   box-shadow: 1px 1px 2px #0003;
-  background-color: ${props => props.bgcolor}9;
+  background-color: ${props => props.color}9;
   border-radius: 100%;
   text-transform: uppercase;
   font-weight: bold;
@@ -72,6 +68,7 @@ export const ArticleStatus = styled.div<ArticleStatusProps>`
     font-size: 30px;
   }
 `;
+
 export const ArticleBody = styled.div`
   padding: 10px 10px;
   border-bottom: solid 1px #0001;
@@ -125,7 +122,7 @@ export const ArticleFooter = styled.div`
     strong {
       font-size: 25px;
       line-height: 45px;
-      color: #c49106;
+      color: ${props => props.color};
     }
     span {
       font-size: 16px;
@@ -141,28 +138,32 @@ export const ArticleFooter = styled.div`
 `;
 
 export const AuditButton = styled.button`
-  font-size: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
   width: 100%;
-  padding: 15px 0;
-  text-transform: uppercase;
-  font-weight: bold;
-  letter-spacing: 1px;
-  border: solid 1px #c49106;
-  background-color: transparent;
-  color: #c49106;
-  transition: color 0.3s;
-  transition: background-color 0.3s;
+  a {
+    font-size: 15px;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: ${props => (props.disabled ? 'default' : 'pointer')};
+    width: 100%;
+    padding: 15px 0;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border: solid 1px ${props => props.color};
+    background-color: ${props => (props.disabled ? props.color : '#fff')};
+    color: ${props => (props.disabled ? '#fff' : props.color)};
+    transition: color 0.3s;
+    transition: background-color 0.3s;
+  }
   .icon {
     margin-left: 7px;
     transition: margin-left 0.3s;
   }
 
-  &:hover {
-    background-color: #c49106;
+  & a:hover {
+    background-color: ${props => props.color};
     color: #fff;
     .icon {
       margin-left: 15px;
