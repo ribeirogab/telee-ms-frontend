@@ -5,11 +5,11 @@ import htmlReactParser from 'html-react-parser';
 import Container from '@material-ui/core/Container';
 
 import {
-  FiInfo, // eslint-disable-line
   FiEdit,
   FiArrowDown,
   FiArrowUp,
   FiSend,
+  FiEdit3,
   FiMessageSquare, // eslint-disable-line
   FiFileText,
 } from 'react-icons/fi';
@@ -30,6 +30,9 @@ import {
 } from './styles';
 
 import Header from '../../components/Header';
+import Modal from '../../components/Modal';
+
+import FormAudit from './FormAudit';
 
 import formatValue from '../../utils/formatValue';
 import getInitialLetters from '../../utils/getInitialLetters';
@@ -60,6 +63,7 @@ const Article: React.FC = () => {
   const { params } = useRouteMatch<ArticleParams>();
   const [scroll, setScroll] = useState(window.scrollY >= 64);
   const [task, setTask] = useState<Task | null>(null);
+  const [modalAuditOpen, setModalAuditOpen] = useState(false);
 
   window.onscroll = () => setScroll(window.scrollY >= 64);
 
@@ -97,10 +101,17 @@ const Article: React.FC = () => {
 
       <ToolsBar fixed={scroll}>
         <div>
-          {/* <FiInfo size={25} /> */}
-          <Link to={`/editar/artigo/${params.taskId}`}>
-            <FiEdit size={25} />
-          </Link>
+          {task?.status === 'pending' && (
+            <button type="button" onClick={() => setModalAuditOpen(true)}>
+              <FiEdit3 size={23} />
+            </button>
+          )}
+          {task?.status === 'writing' ||
+            (task?.status === 'returned' && (
+              <Link to={`/editar/artigo/${params.taskId}`}>
+                <FiEdit size={25} />
+              </Link>
+            ))}
           {scroll ? (
             <FiArrowUp size={25} onClick={backToTop} />
           ) : (
@@ -195,6 +206,14 @@ const Article: React.FC = () => {
           )}
         </ArticleBox>
       </Container>
+
+      <Modal
+        open={modalAuditOpen}
+        setOpen={setModalAuditOpen}
+        Component={
+          <FormAudit setOpen={setModalAuditOpen} taskId={params.taskId} />
+        }
+      />
     </>
   );
 };

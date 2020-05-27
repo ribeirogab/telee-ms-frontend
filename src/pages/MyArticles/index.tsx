@@ -98,7 +98,10 @@ const MyArticles: React.FC = () => {
                       {new Date(item.assumed).toLocaleDateString('pt-br')}
                     </div>
                     <div>
-                      <strong>Entregue:</strong> {item.delivered || '...'}
+                      <strong>Entregue:</strong>{' '}
+                      {item.delivered
+                        ? new Date(item.delivered).toLocaleDateString('pt-br')
+                        : '...'}
                     </div>
                   </div>
                   <div>

@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { shade } from 'polished';
 
 interface ValuesProps {
   open: boolean;
@@ -6,6 +7,10 @@ interface ValuesProps {
 
 interface HeaderRightProps {
   save: boolean;
+}
+
+interface UpdateArticleProps {
+  isOpen: boolean;
 }
 
 export const Header = styled.div`
@@ -91,6 +96,83 @@ export const HeaderRight = styled.div<HeaderRightProps>`
     color: #333;
   }
 `;
+
+export const UpdateArticle = styled.div<UpdateArticleProps>`
+  position: absolute;
+  background-color: #fff;
+  box-shadow: 2px 2px 8px #0003;
+  border-radius: 8px;
+  top: 50px;
+  padding: 10px 0;
+
+  ${props =>
+    !props.isOpen &&
+    css`
+      display: none;
+    `}
+
+  h1 {
+    font-size: 23px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .body {
+    padding: 5px 20px;
+    border-top: solid 1px #0001;
+    border-bottom: solid 1px #0001;
+
+    div {
+      display: flex;
+      margin: 5px 0;
+
+      .radio {
+        width: 25px;
+      }
+
+      .change-update {
+        color: #333;
+        flex-direction: column;
+        align-items: flex-start;
+
+        small {
+          color: #888;
+        }
+      }
+    }
+  }
+
+  .footer {
+    margin-top: 10px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: flex-end;
+
+    .btn-cancel {
+      color: #666;
+      transition: color 0.2s;
+
+      &:hover {
+        color: ${shade(0.4, '#666')};
+      }
+    }
+
+    .btn-update {
+      background-color: #4dc0ff;
+      color: #fff;
+      padding: 7px 10px;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: ${shade(0.2, '#4dc0ff')};
+      }
+    }
+  }
+`;
+
 export const Values = styled.div<ValuesProps>`
   width: 120px;
   height: 70px;
