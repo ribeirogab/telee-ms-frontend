@@ -35,8 +35,7 @@ const Login: React.FC = () => {
 
         const response = await api.post('/sessions', data);
         localStorage.setItem('token', response.data.token);
-        console.log(localStorage.getItem('token'));
-        // history.push('/dashboard');
+        history.push('/dashboard');
       } catch (error) {
         console.log(error);
       }
