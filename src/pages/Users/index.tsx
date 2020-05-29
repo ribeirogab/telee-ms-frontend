@@ -16,6 +16,7 @@ import ModalInfo from './ModalInfo';
 
 import toCapitalize from '../../utils/toCapitalize';
 import getInitialLetters from '../../utils/getInitialLetters';
+import translateUserPermission from '../../utils/translateUserPermission';
 import api from '../../services/api';
 import PermissionService from '../../services/PermissionService';
 
@@ -23,6 +24,7 @@ interface Writer {
   id: string;
   name: string;
   username: string;
+  permission: string;
 }
 
 const Writers: React.FC = () => {
@@ -48,7 +50,6 @@ const Writers: React.FC = () => {
       .get('/users', {
         headers: {
           authorization: `Bearer ${localStorage.getItem('token')}`,
-          permission: 'writer',
         },
       })
       .then(response => setWriters(response.data));
@@ -74,7 +75,7 @@ const Writers: React.FC = () => {
                 <div className="avatar">{getInitialLetters(writer.name)}</div>
                 <div>
                   <span>{toCapitalize(writer.name)}</span>
-                  <small>{writer.username}</small>
+                  <small>{translateUserPermission(writer.permission)}</small>
                 </div>
                 <div>
                   <Popover ElementOpenIcon={FiMoreVertical}>

@@ -8,7 +8,7 @@ import Home from '../pages/Home';
 import Tasks from '../pages/Tasks';
 import MyArticles from '../pages/MyArticles';
 import Audit from '../pages/Audit';
-import Writers from '../pages/Writers';
+import Users from '../pages/Users';
 import Article from '../pages/Article';
 import Edit from '../pages/Edit';
 
@@ -38,8 +38,8 @@ const Routes: React.FC = () => {
           permissions={['editor', 'administrator']}
         />
         <PrivateRoute
-          path="/redatores"
-          component={Writers}
+          path="/usuarios"
+          component={Users}
           permissions={['editor', 'administrator']}
         />
         <PrivateRoute

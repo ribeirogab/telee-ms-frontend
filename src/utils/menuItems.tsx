@@ -47,8 +47,8 @@ const menuItems = (): Array<MenuLabel[]> => {
     },
     {
       icon: <FiUsers size={18} />,
-      text: 'Redatores',
-      path: '/redatores',
+      text: 'Usuários',
+      path: '/usuarios',
       permissions: ['editor', 'administrator'],
     },
   ];

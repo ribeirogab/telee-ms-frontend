@@ -10,6 +10,7 @@ import {
 } from '../../../components/StandardFormElements';
 
 import api from '../../../services/api';
+import PermissionService from '../../../services/PermissionService';
 
 interface Writer {
   id: string;
@@ -90,7 +91,17 @@ const FormAdd = ({
             onChange={e => setPermission(e.target.value)}
             variant="outlined"
           >
-            <MenuItem value="writer">Redator</MenuItem>
+            {PermissionService(['editor', 'administrator']) && (
+              <MenuItem value="writer">Redator</MenuItem>
+            )}
+
+            {PermissionService(['editor', 'administrator']) && (
+              <MenuItem value="editor">Auditor</MenuItem>
+            )}
+
+            {PermissionService(['administrator']) && (
+              <MenuItem value="administrator">Administrador</MenuItem>
+            )}
           </TextField>
         </InputGroup>
 

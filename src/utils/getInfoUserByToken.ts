@@ -25,14 +25,7 @@ export default function getPermissionUser(): User {
     const decoded = verify(token, process.env.REACT_APP_SECRET as string);
     const { nameUser: name, permission } = decoded as TokenPayload;
 
-    let translatePermissionPtBr = '';
-
-    if (permission === 'writer') translatePermissionPtBr = 'redator';
-    else if (permission === 'editor') translatePermissionPtBr = 'auditor';
-    else if (permission === 'administrator')
-      translatePermissionPtBr = 'administrador';
-
-    return { name, permission: translatePermissionPtBr };
+    return { name, permission };
   } catch {
     return { name: '...', permission: '...' };
   }

@@ -36,7 +36,7 @@ import FormAudit from './FormAudit';
 
 import formatValue from '../../utils/formatValue';
 import getInitialLetters from '../../utils/getInitialLetters';
-import { statusColor } from '../../utils/taskStatus';
+import { statusColor, statusText } from '../../utils/taskStatus';
 
 import api from '../../services/api';
 
@@ -106,12 +106,13 @@ const Article: React.FC = () => {
               <FiEdit3 size={23} />
             </button>
           )}
-          {task?.status === 'writing' ||
-            (task?.status === 'returned' && (
-              <Link to={`/editar/artigo/${params.taskId}`}>
-                <FiEdit size={25} />
-              </Link>
-            ))}
+          {task?.status === 'writing' || task?.status === 'returned' ? (
+            <Link to={`/editar/artigo/${params.taskId}`}>
+              <FiEdit size={25} />
+            </Link>
+          ) : (
+            ''
+          )}
           {scroll ? (
             <FiArrowUp size={25} onClick={backToTop} />
           ) : (
@@ -152,7 +153,7 @@ const Article: React.FC = () => {
                       <strong>{task.writer.username}</strong>
                     </User>
                     <Status color={statusColor(task.status)}>
-                      {task.status}
+                      {statusText(task.status)}
                     </Status>
                     <small>
                       Última edição:{' '}

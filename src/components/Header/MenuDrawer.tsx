@@ -14,7 +14,7 @@ import { Sidebar, Menu, SidebarHeader } from './styles';
 import menuItems from '../../utils/menuItems';
 import getInitialLetters from '../../utils/getInitialLetters';
 import getInfoUserByToken from '../../utils/getInfoUserByToken';
-import toCapitalize from '../../utils/toCapitalize';
+import translateUserPermission from '../../utils/translateUserPermission';
 import PermissionService from '../../services/PermissionService';
 
 interface MenuDrawerProps {
@@ -52,7 +52,7 @@ const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
         <div className="avatar">{getInitialLetters(userInfo.name)}</div>
         <div className="user-info">
           <span>{userInfo.name}</span>
-          <small>{toCapitalize(userInfo.permission)}</small>
+          <small>{translateUserPermission(userInfo.permission)}</small>
         </div>
         <button type="button" onClick={toggleDrawer(false)}>
           <FiChevronLeft size={20} />
@@ -64,7 +64,7 @@ const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
           item =>
             PermissionService(item.permissions) && (
               <Link to={item.path} key={item.text}>
-                <ListItem button>
+                <ListItem button onClick={toggleDrawer(false)}>
                   <ListItemIcon>{item.icon}</ListItemIcon>
                   <ListItemText primary={item.text} />
                 </ListItem>
@@ -78,7 +78,7 @@ const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
           item =>
             PermissionService(item.permissions) && (
               <Link to={item.path} key={item.text}>
-                <ListItem button>
+                <ListItem button onClick={toggleDrawer(false)}>
                   <ListItemIcon>{item.icon}</ListItemIcon>
                   <ListItemText primary={item.text} />
                 </ListItem>
@@ -92,7 +92,7 @@ const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
           item =>
             PermissionService(item.permissions) && (
               <Link to={item.path} key={item.text}>
-                <ListItem button>
+                <ListItem button onClick={toggleDrawer(false)}>
                   <ListItemIcon>{item.icon}</ListItemIcon>
                   <ListItemText primary={item.text} />
                 </ListItem>
