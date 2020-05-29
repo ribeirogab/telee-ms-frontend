@@ -11,6 +11,7 @@ import { Container, Content, Background, ErrorLogin } from './styles';
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import Loader from '../../components/Loader';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -26,11 +27,13 @@ const Login: React.FC = () => {
   const history = useHistory();
 
   const [errorLogin, setErrorLogin] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = useCallback(
     async (data: Submit): Promise<void> => {
       try {
         setErrorLogin(false);
+        setLoading(true);
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
@@ -46,6 +49,7 @@ const Login: React.FC = () => {
         localStorage.setItem('token', response.data.token);
         history.push('/dashboard');
       } catch (err) {
+        setLoading(false);
         if (err.name === 'ValidationError') {
           const errors = getValidationErrors(err);
           formRef.current?.setErrors(errors);
@@ -57,6 +61,7 @@ const Login: React.FC = () => {
 
   return (
     <Container>
+      {loading && <Loader />}
       <Content>
         <img src={logo} alt="Logo" />
 
