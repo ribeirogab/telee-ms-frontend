@@ -48,8 +48,8 @@ const ReactQuillComponent = ({
       ['bold', 'italic', 'underline', 'strike'], // toggled buttons
       ['blockquote'],
       [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
-      ['link', 'image', 'video'],
-      [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+      ['link', 'video'],
+      // [{ color: [] }, { background: [] }], // dropdown with defaults from theme
       ['clean'], // remove formatting button
     ],
   };

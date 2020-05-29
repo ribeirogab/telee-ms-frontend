@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import {
   ContainerForm,
@@ -66,13 +67,27 @@ const FormAdd = ({ setOpen, tasks, setTasks }: FormAddProps): JSX.Element => {
             onChange={e => setKeyword(e.target.value)}
           />
           <TextField
-            className="input"
             required
+            id="outlined-select-currency"
+            select
+            className="input"
             label="Site"
-            variant="outlined"
             value={website}
             onChange={e => setWebsite(e.target.value)}
-          />
+            variant="outlined"
+          >
+            <MenuItem value="skycombotv.com.br">skycombotv.com.br</MenuItem>
+            <MenuItem value="assinesky.com.br">assinesky.com.br</MenuItem>
+            <MenuItem value="planoskytv.com.br">planoskytv.com.br</MenuItem>
+            <MenuItem value="telefonesky.com.br">telefonesky.com.br</MenuItem>
+            <MenuItem value="skytvinternetbandalarga.com.br">
+              skytvinternetbandalarga.com.br
+            </MenuItem>
+            <MenuItem value="assineskytv.com.br">assineskytv.com.br</MenuItem>
+            <MenuItem value="skycombo.com.br">skycombo.com.br</MenuItem>
+            <MenuItem value="comboskytv.com.br">comboskytv.com.br</MenuItem>
+            <MenuItem value="numerodasky.com.br">numerodasky.com.br</MenuItem>
+          </TextField>
         </InputGroup>
         <TextField
           required
