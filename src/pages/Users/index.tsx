@@ -4,7 +4,7 @@ import Container from '@material-ui/core/Container';
 
 import { FiMoreVertical, FiPlus, FiDelete, FiInfo } from 'react-icons/fi';
 
-import { ToolsBar, WritersContainer, BoxWriter } from './styles';
+import { ToolsBar, UsersContainer, BoxUser } from './styles';
 
 import Header from '../../components/Header';
 import Modal from '../../components/Modal';
@@ -20,14 +20,14 @@ import translateUserPermission from '../../utils/translateUserPermission';
 import api from '../../services/api';
 import PermissionService from '../../services/PermissionService';
 
-interface Writer {
+interface User {
   id: string;
   name: string;
   username: string;
   permission: string;
 }
 
-const Writers: React.FC = () => {
+const Users: React.FC = () => {
   const [idForApiRequest, setIdForApiRequest] = useState<string>('');
 
   const [modalAddOpen, setModalAddOpen] = useState(false);
@@ -35,14 +35,14 @@ const Writers: React.FC = () => {
 
   const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
 
-  const [writers, setWriters] = useState<Writer[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
-  async function handleDeleteWriter(): Promise<void> {
+  async function handleDeleteUser(): Promise<void> {
     await api.delete(`/users/${idForApiRequest}`, {
       headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
     });
 
-    setWriters(writers.filter(writer => writer.id !== idForApiRequest));
+    setUsers(users.filter(user => user.id !== idForApiRequest));
   }
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const Writers: React.FC = () => {
           authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
-      .then(response => setWriters(response.data));
+      .then(response => setUsers(response.data));
   }, []);
 
   return (
@@ -68,34 +68,35 @@ const Writers: React.FC = () => {
           )}
         </ToolsBar>
 
-        <WritersContainer>
-          {writers.map(writer => (
-            <BoxWriter key={writer.id}>
+        <UsersContainer>
+          {users.map(user => (
+            <BoxUser key={user.id}>
               <div className="box">
-                <div className="avatar">{getInitialLetters(writer.name)}</div>
+                <div className="avatar">{getInitialLetters(user.name)}</div>
                 <div>
-                  <span>{toCapitalize(writer.name)}</span>
-                  <small>{translateUserPermission(writer.permission)}</small>
+                  <span>{toCapitalize(user.name)}</span>
+                  <small>{translateUserPermission(user.permission)}</small>
                 </div>
                 <div>
                   <Popover ElementOpenIcon={FiMoreVertical}>
-                    {PermissionService(['administrator']) && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIdForApiRequest(writer.id);
-                          setAlertDeleteOpen(true);
-                        }}
-                      >
-                        <FiDelete />
-                        <span>Excluir</span>
-                      </button>
-                    )}
+                    {PermissionService(['administrator']) &&
+                      user.permission !== 'administrator' && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIdForApiRequest(user.id);
+                            setAlertDeleteOpen(true);
+                          }}
+                        >
+                          <FiDelete />
+                          <span>Excluir</span>
+                        </button>
+                      )}
 
                     <button
                       type="button"
                       onClick={() => {
-                        setIdForApiRequest(writer.id);
+                        setIdForApiRequest(user.id);
                         setModalInfoOpen(true);
                       }}
                     >
@@ -105,9 +106,9 @@ const Writers: React.FC = () => {
                   </Popover>
                 </div>
               </div>
-            </BoxWriter>
+            </BoxUser>
           ))}
-        </WritersContainer>
+        </UsersContainer>
       </Container>
 
       <Modal
@@ -116,8 +117,8 @@ const Writers: React.FC = () => {
         Component={
           <FormAdd
             setOpen={setModalAddOpen}
-            writers={writers}
-            setWriters={setWriters}
+            users={users}
+            setUsers={setUsers}
           />
         }
       />
@@ -125,7 +126,7 @@ const Writers: React.FC = () => {
         open={modalInfoOpen}
         setOpen={setModalInfoOpen}
         Component={
-          <ModalInfo setOpen={setModalInfoOpen} writerId={idForApiRequest} />
+          <ModalInfo setOpen={setModalInfoOpen} userId={idForApiRequest} />
         }
       />
       <Alert
@@ -135,11 +136,11 @@ const Writers: React.FC = () => {
         text="Após a exclusão a operação não poderá ser desfeita."
         textAcceptButton="Excluir"
         ifAccepted={{
-          execute: handleDeleteWriter,
+          execute: handleDeleteUser,
         }}
       />
     </>
   );
 };
 
-export default Writers;
+export default Users;

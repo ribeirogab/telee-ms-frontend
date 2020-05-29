@@ -12,10 +12,10 @@ import api from '../../../services/api';
 
 interface ModalInfoProps {
   setOpen?: Function;
-  writerId: string;
+  userId: string;
 }
 
-const ModalInfo = ({ setOpen, writerId }: ModalInfoProps): JSX.Element => {
+const ModalInfo = ({ setOpen, userId }: ModalInfoProps): JSX.Element => {
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [permission, setPermission] = useState('');
@@ -26,7 +26,7 @@ const ModalInfo = ({ setOpen, writerId }: ModalInfoProps): JSX.Element => {
 
   useEffect(() => {
     api
-      .get(`/users/${writerId}`, {
+      .get(`/users/${userId}`, {
         headers: {
           authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -36,7 +36,7 @@ const ModalInfo = ({ setOpen, writerId }: ModalInfoProps): JSX.Element => {
         setName(response.data.name);
         setPermission(response.data.permission);
       });
-  }, [writerId]);
+  }, [userId]);
 
   return (
     <ContainerForm>
