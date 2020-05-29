@@ -20,15 +20,11 @@ interface Writer {
 
 interface FormAddProps {
   setOpen?: Function;
-  writers: Writer[];
-  setWriters: Function;
+  users: Writer[];
+  setUsers: Function;
 }
 
-const FormAdd = ({
-  setOpen,
-  writers,
-  setWriters,
-}: FormAddProps): JSX.Element => {
+const FormAdd = ({ setOpen, users, setUsers }: FormAddProps): JSX.Element => {
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [permission, setPermission] = useState('');
@@ -49,7 +45,7 @@ const FormAdd = ({
       },
     );
 
-    setWriters([...writers, writer]);
+    setUsers([...users, writer]);
 
     if (setOpen) setOpen(false);
   }

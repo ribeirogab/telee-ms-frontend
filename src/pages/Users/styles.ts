@@ -31,7 +31,7 @@ export const ToolsBar = styled.div`
   }
 `;
 
-export const WritersContainer = styled.div`
+export const UsersContainer = styled.div`
   margin-top: 20px;
   width: 100%;
   display: flex;
@@ -39,7 +39,7 @@ export const WritersContainer = styled.div`
   flex-wrap: wrap;
 `;
 
-export const BoxWriter = styled.div`
+export const BoxUser = styled.div`
   width: 49%;
   margin-bottom: 2%;
   @media screen and (max-width: 767px) {
