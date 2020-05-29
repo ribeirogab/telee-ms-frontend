@@ -1,15 +1,18 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { FiUser, FiLock } from 'react-icons/fi';
+import { FiUser, FiLock, FiAlertCircle } from 'react-icons/fi';
+import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 
 import logo from '../../assets/logo.png';
 
-import { Container, Content, Background } from './styles';
+import { Container, Content, Background, ErrorLogin } from './styles';
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+
+import getValidationErrors from '../../utils/getValidationErrors';
 
 import api from '../../services/api';
 
@@ -19,14 +22,20 @@ interface Submit {
 }
 
 const Login: React.FC = () => {
+  const formRef = useRef<FormHandles>(null);
   const history = useHistory();
+
+  const [errorLogin, setErrorLogin] = useState(false);
 
   const handleSubmit = useCallback(
     async (data: Submit): Promise<void> => {
       try {
+        setErrorLogin(false);
+        formRef.current?.setErrors({});
+
         const schema = Yup.object().shape({
           username: Yup.string().required('Usuário obrigatório'),
-          password: Yup.string().min(3, 'No mínimo 3 digitos'),
+          password: Yup.string().required('Senha obrigatória'),
         });
 
         await schema.validate(data, {
@@ -36,8 +45,11 @@ const Login: React.FC = () => {
         const response = await api.post('/sessions', data);
         localStorage.setItem('token', response.data.token);
         history.push('/dashboard');
-      } catch (error) {
-        console.log(error);
+      } catch (err) {
+        if (err.name === 'ValidationError') {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+        } else setErrorLogin(true);
       }
     },
     [history],
@@ -48,20 +60,22 @@ const Login: React.FC = () => {
       <Content>
         <img src={logo} alt="Logo" />
 
-        <Form onSubmit={handleSubmit}>
+        <Form ref={formRef} onSubmit={handleSubmit}>
           <h1>Faça seu logon</h1>
 
-          <Input name="username" icon={FiUser} placeholder="Usuário" required />
+          <Input name="username" icon={FiUser} placeholder="Usuário" />
           <Input
             name="password"
             type="password"
             icon={FiLock}
             placeholder="Senha"
-            required
           />
 
           <Button type="submit">Entrar</Button>
 
+          <ErrorLogin error={errorLogin}>
+            <FiAlertCircle size={20} /> Usuário ou senha incorreto(s).
+          </ErrorLogin>
           {/* <a href="forgot">Esqueci minha senha</a> */}
         </Form>
       </Content>

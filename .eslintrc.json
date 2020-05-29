@@ -32,6 +32,7 @@
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
     "prettier/prettier": "error",
+    "no-unused-expressions": "off",
     "react/jsx-wrap-multilines": ["error", {"declaration": false, "assignment": false}],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { shade } from 'polished';
 import signInBackground from '../../assets/login-background.jpg';
 
@@ -7,6 +7,10 @@ export const Container = styled.div`
   display: flex;
   align-items: stretch;
 `;
+
+interface ErrorLogin {
+  error: boolean;
+}
 
 export const Content = styled.div`
   display: flex;
@@ -40,4 +44,27 @@ export const Background = styled.div`
   flex: 1;
   background: url(${signInBackground}) no-repeat center;
   background-size: cover;
+`;
+
+export const ErrorLogin = styled.div<ErrorLogin>`
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: #c53030;
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  ${props =>
+    props.error &&
+    css`
+      & {
+        opacity: 1;
+      }
+    `}
+
+  svg {
+    margin-right: 8px;
+  }
 `;
