@@ -43,12 +43,12 @@ const Routes: React.FC = () => {
           permissions={['editor', 'administrator']}
         />
         <PrivateRoute
-          path="/artigo/:taskId"
+          path="/artigo/:articleId"
           component={Article}
           permissions={['writer', 'editor', 'administrator']}
         />
         <PrivateRoute
-          path="/editar/artigo/:taskId"
+          path="/editar/artigo/:articleId"
           component={Edit}
           permissions={['writer', 'editor', 'administrator']}
         />

@@ -21,7 +21,7 @@ interface Task {
 
 interface FormAuditProps {
   setOpen?: Function;
-  taskId: string;
+  taskId: string | undefined;
 }
 const FormAudit = ({ setOpen, taskId }: FormAuditProps): JSX.Element => {
   const history = useHistory();
@@ -32,18 +32,22 @@ const FormAudit = ({ setOpen, taskId }: FormAuditProps): JSX.Element => {
   ): Promise<void> {
     event.preventDefault();
 
-    try {
-      await api.patch(
-        `/tasks/${taskId}`,
-        { status },
-        {
-          headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
-        },
-      );
+    if (taskId) {
+      try {
+        await api.patch(
+          `/tasks/${taskId}`,
+          { status },
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          },
+        );
 
-      history.push('/auditoria');
-    } catch (error) {
-      console.log(error); // eslint-disable-line
+        history.push('/auditoria');
+      } catch (error) {
+        console.log(error); // eslint-disable-line
+      }
     }
   }
 

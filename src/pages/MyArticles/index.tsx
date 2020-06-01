@@ -43,26 +43,32 @@ interface Task {
   sub_keywords: string;
   website: string;
   status: string;
-  assumed: string;
-  delivered: string | null;
-  value: number | null;
-  words: number | null;
-  article: string | null;
   created_at: string;
   updated_at: string;
   author: User;
+}
+
+interface Article {
+  id: string;
   writer: User;
+  task: Task;
+  words: number;
+  value: string;
+  article: string;
+  created_at: Date;
+  updated_at: Date;
+  delivered_at: Date;
 }
 
 const MyArticles: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[] | null>(null);
+  const [articles, setArticles] = useState<Article[] | null>(null);
 
   useEffect(() => {
     api
-      .get('/tasks-writer', {
+      .get('/articles/from/writer', {
         headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
       })
-      .then(response => setTasks(response.data));
+      .then(response => setArticles(response.data));
   }, []);
 
   return (
@@ -70,62 +76,68 @@ const MyArticles: React.FC = () => {
       <Header textPage="Artigos" />
       <Container maxWidth="lg">
         <ArticlesContainer>
-          {tasks ? (
-            tasks.map(item => (
-              <ArticleBox key={item.id}>
-                <ArticleHeader color={statusColor(item.status)}>
-                  <ArticleStatus color={statusColor(item.status)}>
-                    {statusIcon(item.status)}
+          {articles ? (
+            articles.map(article => (
+              <ArticleBox key={article.id}>
+                <ArticleHeader color={statusColor(article.task.status)}>
+                  <ArticleStatus color={statusColor(article.task.status)}>
+                    {statusIcon(article.task.status)}
                   </ArticleStatus>
                   <div>
-                    <strong>{item.keyword}</strong>
-                    <span>{item.sub_keywords}</span>
+                    <strong>{article.task.keyword}</strong>
+                    <span>{article.task.sub_keywords}</span>
                   </div>
                 </ArticleHeader>
 
                 <ArticleBody>
                   <div className="group">
                     <div>
-                      <strong>Redator:</strong> {item.writer.name}
+                      <strong>Redator:</strong> {article.writer.name}
                     </div>
                     <div>
-                      <strong>Criador:</strong> {item.author.name}
+                      <strong>Criador:</strong> {article.task.author.name}
                     </div>
                   </div>
                   <div className="group">
                     <div>
                       <strong>Assumido:</strong>{' '}
-                      {new Date(item.assumed).toLocaleDateString('pt-br')}
+                      {new Date(article.created_at).toLocaleDateString('pt-br')}
                     </div>
                     <div>
                       <strong>Entregue:</strong>{' '}
-                      {item.delivered
-                        ? new Date(item.delivered).toLocaleDateString('pt-br')
+                      {article.delivered_at
+                        ? new Date(article.delivered_at).toLocaleDateString(
+                            'pt-br',
+                          )
                         : '...'}
                     </div>
                   </div>
                   <div>
-                    <strong>Destino:</strong> {item.website}
+                    <strong>Destino:</strong> {article.task.website}
                   </div>
                 </ArticleBody>
 
-                <ArticleFooter color={statusColor(item.status)}>
+                <ArticleFooter color={statusColor(article.task.status)}>
                   <div className="values">
                     <strong>
-                      {formatValue(item.words ? item.words * 0.06 : 0)}
+                      {formatValue(article.words ? article.words * 0.06 : 0)}
                     </strong>
-                    <span>{item.words || '0'} palavras</span>
+                    <span>{article.words || '0'} palavras</span>
                   </div>
                   <div className="audit">
                     <AuditButton
-                      color={statusColor(item.status)}
-                      disabled={isDisabled(item.status)}
+                      color={statusColor(article.task.status)}
+                      disabled={isDisabled(article.task.status)}
                     >
                       <Link
-                        to={isLink(item.status) ? `/artigo/${item.id}` : '#'}
+                        to={
+                          isLink(article.task.status)
+                            ? `/artigo/${article.id}`
+                            : '#'
+                        }
                       >
-                        {statusText(item.status)}{' '}
-                        {isDisabled(item.status) ? (
+                        {statusText(article.task.status)}{' '}
+                        {isDisabled(article.task.status) ? (
                           false
                         ) : (
                           <FiArrowRight className="icon" size={20} />

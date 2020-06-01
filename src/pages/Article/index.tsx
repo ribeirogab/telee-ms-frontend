@@ -10,7 +10,6 @@ import {
   FiArrowUp,
   FiSend,
   FiEdit3,
-  FiMessageSquare, // eslint-disable-line
   FiFileText,
 } from 'react-icons/fi';
 
@@ -20,8 +19,6 @@ import {
   PreviewTop,
   PreviewBottom,
   User,
-  Comments, // eslint-disable-line
-  Chat, // eslint-disable-line
   ArticleBox,
   Status,
   Money,
@@ -41,28 +38,47 @@ import { statusColor, statusText } from '../../utils/taskStatus';
 import api from '../../services/api';
 
 interface ArticleParams {
-  taskId: string;
+  articleId: string;
+}
+
+interface User {
+  id: string;
+  name: string;
+  username: string;
+  permission: string;
+  created_at: string;
+  updated_at: string;
 }
 
 interface Task {
+  id: string;
   keyword: string;
-  subKeywords: string;
+  sub_keywords: string;
   website: string;
   status: string;
+  created_at: string;
+  updated_at: string;
+  author: User;
+}
+
+interface Article {
+  id: string;
+  writer: User;
+  task: Task;
   words: number;
-  updatedAt: string;
+  value: string;
   article: string;
-  writer: {
-    name: string;
-    username: string;
-  };
+  created_at: Date;
+  updated_at: Date;
+  delivered_at: Date;
 }
 
 const Article: React.FC = () => {
   const history = useHistory();
   const { params } = useRouteMatch<ArticleParams>();
+
   const [scroll, setScroll] = useState(window.scrollY >= 64);
-  const [task, setTask] = useState<Task | null>(null);
+  const [article, setArticle] = useState<Article | null>(null);
   const [modalAuditOpen, setModalAuditOpen] = useState(false);
 
   window.onscroll = () => setScroll(window.scrollY >= 64);
@@ -74,40 +90,28 @@ const Article: React.FC = () => {
 
   useEffect(() => {
     api
-      .get(`/tasks/${params.taskId}`, {
+      .get(`/articles/${params.articleId}`, {
         headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
       })
       .then(response => {
-        setTask({
-          keyword: response.data.keyword,
-          subKeywords: response.data.sub_keywords,
-          website: response.data.website,
-          status: response.data.status,
-          words: response.data.words || 0,
-          updatedAt: response.data.updated_at,
-          article: response.data.article || '',
-          writer: {
-            name: response.data.writer.name,
-            username: response.data.writer.username,
-          },
-        });
-      })
-      .catch(() => history.push('/artigos'));
-  }, [params.taskId, history]);
+        setArticle(response.data);
+      });
+  }, [params.articleId]);
 
   return (
     <>
-      <Header textPage={`Artigo ${params.taskId}`} />
+      <Header textPage={`Artigo ${params.articleId}`} />
 
       <ToolsBar fixed={scroll}>
         <div>
-          {task?.status === 'pending' && (
+          {article?.task.status === 'pending' && (
             <button type="button" onClick={() => setModalAuditOpen(true)}>
               <FiEdit3 size={23} />
             </button>
           )}
-          {task?.status === 'writing' || task?.status === 'returned' ? (
-            <Link to={`/editar/artigo/${params.taskId}`}>
+          {article?.task.status === 'writing' ||
+          article?.task.status === 'returned' ? (
+            <Link to={`/editar/artigo/${params.articleId}`}>
               <FiEdit size={25} />
             </Link>
           ) : (
@@ -123,23 +127,23 @@ const Article: React.FC = () => {
 
       <Container maxWidth="lg">
         <PreviewContainer>
-          {task && (
+          {article && (
             <>
               <PreviewTop>
                 <div className="info">
-                  <h2>{task.keyword}</h2>
-                  <p>{task.subKeywords}</p>
+                  <h2>{article.task.keyword}</h2>
+                  <p>{article.task.sub_keywords}</p>
                   <div className="destiny">
                     <FiSend />
-                    <span>{task.website}</span>
+                    <span>{article.task.website}</span>
                   </div>
                 </div>
                 <div className="values">
                   <Money border color="#C93" padding="5px 20px" size={24}>
-                    {formatValue(task.words * 0.06)}
+                    {formatValue(article.words * 0.06)}
                   </Money>
                   <Words border color="#5CB" size={16} padding="5px 20px">
-                    {task.words} palavras
+                    {article.words} palavras
                   </Words>
                 </div>
               </PreviewTop>
@@ -148,16 +152,16 @@ const Article: React.FC = () => {
                   <div className="bar">
                     <User>
                       <div className="avatar">
-                        {getInitialLetters(task.writer.name)}
+                        {getInitialLetters(article.writer.name)}
                       </div>
-                      <strong>{task.writer.username}</strong>
+                      <strong>{article.writer.username}</strong>
                     </User>
-                    <Status color={statusColor(task.status)}>
-                      {statusText(task.status)}
+                    <Status color={statusColor(article.task.status)}>
+                      {statusText(article.task.status)}
                     </Status>
                     <small>
                       Última edição:{' '}
-                      {new Date(task.updatedAt).toLocaleDateString('pt-br')}
+                      {new Date(article.updated_at).toLocaleDateString('pt-br')}
                     </small>
                   </div>
                 </div>
@@ -183,25 +187,25 @@ const Article: React.FC = () => {
           <h2>
             Artigo <FiFileText />
           </h2>
-          {task && (
+          {article && (
             <div className="article-container">
               <div className="info-container">
                 <div className="info">
                   <Money color="#C93" size={21}>
-                    {formatValue(task.words * 0.06)}
+                    {formatValue(article.words * 0.06)}
                   </Money>
                   <Words color="#5CB" size={21}>
-                    {task.words} palavras
+                    {article.words} palavras
                   </Words>
                   <small>
                     {' '}
                     Última edição:{' '}
-                    {new Date(task.updatedAt).toLocaleDateString('pt-br')}
+                    {new Date(article.updated_at).toLocaleDateString('pt-br')}
                   </small>
                 </div>
               </div>
               <ArticleContent className="ql-editor">
-                {htmlReactParser(task.article)}
+                {htmlReactParser(article.article)}
               </ArticleContent>
             </div>
           )}
@@ -212,7 +216,7 @@ const Article: React.FC = () => {
         open={modalAuditOpen}
         setOpen={setModalAuditOpen}
         Component={
-          <FormAudit setOpen={setModalAuditOpen} taskId={params.taskId} />
+          <FormAudit setOpen={setModalAuditOpen} taskId={article?.task.id} />
         }
       />
     </>
