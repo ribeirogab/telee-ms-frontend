@@ -25,7 +25,7 @@ import {
 import api from '../../services/api';
 
 interface EditParams {
-  taskId: string;
+  articleId: string;
 }
 
 const Edit: React.FC = () => {
@@ -46,7 +46,7 @@ const Edit: React.FC = () => {
   async function handleUpdate(): Promise<void> {
     if (typeUpdate === 'update') {
       await api.put(
-        `/tasks-writer/${params.taskId}`,
+        `/articles/${params.articleId}`,
         { words, article },
         {
           headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -60,7 +60,7 @@ const Edit: React.FC = () => {
 
       if (!confirmDeliver) return;
 
-      await api.patch(`/tasks-writer/deliver/${params.taskId}`, null, {
+      await api.patch(`/articles/${params.articleId}`, null, {
         headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
       });
 
@@ -72,11 +72,11 @@ const Edit: React.FC = () => {
 
   useEffect(() => {
     api
-      .get(`/tasks/${params.taskId}`, {
+      .get(`/articles/${params.articleId}`, {
         headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
       })
       .then(response => setArticle(response.data.article || ''));
-  }, [params.taskId]);
+  }, [params.articleId]);
 
   window.onresize = () => setOpenValues(window.innerWidth > 1350);
 
@@ -84,7 +84,7 @@ const Edit: React.FC = () => {
     <>
       <Header>
         <HeaderLeft>
-          <Link to={`/artigo/${params.taskId}`}>
+          <Link to={`/artigo/${params.articleId}`}>
             <FiChevronLeft size={18} /> Voltar
           </Link>
           <Status color="#999">Escrevendo</Status>

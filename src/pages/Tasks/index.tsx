@@ -55,19 +55,11 @@ const Tasks: React.FC = () => {
   }
 
   async function handleAssumeTask(): Promise<void> {
-    await api.patch(
-      `/tasks-writer/${idForApiRequest}`,
-      {
-        writerId: '1b701427-8f31-4944-b599-bc025fee85ed',
-        words: '10',
-        article: 'lalalal',
+    await api.post(`/articles/${idForApiRequest}`, null, {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('token')}`,
       },
-      {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      },
-    );
+    });
 
     setTasks(tasks.filter(task => task.id !== idForApiRequest));
   }
