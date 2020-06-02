@@ -57,7 +57,7 @@ const Users: React.FC = () => {
 
   return (
     <>
-      <Header textPage="Redatores" />
+      <Header textPage="Usuários" />
       <Container maxWidth="md">
         <ToolsBar>
           {PermissionService(['editor', 'administrator']) && (

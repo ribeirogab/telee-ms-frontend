@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { useHistory } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 
 import {
@@ -33,15 +33,14 @@ interface Task {
 }
 
 const Tasks: React.FC = () => {
-  const [idForApiRequest, setIdForApiRequest] = useState<string>('');
+  const history = useHistory();
 
+  const [idForApiRequest, setIdForApiRequest] = useState<string>('');
   const [modalAddOpen, setModalAddOpen] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false);
   const [modalInfoOpen, setModalInfoOpen] = useState(false);
-
   const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
   const [alertAssumeOpen, setAlertAssumeOpen] = useState(false);
-
   const [tasks, setTasks] = useState<Task[]>([]);
 
   async function handleDeleteTask(): Promise<void> {
@@ -62,6 +61,7 @@ const Tasks: React.FC = () => {
     });
 
     setTasks(tasks.filter(task => task.id !== idForApiRequest));
+    history.push('/artigos');
   }
 
   useEffect(() => {
