@@ -80,7 +80,12 @@ const Tasks: React.FC = () => {
       <Header textPage="Tarefas" />
       <Container maxWidth="lg">
         <ToolsBar>
-          {PermissionService(['editor', 'administrator']) && (
+          {PermissionService([
+            'editor',
+            'administrator',
+            'developer',
+            'developer',
+          ]) && (
             <button type="button" onClick={() => setModalAddOpen(true)}>
               <FiPlus />
               <span>ADICIONAR</span>
@@ -110,7 +115,11 @@ const Tasks: React.FC = () => {
                   </td>
                   <td>
                     <Popover>
-                      {PermissionService(['editor', 'administrator']) && (
+                      {PermissionService([
+                        'editor',
+                        'administrator',
+                        'developer',
+                      ]) && (
                         <button
                           type="button"
                           onClick={() => {
@@ -123,7 +132,11 @@ const Tasks: React.FC = () => {
                         </button>
                       )}
 
-                      {PermissionService(['editor', 'administrator']) && (
+                      {PermissionService([
+                        'editor',
+                        'administrator',
+                        'developer',
+                      ]) && (
                         <button
                           type="button"
                           onClick={() => {
@@ -140,6 +153,7 @@ const Tasks: React.FC = () => {
                         'writer',
                         'editor',
                         'administrator',
+                        'developer',
                       ]) && (
                         <button
                           type="button"

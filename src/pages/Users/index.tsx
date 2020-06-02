@@ -60,7 +60,7 @@ const Users: React.FC = () => {
       <Header textPage="Usuários" />
       <Container maxWidth="md">
         <ToolsBar>
-          {PermissionService(['editor', 'administrator']) && (
+          {PermissionService(['editor', 'administrator', 'developer']) && (
             <button type="button" onClick={() => setModalAddOpen(true)}>
               <FiPlus />
               <span>ADICIONAR</span>
@@ -79,8 +79,10 @@ const Users: React.FC = () => {
                 </div>
                 <div>
                   <Popover ElementOpenIcon={FiMoreVertical}>
-                    {PermissionService(['administrator']) &&
-                      user.permission !== 'administrator' && (
+                    {PermissionService(['administrator', 'developer']) &&
+                      (user.permission !== 'administrator' ||
+                        PermissionService(['developer'])) &&
+                      user.permission !== 'developer' && (
                         <button
                           type="button"
                           onClick={() => {

@@ -19,13 +19,13 @@ const Routes: React.FC = () => {
         <Route exact path="/" component={Login} />
         <PrivateRoute
           path="/dashboard"
-          permissions={['writer', 'editor', 'administrator']}
+          permissions={['writer', 'editor', 'administrator', 'developer']}
           component={Home}
         />
         <PrivateRoute
           path="/tarefas"
           component={Tasks}
-          permissions={['writer', 'editor', 'administrator']}
+          permissions={['writer', 'editor', 'administrator', 'developer']}
         />
         <PrivateRoute
           path="/artigos"
@@ -35,22 +35,22 @@ const Routes: React.FC = () => {
         <PrivateRoute
           path="/auditoria"
           component={Audit}
-          permissions={['editor', 'administrator']}
+          permissions={['editor', 'administrator', 'developer']}
         />
         <PrivateRoute
           path="/usuarios"
           component={Users}
-          permissions={['editor', 'administrator']}
+          permissions={['editor', 'administrator', 'developer']}
         />
         <PrivateRoute
           path="/artigo/:articleId"
           component={Article}
-          permissions={['writer', 'editor', 'administrator']}
+          permissions={['writer', 'editor', 'administrator', 'developer']}
         />
         <PrivateRoute
           path="/editar/artigo/:articleId"
           component={Edit}
-          permissions={['writer', 'editor', 'administrator']}
+          permissions={['writer', 'editor', 'administrator', 'developer']}
         />
       </Switch>
     </BrowserRouter>
