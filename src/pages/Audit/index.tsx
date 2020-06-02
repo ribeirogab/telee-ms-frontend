@@ -61,6 +61,7 @@ const Audit: React.FC = () => {
       .get('/articles', {
         headers: {
           authorization: `Bearer ${localStorage.getItem('token')}`,
+          status: 'pending',
         },
       })
       .then(response => setArticles(response.data));
