@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useRouteMatch, useHistory } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import htmlReactParser from 'html-react-parser';
 
 import Container from '@material-ui/core/Container';
@@ -74,7 +74,6 @@ interface Article {
 }
 
 const Article: React.FC = () => {
-  const history = useHistory();
   const { params } = useRouteMatch<ArticleParams>();
 
   const [scroll, setScroll] = useState(window.scrollY >= 64);

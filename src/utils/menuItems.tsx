@@ -22,13 +22,13 @@ const menuItems = (): Array<MenuLabel[]> => {
       icon: <FiGrid size={18} />,
       text: 'Home',
       path: '/dashboard',
-      permissions: ['writer', 'editor', 'administrator'],
+      permissions: ['writer', 'editor', 'administrator', 'developer'],
     },
     {
       icon: <FiClipboard size={18} />,
       text: 'Tarefas',
       path: '/tarefas',
-      permissions: ['writer', 'editor', 'administrator'],
+      permissions: ['writer', 'editor', 'administrator', 'developer'],
     },
     {
       icon: <FiBook size={18} />,
@@ -43,13 +43,13 @@ const menuItems = (): Array<MenuLabel[]> => {
       icon: <FiCheckSquare size={18} />,
       text: 'Auditoria',
       path: '/auditoria',
-      permissions: ['editor', 'administrator'],
+      permissions: ['editor', 'administrator', 'developer'],
     },
     {
       icon: <FiUsers size={18} />,
       text: 'Usuários',
       path: '/usuarios',
-      permissions: ['editor', 'administrator'],
+      permissions: ['editor', 'administrator', 'developer'],
     },
   ];
 

@@ -87,15 +87,15 @@ const FormAdd = ({ setOpen, users, setUsers }: FormAddProps): JSX.Element => {
             onChange={e => setPermission(e.target.value)}
             variant="outlined"
           >
-            {PermissionService(['editor', 'administrator']) && (
+            {PermissionService(['editor', 'administrator', 'developer']) && (
               <MenuItem value="writer">Redator</MenuItem>
             )}
 
-            {PermissionService(['editor', 'administrator']) && (
+            {PermissionService(['editor', 'administrator', 'developer']) && (
               <MenuItem value="editor">Auditor</MenuItem>
             )}
 
-            {PermissionService(['administrator']) && (
+            {PermissionService(['administrator', 'developer']) && (
               <MenuItem value="administrator">Administrador</MenuItem>
             )}
           </TextField>
