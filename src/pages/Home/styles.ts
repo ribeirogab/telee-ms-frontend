@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { shade } from 'polished';
 
 export const LastAcess = styled.div`
   margin-top: 40px;
@@ -30,6 +31,7 @@ export const LastAcess = styled.div`
 `;
 
 export const News = styled.div`
+  margin-top: 40px;
   max-width: 100%;
   padding: 50px 30px;
   border-radius: 16px;
@@ -80,5 +82,70 @@ export const BoxNews = styled.div`
     border-radius: 8px;
     border: solid 1px #0005;
     padding: 20px;
+
+    button {
+      border: none;
+      background: none;
+      margin-top: 20px;
+
+      & + button {
+        margin-left: 10px;
+      }
+
+      svg {
+        font-size: 25px;
+        transition: color 0.3s;
+      }
+    }
+
+    .edit {
+      svg {
+        color: #29f;
+      }
+
+      &:hover svg {
+        color: ${shade(0.2, '#29f')};
+      }
+    }
+
+    .delete {
+      svg {
+        color: #c53030;
+      }
+
+      &:hover svg {
+        color: ${shade(0.2, '#c53030')};
+      }
+    }
+  }
+`;
+
+export const ToolsBar = styled.div`
+  margin-top: 40px;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 30px;
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: transparent;
+    color: #f4434b;
+    border: solid 1px #f4434b;
+    transition: background-color 0.5s;
+
+    span {
+      margin-left: 5px;
+    }
+
+    &:hover {
+      background-color: #f442;
+    }
   }
 `;
