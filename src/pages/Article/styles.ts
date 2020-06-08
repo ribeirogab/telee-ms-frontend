@@ -29,6 +29,7 @@ export const ToolsBar = styled.div<ToolsBarProps>`
   top: ${props => (props.fixed ? 0 : '')};
   div {
     padding-right: 2%;
+    display: flex;
     svg {
       margin: 0 5px;
       cursor: pointer;
@@ -43,6 +44,20 @@ export const ToolsBar = styled.div<ToolsBarProps>`
   button {
     background: none;
     border: none;
+  }
+
+  .btn-audit {
+    display: flex;
+    align-items: center;
+
+    span {
+      transition: color 0.3s;
+    }
+
+    &:hover svg,
+    &:hover span {
+      color: #e75656;
+    }
   }
 `;
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import htmlReactParser from 'html-react-parser';
 
@@ -80,12 +80,19 @@ const Article: React.FC = () => {
   const [article, setArticle] = useState<Article | null>(null);
   const [modalAuditOpen, setModalAuditOpen] = useState(false);
 
-  window.onscroll = () => setScroll(window.scrollY >= 64);
+  window.onscroll = useCallback(() => setScroll(window.scrollY >= 64), []);
 
-  const backToTop = (): void => window.scrollTo({ top: 0, behavior: 'smooth' });
+  const backToTop = useCallback(
+    () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+    [],
+  );
 
-  const goToArticle = (): void =>
-    window.scrollTo({ top: 1113, behavior: 'smooth' });
+  const goToArticle = useCallback(
+    () => window.scrollTo({ top: 1113, behavior: 'smooth' }),
+    [],
+  );
+
+  const openModalAudit = useCallback(() => setModalAuditOpen(true), []);
 
   useEffect(() => {
     api
@@ -104,7 +111,12 @@ const Article: React.FC = () => {
       <ToolsBar fixed={scroll}>
         <div>
           {article?.task.status === 'pending' && (
-            <button type="button" onClick={() => setModalAuditOpen(true)}>
+            <button
+              className="btn-audit"
+              type="button"
+              onClick={openModalAudit}
+            >
+              <span>AUDITAR</span>
               <FiEdit3 size={23} />
             </button>
           )}

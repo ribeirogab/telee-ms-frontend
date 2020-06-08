@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import Container from '@material-ui/core/Container';
 
@@ -29,21 +29,30 @@ interface User {
 
 const Users: React.FC = () => {
   const [idForApiRequest, setIdForApiRequest] = useState<string>('');
-
   const [modalAddOpen, setModalAddOpen] = useState(false);
   const [modalInfoOpen, setModalInfoOpen] = useState(false);
-
   const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
-
   const [users, setUsers] = useState<User[]>([]);
 
-  async function handleDeleteUser(): Promise<void> {
+  const handleDeleteUser = useCallback(async () => {
     await api.delete(`/users/${idForApiRequest}`, {
       headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
     });
 
     setUsers(users.filter(user => user.id !== idForApiRequest));
-  }
+  }, [idForApiRequest, users]);
+
+  const openModallAdd = useCallback(() => setModalAddOpen(true), []);
+
+  const openModallInfo = useCallback((id: string) => {
+    setIdForApiRequest(id);
+    setModalInfoOpen(true);
+  }, []);
+
+  const openAlertDelete = useCallback((id: string) => {
+    setIdForApiRequest(id);
+    setAlertDeleteOpen(true);
+  }, []);
 
   useEffect(() => {
     api
@@ -61,7 +70,7 @@ const Users: React.FC = () => {
       <Container maxWidth="md">
         <ToolsBar>
           {PermissionService(['editor', 'administrator', 'developer']) && (
-            <button type="button" onClick={() => setModalAddOpen(true)}>
+            <button type="button" onClick={openModallAdd}>
               <FiPlus />
               <span>ADICIONAR</span>
             </button>
@@ -85,10 +94,7 @@ const Users: React.FC = () => {
                       user.permission !== 'developer' && (
                         <button
                           type="button"
-                          onClick={() => {
-                            setIdForApiRequest(user.id);
-                            setAlertDeleteOpen(true);
-                          }}
+                          onClick={() => openAlertDelete(user.id)}
                         >
                           <FiDelete />
                           <span>Excluir</span>
@@ -97,10 +103,7 @@ const Users: React.FC = () => {
 
                     <button
                       type="button"
-                      onClick={() => {
-                        setIdForApiRequest(user.id);
-                        setModalInfoOpen(true);
-                      }}
+                      onClick={() => openModallInfo(user.id)}
                     >
                       <FiInfo />
                       <span>Detalhes</span>

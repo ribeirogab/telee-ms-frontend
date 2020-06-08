@@ -1,12 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useRouteMatch, useHistory } from 'react-router-dom';
 
-import {
-  FiChevronLeft,
-  FiChevronDown,
-  FiSettings, // eslint-disable-line
-  FiChevronRight,
-} from 'react-icons/fi';
+import { FiChevronLeft, FiChevronDown, FiChevronRight } from 'react-icons/fi';
 import Container from '@material-ui/core/Container';
 import ReactQuill from '../../components/ReactQuill';
 
@@ -33,18 +28,33 @@ const Edit: React.FC = () => {
   const { params } = useRouteMatch<EditParams>();
   const [openValues, setOpenValues] = useState(true);
   const [boxUpdateOpen, setBoxUpdateOpen] = useState(false);
-  const [typeUpdate, setTypeUpdate] = useState('update');
+  const [typeSave, setTypeSave] = useState('update');
   const [article, setArticle] = useState('');
   const [words, setWords] = useState(0);
   const [money, setMoney] = useState(0);
   const [save, setSave] = useState(false);
 
-  function handleBoxUpdate(): void {
-    setBoxUpdateOpen(!boxUpdateOpen);
-  }
+  window.onresize = useCallback(
+    () => setOpenValues(window.innerWidth > 1350),
+    [],
+  );
 
-  async function handleUpdate(): Promise<void> {
-    if (typeUpdate === 'update') {
+  const handleBoxUpdate = useCallback(() => setBoxUpdateOpen(!boxUpdateOpen), [
+    boxUpdateOpen,
+  ]);
+
+  const changeTypeSaveForUpdate = useCallback(() => setTypeSave('update'), []);
+
+  const changeTypeSaveForDeliver = useCallback(
+    () => setTypeSave('deliver'),
+    [],
+  );
+
+  const handleOpenValues = useCallback(() => setOpenValues(true), []);
+  const handleCloseValues = useCallback(() => setOpenValues(false), []);
+
+  const handleUpdate = useCallback(async () => {
+    if (typeSave === 'update') {
       await api.put(
         `/articles/${params.articleId}`,
         { words, article },
@@ -52,7 +62,7 @@ const Edit: React.FC = () => {
           headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
         },
       );
-    } else if (typeUpdate === 'deliver') {
+    } else if (typeSave === 'deliver') {
       // eslint-disable-next-line no-alert
       const confirmDeliver = window.confirm(
         'Após a entrega o artigo não podera mais ser editado. Deseja realmente entregar?',
@@ -68,7 +78,7 @@ const Edit: React.FC = () => {
     }
     setSave(true);
     setTimeout(() => setSave(false), 5000);
-  }
+  }, [article, history, params.articleId, typeSave, words]);
 
   useEffect(() => {
     api
@@ -77,8 +87,6 @@ const Edit: React.FC = () => {
       })
       .then(response => setArticle(response.data.article || ''));
   }, [params.articleId]);
-
-  window.onresize = () => setOpenValues(window.innerWidth > 1350);
 
   return (
     <>
@@ -91,7 +99,7 @@ const Edit: React.FC = () => {
         </HeaderLeft>
         <HeaderRight save={save}>
           <span>
-            Artigo {typeUpdate === 'update' ? 'atualizado' : 'entregue'} com
+            Artigo {typeSave === 'update' ? 'atualizado' : 'entregue'} com
             sucesso!
           </span>
           <button type="button" onClick={handleBoxUpdate}>
@@ -108,7 +116,7 @@ const Edit: React.FC = () => {
                     name="update"
                     value="update"
                     defaultChecked
-                    onClick={() => setTypeUpdate('update')}
+                    onClick={changeTypeSaveForUpdate}
                   />
                 </div>
                 <div className="change-update">
@@ -122,7 +130,7 @@ const Edit: React.FC = () => {
                     type="radio"
                     name="update"
                     value="deliver"
-                    onClick={() => setTypeUpdate('deliver')}
+                    onClick={changeTypeSaveForDeliver}
                   />
                 </div>
                 <div className="change-update">
@@ -144,7 +152,7 @@ const Edit: React.FC = () => {
                 className="btn-update"
                 onClick={handleUpdate}
               >
-                {typeUpdate === 'update' ? 'Atualizar' : 'Entregar'}
+                {typeSave === 'update' ? 'Atualizar' : 'Entregar'}
               </button>
             </div>
           </UpdateArticle>
@@ -164,9 +172,9 @@ const Edit: React.FC = () => {
       <Values open={openValues}>
         <ToggleValues>
           {openValues ? (
-            <FiChevronRight size={30} onClick={() => setOpenValues(false)} />
+            <FiChevronRight size={30} onClick={handleCloseValues} />
           ) : (
-            <FiChevronLeft size={30} onClick={() => setOpenValues(true)} />
+            <FiChevronLeft size={30} onClick={handleOpenValues} />
           )}
         </ToggleValues>
         <Words>{words} palavras</Words>

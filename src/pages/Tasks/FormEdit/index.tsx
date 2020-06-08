@@ -1,14 +1,24 @@
-import React, { useState, useEffect } from 'react';
-
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
+import * as Yup from 'yup';
 
 import {
-  ContainerForm,
-  InputGroup,
-  ButtonGroup,
-} from '../../../components/StandardFormElements';
+  FiAperture,
+  FiKey,
+  FiList,
+  FiXCircle,
+  FiAlertCircle,
+} from 'react-icons/fi';
 
+import { Container, CloseButton, ErrorEdit } from './styles';
+
+import Button from '../../../components/Button';
+import Input from '../../../components/Input';
+import Select from '../../../components/Select';
+import Loader from '../../../components/Loader';
+
+import getValidationErrors from '../../../utils/getValidationErrors';
 import api from '../../../services/api';
 
 interface Task {
@@ -19,117 +29,143 @@ interface Task {
   created_at: string;
 }
 
-interface FormEditProps {
-  setOpen?: Function;
+interface FormAddProps {
+  setOpen: Function;
   taskId: string;
   tasks: Task[];
   setTasks: Function;
 }
 
-const FormEdit = ({
+interface SubmitFormData {
+  keyword: string;
+  website: string;
+  subKeywords?: string;
+}
+
+const FormAdd = ({
   setOpen,
   taskId,
   tasks,
   setTasks,
-}: FormEditProps): JSX.Element => {
+}: FormAddProps): JSX.Element => {
+  const formRef = useRef<FormHandles>(null);
+
+  const [errorEdit, setErrorEdit] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [website, setWebsite] = useState('');
   const [subKeywords, setSubKeywords] = useState('');
 
+  const handleCloseModal = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const handleSubmit = useCallback(
+    async (data: SubmitFormData) => {
+      try {
+        setErrorEdit(false);
+        setLoading(true);
+
+        const schema = Yup.object().shape({
+          keyword: Yup.string().required('Palavra-chave obrigatória'),
+          website: Yup.string().required('Site obrigatório'),
+          subKeywords: Yup.string(),
+        });
+
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        const { data: task } = await api.post('/tasks', data, {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        setTasks([...tasks, task]);
+        handleCloseModal();
+      } catch (err) {
+        setLoading(false);
+        if (err.name === 'ValidationError') {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+        } else setErrorEdit(true);
+      }
+    },
+    [handleCloseModal, setTasks, tasks],
+  );
+
   useEffect(() => {
-    api
-      .get(`/tasks/${taskId}`, {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
-      .then(response => {
-        setKeyword(response.data.keyword);
-        setWebsite(response.data.website);
-        setSubKeywords(response.data.sub_keywords);
-      });
+    async function getTaskData(): Promise<void> {
+      try {
+        setErrorEdit(false);
+        setLoading(true);
+
+        const { data: task } = await api.get(`/tasks/${taskId}`, {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        setKeyword(task.keyword);
+        setWebsite(task.website);
+        setSubKeywords(task.sub_keywords);
+        setLoading(false);
+      } catch (error) {
+        setErrorEdit(true);
+      }
+    }
+
+    getTaskData();
   }, [taskId]);
 
-  async function handleSubmit(
-    event: React.FormEvent<HTMLFormElement>,
-  ): Promise<void> {
-    event.preventDefault();
-
-    const { data } = await api.put(
-      `/tasks/${taskId}`,
-      { keyword, website, subKeywords },
-      {
-        headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
-      },
-    );
-
-    setTasks(
-      tasks.map(task => {
-        if (task.id === taskId) return data;
-        return task;
-      }),
-    );
-
-    if (setOpen) setOpen(false);
-  }
-
-  function handleClose(): void {
-    if (setOpen) setOpen(false);
-  }
-
   return (
-    <ContainerForm>
-      <form onSubmit={handleSubmit}>
-        <h2>Editar Tarefa</h2>
-        <InputGroup>
-          <TextField
-            required
-            className="input"
-            label="Palavra-chave"
-            variant="outlined"
-            value={keyword}
-            onChange={e => setKeyword(e.target.value)}
+    <>
+      {loading && <Loader />}
+      <Container>
+        <div>
+          <CloseButton onClick={handleCloseModal}>
+            <FiXCircle size={25} />
+          </CloseButton>
+          <h2>Editar Tarefa</h2>
+        </div>
+        <Form ref={formRef} onSubmit={handleSubmit}>
+          <Input
+            placeholder="Palavra-chave"
+            name="keyword"
+            icon={FiKey}
+            defaultValue={keyword}
           />
-          <TextField
-            required
-            id="outlined-select-currency"
-            select
-            className="input"
-            label="Site"
-            value={website}
-            onChange={e => setWebsite(e.target.value)}
-            variant="outlined"
-          >
-            <MenuItem value="skycombotv.com.br">skycombotv.com.br</MenuItem>
-            <MenuItem value="assinesky.com.br">assinesky.com.br</MenuItem>
-            <MenuItem value="planoskytv.com.br">planoskytv.com.br</MenuItem>
-            <MenuItem value="telefonesky.com.br">telefonesky.com.br</MenuItem>
-            <MenuItem value="skytvinternetbandalarga.com.br">
+          <Select name="website" icon={FiAperture} defaultValue={website}>
+            <option value="">Selecione uma site...</option>
+            <option value="skycombotv.com.br">skycombotv.com.br</option>
+            <option value="assinesky.com.br">assinesky.com.br</option>
+            <option value="planoskytv.com.br">planoskytv.com.br</option>
+            <option value="telefonesky.com.br">telefonesky.com.br</option>
+            <option value="skytvinternetbandalarga.com.br">
               skytvinternetbandalarga.com.br
-            </MenuItem>
-            <MenuItem value="assineskytv.com.br">assineskytv.com.br</MenuItem>
-            <MenuItem value="skycombo.com.br">skycombo.com.br</MenuItem>
-            <MenuItem value="comboskytv.com.br">comboskytv.com.br</MenuItem>
-            <MenuItem value="numerodasky.com.br">numerodasky.com.br</MenuItem>
-          </TextField>
-        </InputGroup>
-        <TextField
-          required
-          className="input"
-          label="Palavra-chaves secundárias"
-          variant="outlined"
-          value={subKeywords}
-          onChange={e => setSubKeywords(e.target.value)}
-        />
-        <ButtonGroup>
-          <button type="button" onClick={handleClose}>
-            Cancelar
-          </button>
-          <button type="submit">Salvar</button>
-        </ButtonGroup>
-      </form>
-    </ContainerForm>
+            </option>
+            <option value="assineskytv.com.br">assineskytv.com.br</option>
+            <option value="skycombo.com.br">skycombo.com.br</option>
+            <option value="comboskytv.com.br">comboskytv.com.br</option>
+            <option value="numerodasky.com.br">numerodasky.com.br</option>
+          </Select>
+
+          <Input
+            placeholder="Palavras-chave secundárias"
+            name="subKeywords"
+            icon={FiList}
+            defaultValue={subKeywords}
+          />
+          <Button type="submit">Cadastrar</Button>
+        </Form>
+
+        <ErrorEdit error={errorEdit}>
+          <FiAlertCircle size={20} /> Erro ao editar tarefa
+        </ErrorEdit>
+      </Container>
+    </>
   );
 };
 
-export default FormEdit;
+export default FormAdd;

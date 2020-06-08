@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
+import * as Yup from 'yup';
 
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
+import { FiClipboard, FiAlertCircle, FiXCircle } from 'react-icons/fi';
 
-import {
-  ContainerForm,
-  ButtonGroup,
-} from '../../../components/StandardFormElements';
+import { Container, CloseButton, ErrorAudit } from './styles';
 
+import Button from '../../../components/Button';
+import Select from '../../../components/Select';
+import Loader from '../../../components/Loader';
+
+import getValidationErrors from '../../../utils/getValidationErrors';
 import api from '../../../services/api';
 
 interface Task {
@@ -20,67 +24,80 @@ interface Task {
 }
 
 interface FormAuditProps {
-  setOpen?: Function;
+  setOpen: Function;
   taskId: string | undefined;
 }
+
+interface SubmitFormData {
+  status: 'returned' | 'accepeted' | 'recused';
+}
+
 const FormAudit = ({ setOpen, taskId }: FormAuditProps): JSX.Element => {
+  const formRef = useRef<FormHandles>(null);
   const history = useHistory();
-  const [status, setStatus] = useState('');
+  const [errorAudit, setErrorAudit] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(
-    event: React.FormEvent<HTMLFormElement>,
-  ): Promise<void> {
-    event.preventDefault();
+  const handleCloseModal = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
 
-    if (taskId) {
+  const handleSubmit = useCallback(
+    async (data: SubmitFormData) => {
       try {
-        await api.patch(
-          `/tasks/${taskId}`,
-          { status },
-          {
-            headers: {
-              authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
+        setErrorAudit(false);
+        setLoading(true);
+
+        const schema = Yup.object().shape({
+          status: Yup.string().required('Status obrigatório'),
+        });
+
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        await api.patch(`/tasks/${taskId}`, data, {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
           },
-        );
+        });
 
+        handleCloseModal();
         history.push('/auditoria');
-      } catch (error) {
-        console.log(error); // eslint-disable-line
+      } catch (err) {
+        setLoading(false);
+        if (err.name === 'ValidationError') {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+        } else setErrorAudit(true);
       }
-    }
-  }
-
-  function handleClose(): void {
-    if (setOpen) setOpen(false);
-  }
+    },
+    [handleCloseModal, history, taskId],
+  );
 
   return (
-    <ContainerForm>
-      <form onSubmit={handleSubmit}>
-        <h2>Auditoria</h2>
-        <TextField
-          required
-          id="outlined-select-currency"
-          select
-          className="input"
-          label="Status"
-          value={status}
-          onChange={e => setStatus(e.target.value)}
-          variant="outlined"
-        >
-          <MenuItem value="returned">Retornar</MenuItem>
-          <MenuItem value="accepted">Aceitar</MenuItem>
-          <MenuItem value="recused">Recusar</MenuItem>
-        </TextField>
-        <ButtonGroup>
-          <button type="button" onClick={handleClose}>
-            Cancelar
-          </button>
-          <button type="submit">Confirmar</button>
-        </ButtonGroup>
-      </form>
-    </ContainerForm>
+    <>
+      {loading && <Loader />}
+      <Container>
+        <div>
+          <CloseButton onClick={handleCloseModal}>
+            <FiXCircle size={25} />
+          </CloseButton>
+          <h2>Auditoria</h2>
+        </div>
+        <Form ref={formRef} onSubmit={handleSubmit}>
+          <Select name="status" icon={FiClipboard}>
+            <option value="returned">Retornar</option>
+            <option value="accepted">Aceitar</option>
+            <option value="recused">Recusar</option>
+          </Select>
+          <Button type="submit">Confirmar</Button>
+        </Form>
+        <ErrorAudit error={errorAudit}>
+          <FiAlertCircle size={20} /> Erro ao auditar tarefa
+        </ErrorAudit>
+      </Container>
+    </>
   );
 };
 
