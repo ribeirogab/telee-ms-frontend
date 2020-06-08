@@ -137,7 +137,7 @@ const FormAdd = ({
             defaultValue={keyword}
           />
           <Select name="website" icon={FiAperture} defaultValue={website}>
-            <option value="">Selecione uma site...</option>
+            <option value="">Selecione um site...</option>
             <option value="skycombotv.com.br">skycombotv.com.br</option>
             <option value="assinesky.com.br">assinesky.com.br</option>
             <option value="planoskytv.com.br">planoskytv.com.br</option>

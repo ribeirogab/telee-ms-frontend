@@ -99,7 +99,7 @@ const FormAdd = ({ setOpen, tasks, setTasks }: FormAddProps): JSX.Element => {
         <Form ref={formRef} onSubmit={handleSubmit}>
           <Input placeholder="Palavra-chave" name="keyword" icon={FiKey} />
           <Select name="website" icon={FiAperture}>
-            <option value="">Selecione uma site...</option>
+            <option value="">Selecione um site...</option>
             <option value="skycombotv.com.br">skycombotv.com.br</option>
             <option value="assinesky.com.br">assinesky.com.br</option>
             <option value="planoskytv.com.br">planoskytv.com.br</option>
