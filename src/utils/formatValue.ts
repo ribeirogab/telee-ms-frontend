@@ -1,7 +1,6 @@
-const formatValue = (value: number): string =>
-  Intl.NumberFormat('pt-BR', {
+export default function formatValue(value: number): string {
+  return Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   }).format(value);
-
-export default formatValue;
+}

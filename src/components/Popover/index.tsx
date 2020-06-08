@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 import { IconType } from 'react-icons';
@@ -22,23 +22,27 @@ const PopoverComponent = ({
   const [positionPopoverX, setPositionPopoverX] = useState(-1);
   const [positionPopoverY, setPositionPopoverY] = useState(-1);
 
-  function handleClickAway(): void {
+  const handleClickAway = useCallback(() => {
     setOpenPopover(false);
-  }
+  }, []);
 
-  function handlePositionPopover(
-    event: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
-  ): void {
-    setPositionPopoverX(event.clientX);
-    setPositionPopoverY(event.clientY);
-  }
+  const handlePositionPopover = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+      setPositionPopoverX(event.clientX);
+      setPositionPopoverY(event.clientY);
+    },
+    [],
+  );
 
-  function handlePopover(
-    event: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
-  ): void {
-    setOpenPopover(!openPopover);
-    handlePositionPopover(event);
-  }
+  const handlePopover = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+      setOpenPopover(!openPopover);
+      handlePositionPopover(event);
+    },
+    [handlePositionPopover, openPopover],
+  );
+
+  const handleClosePopover = useCallback(() => setOpenPopover(false), []);
 
   // default icons
   const CloseIcon = ElementCloseIcon || FiXCircle;
@@ -47,7 +51,7 @@ const PopoverComponent = ({
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
       <Container>
-        <button type="button" onClick={e => handlePopover(e)}>
+        <button type="button" onClick={handlePopover}>
           {openPopover ? (
             <CloseIcon className="close-popover" size={25} />
           ) : (
@@ -57,7 +61,7 @@ const PopoverComponent = ({
         {openPopover ? (
           <Popover
             position={{ X: positionPopoverX, Y: positionPopoverY }}
-            onClick={() => setOpenPopover(false)}
+            onClick={handleClosePopover}
           >
             {children}
           </Popover>

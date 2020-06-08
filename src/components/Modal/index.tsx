@@ -10,7 +10,7 @@ interface ModalProps {
   Component: JSX.Element;
 }
 
-const Modal = ({ open, setOpen, Component }: ModalProps): JSX.Element => {
+const Modal: React.FC<ModalProps> = ({ open, setOpen, Component }) => {
   return (
     <ModalUi
       open={open}
