@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -11,18 +11,20 @@ interface ReactQuillProps {
   value: string;
 }
 
-const ReactQuillComponent = ({
+const ReactQuillComponent: React.FC<ReactQuillProps> = ({
   setWords,
   setMoney,
   setValue,
   value,
-}: ReactQuillProps): JSX.Element => {
-  function isWord(word: string): boolean {
+}) => {
+  const isWord = useCallback((word: string): boolean => {
     return (
       word.length >= 2 &&
       /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ]+$/.test(word)
     );
-  }
+  }, []);
+
+  const changeHtmlValue = useCallback(html => setValue(html), [setValue]);
 
   useEffect(() => {
     const splitValue = value
@@ -39,7 +41,7 @@ const ReactQuillComponent = ({
 
     setWords(numberOfWords);
     setMoney(numberOfWords * 0.06);
-  }, [value, setMoney, setWords]);
+  }, [value, setMoney, setWords, isWord]);
 
   const modules = {
     toolbar: [
@@ -61,7 +63,7 @@ const ReactQuillComponent = ({
         theme="snow"
         modules={modules}
         value={value}
-        onChange={html => setValue(html)}
+        onChange={changeHtmlValue}
       />
     </Container>
   );

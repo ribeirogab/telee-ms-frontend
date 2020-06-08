@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -27,24 +27,25 @@ const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
   const [state, setState] = React.useState({ left: false });
   const [headerMenu, bodyMenu, footerMenu] = menuItems();
 
-  function handleLogout(): void {
+  const handleLogout = useCallback(() => {
     localStorage.clear();
     history.push('/');
-  }
+  }, [history]);
 
-  const toggleDrawer = (open: boolean) => (
-    event: React.KeyboardEvent | React.MouseEvent,
-  ) => {
-    if (
-      event.type === 'keydown' &&
-      ((event as React.KeyboardEvent).key === 'Tab' ||
-        (event as React.KeyboardEvent).key === 'Shift')
-    ) {
-      return;
-    }
+  const toggleDrawer = useCallback(
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === 'keydown' &&
+        ((event as React.KeyboardEvent).key === 'Tab' ||
+          (event as React.KeyboardEvent).key === 'Shift')
+      ) {
+        return;
+      }
 
-    setState({ left: open });
-  };
+      setState({ left: open });
+    },
+    [],
+  );
 
   const list = (): JSX.Element => (
     <Sidebar>

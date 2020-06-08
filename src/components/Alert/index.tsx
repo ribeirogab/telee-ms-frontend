@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -25,20 +25,22 @@ const Alert = ({
   textAcceptButton,
   ifAccepted,
 }: AlertProps): JSX.Element => {
-  function handleAccept(): void {
+  const handleAccept = useCallback(() => {
     setOpen(false);
 
     if (ifAccepted) {
       const { execute } = ifAccepted;
       execute();
     }
-  }
+  }, [ifAccepted, setOpen]);
+
+  const handleClose = useCallback(() => setOpen(false), [setOpen]);
 
   return (
     <div>
       <Dialog
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -49,7 +51,7 @@ const Alert = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
+          <Button onClick={handleClose} color="primary">
             Cancelar
           </Button>
           <Button onClick={handleAccept} color="secondary" variant="contained">
