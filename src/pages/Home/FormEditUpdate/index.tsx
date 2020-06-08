@@ -94,7 +94,7 @@ const FormEditUpdate: React.FC<FormEditUpdatesProps> = ({
         } else setErrorLogin(true);
       }
     },
-    [setOpen, setUpdates, updates],
+    [setOpen, setUpdates, updates, id],
   );
 
   const handleCloseEditUpdateModal = useCallback(() => {

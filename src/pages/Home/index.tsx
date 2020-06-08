@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import Container from '@material-ui/core/Container';
 import { FiPlus, FiEdit, FiDelete } from 'react-icons/fi';
 
-import { LastAcess, ToolsBar, News, ContainerNews, BoxNews } from './styles';
+import { ToolsBar, News, ContainerNews, BoxNews } from './styles';
 
 import Header from '../../components/Header';
 import Modal from '../../components/Modal';

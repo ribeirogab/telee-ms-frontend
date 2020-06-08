@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 
@@ -43,7 +43,7 @@ const Tasks: React.FC = () => {
   const [alertAssumeOpen, setAlertAssumeOpen] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  async function handleDeleteTask(): Promise<void> {
+  const handleDeleteTask = useCallback(async () => {
     await api.delete(`/tasks/${idForApiRequest}`, {
       headers: {
         authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -51,9 +51,9 @@ const Tasks: React.FC = () => {
     });
 
     setTasks(tasks.filter(task => task.id !== idForApiRequest));
-  }
+  }, [idForApiRequest, tasks]);
 
-  async function handleAssumeTask(): Promise<void> {
+  const handleAssumeTask = useCallback(async () => {
     await api.post(`/articles/${idForApiRequest}`, null, {
       headers: {
         authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -62,7 +62,29 @@ const Tasks: React.FC = () => {
 
     setTasks(tasks.filter(task => task.id !== idForApiRequest));
     history.push('/artigos');
-  }
+  }, [history, idForApiRequest, tasks]);
+
+  const openModallAdd = useCallback(() => setModalAddOpen(true), []);
+
+  const openModallEdit = useCallback((id: string) => {
+    setIdForApiRequest(id);
+    setModalEditOpen(true);
+  }, []);
+
+  const openModallInfo = useCallback((id: string) => {
+    setIdForApiRequest(id);
+    setModalInfoOpen(true);
+  }, []);
+
+  const openAlertDelete = useCallback((id: string) => {
+    setIdForApiRequest(id);
+    setAlertDeleteOpen(true);
+  }, []);
+
+  const openAlertAssume = useCallback((id: string) => {
+    setIdForApiRequest(id);
+    setAlertAssumeOpen(true);
+  }, []);
 
   useEffect(() => {
     api
@@ -86,7 +108,7 @@ const Tasks: React.FC = () => {
             'developer',
             'developer',
           ]) && (
-            <button type="button" onClick={() => setModalAddOpen(true)}>
+            <button type="button" onClick={openModallAdd}>
               <FiPlus />
               <span>ADICIONAR</span>
             </button>
@@ -122,10 +144,7 @@ const Tasks: React.FC = () => {
                       ]) && (
                         <button
                           type="button"
-                          onClick={() => {
-                            setIdForApiRequest(task.id);
-                            setModalEditOpen(true);
-                          }}
+                          onClick={() => openModallEdit(task.id)}
                         >
                           <FiEdit3 />
                           <span>Editar</span>
@@ -139,10 +158,7 @@ const Tasks: React.FC = () => {
                       ]) && (
                         <button
                           type="button"
-                          onClick={() => {
-                            setIdForApiRequest(task.id);
-                            setAlertDeleteOpen(true);
-                          }}
+                          onClick={() => openAlertDelete(task.id)}
                         >
                           <FiDelete />
                           <span>Excluir</span>
@@ -157,10 +173,7 @@ const Tasks: React.FC = () => {
                       ]) && (
                         <button
                           type="button"
-                          onClick={() => {
-                            setIdForApiRequest(task.id);
-                            setModalInfoOpen(true);
-                          }}
+                          onClick={() => openModallInfo(task.id)}
                         >
                           <FiInfo />
                           <span>Detalhes</span>
@@ -170,10 +183,7 @@ const Tasks: React.FC = () => {
                       {PermissionService(['writer']) && (
                         <button
                           type="button"
-                          onClick={() => {
-                            setIdForApiRequest(task.id);
-                            setAlertAssumeOpen(true);
-                          }}
+                          onClick={() => openAlertAssume(task.id)}
                         >
                           <FiCornerDownLeft />
                           <span>Assumir</span>

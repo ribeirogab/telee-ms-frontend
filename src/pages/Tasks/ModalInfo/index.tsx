@@ -1,81 +1,124 @@
-import React, { useState, useEffect } from 'react';
-
-import TextField from '@material-ui/core/TextField';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
 
 import {
-  ContainerForm,
-  InputGroup,
-  ButtonGroup,
-} from '../../../components/StandardFormElements';
+  FiAperture,
+  FiKey,
+  FiList,
+  FiXCircle,
+  FiAlertCircle,
+} from 'react-icons/fi';
+
+import { Container, CloseButton, ErrorLoading } from './styles';
+
+import Input from '../../../components/Input';
+import Loader from '../../../components/Loader';
 
 import api from '../../../services/api';
 
-interface ModalInfoProps {
-  setOpen?: Function;
+interface Task {
+  id: string;
+  keyword: string;
+  sub_keywords: string;
+  website: string;
+  created_at: string;
+}
+
+interface FormAddProps {
+  setOpen: Function;
   taskId: string;
 }
 
-const ModalInfo = ({ setOpen, taskId }: ModalInfoProps): JSX.Element => {
+interface SubmitFormData {
+  keyword: string;
+  website: string;
+  subKeywords?: string;
+}
+
+const FormAdd = ({ setOpen, taskId }: FormAddProps): JSX.Element => {
+  const formRef = useRef<FormHandles>(null);
+
+  const [errorLoading, setErrorLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [website, setWebsite] = useState('');
   const [subKeywords, setSubKeywords] = useState('');
 
-  function handleClose(): void {
-    if (setOpen) setOpen(false);
-  }
+  const handleCloseModal = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+
+  const handleSubmit = useCallback(() => {
+    console.log(''); // eslint-disable-line
+  }, []);
 
   useEffect(() => {
-    api
-      .get(`/tasks/${taskId}`, {
-        headers: {
-          authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
-      .then(response => {
-        setKeyword(response.data.keyword);
-        setWebsite(response.data.website);
-        setSubKeywords(response.data.sub_keywords);
-      });
+    async function getTaskData(): Promise<void> {
+      try {
+        setErrorLoading(false);
+        setLoading(true);
+
+        const { data: task } = await api.get(`/tasks/${taskId}`, {
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        setKeyword(task.keyword);
+        setWebsite(task.website);
+        setSubKeywords(task.sub_keywords);
+        setLoading(false);
+      } catch (error) {
+        setErrorLoading(true);
+      }
+    }
+
+    getTaskData();
   }, [taskId]);
 
   return (
-    <ContainerForm>
-      <form>
-        <h2>Detalhes da Tarefa</h2>
-        <InputGroup>
-          <TextField
-            disabled
-            className="input"
-            label="Palavra-chave"
-            variant="standard"
+    <>
+      {loading && <Loader />}
+      <Container>
+        <div>
+          <CloseButton onClick={handleCloseModal}>
+            <FiXCircle size={25} />
+          </CloseButton>
+          <h2>Detalhes da Tarefa</h2>
+        </div>
+        <Form ref={formRef} onSubmit={handleSubmit}>
+          <Input
+            placeholder="Palavra-chave"
+            name="keyword"
+            icon={FiKey}
             value={keyword}
-            onChange={e => setKeyword(e.target.value)}
-          />
-          <TextField
-            className="input"
             disabled
-            label="Site"
-            variant="standard"
-            value={website}
-            onChange={e => setWebsite(e.target.value)}
           />
-        </InputGroup>
-        <TextField
-          disabled
-          className="input"
-          label="Palavra-chaves secundárias"
-          variant="standard"
-          value={subKeywords}
-          onChange={e => setSubKeywords(e.target.value)}
-        />
-        <ButtonGroup>
-          <button type="button" onClick={handleClose}>
-            Fechar
-          </button>
-        </ButtonGroup>
-      </form>
-    </ContainerForm>
+
+          <Input
+            placeholder="Website"
+            name="website"
+            icon={FiAperture}
+            value={website}
+            disabled
+          />
+
+          <Input
+            placeholder="Palavras-chave secundárias"
+            name="subKeywords"
+            icon={FiList}
+            value={subKeywords}
+            disabled
+          />
+        </Form>
+
+        <ErrorLoading error={errorLoading}>
+          <FiAlertCircle size={20} /> Erro ao carregar tarefa
+        </ErrorLoading>
+      </Container>
+    </>
   );
 };
 
-export default ModalInfo;
+export default FormAdd;
