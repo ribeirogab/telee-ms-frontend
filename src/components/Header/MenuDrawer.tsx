@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -11,7 +11,7 @@ import { FiMenu, FiChevronLeft, FiLogOut } from 'react-icons/fi';
 
 import { Sidebar, Menu, SidebarHeader } from './styles';
 
-import { AuthContext } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/AuthContext';
 
 import menuItems from '../../utils/menuItems';
 import getInitialLetters from '../../utils/getInitialLetters';
@@ -24,7 +24,7 @@ interface MenuDrawerProps {
 
 const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
   const history = useHistory();
-  const { user, signOut } = useContext(AuthContext);
+  const { user, signOut } = useAuth();
   const [state, setState] = React.useState({ left: false });
   const [headerMenu, bodyMenu, footerMenu] = menuItems();
 

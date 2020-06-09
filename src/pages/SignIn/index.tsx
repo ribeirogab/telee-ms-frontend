@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState, useContext } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FiUser, FiLock, FiAlertCircle } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
@@ -13,7 +13,7 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Loader from '../../components/Loader';
 
-import { AuthContext } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/auth';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -24,7 +24,7 @@ interface SignInFormData {
 
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
-  const { signIn } = useContext(AuthContext);
+  const { signIn } = useAuth();
   const history = useHistory();
 
   const [errorLogin, setErrorLogin] = useState(false);
