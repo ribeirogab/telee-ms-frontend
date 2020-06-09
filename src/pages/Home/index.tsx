@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Container from '@material-ui/core/Container';
 import { FiPlus, FiEdit, FiDelete } from 'react-icons/fi';
 
@@ -10,7 +10,7 @@ import Alert from '../../components/Alert';
 
 import toCapitalize from '../../utils/toCapitalize';
 
-import { AuthContext } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/auth';
 
 import PermissionService from '../../services/PermissionService';
 import api from '../../services/api';
@@ -28,7 +28,7 @@ interface Update {
 }
 
 const Home: React.FC = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const userFirstName = user.name.split(' ')[0];
   const [idForApiRequest, setIdForApiRequest] = useState<string>('');
   const [modalAddUpdatesOpen, setModalAddUpdatesOpen] = useState(false);
