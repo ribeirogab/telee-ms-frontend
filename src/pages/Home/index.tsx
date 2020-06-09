@@ -10,7 +10,7 @@ import Alert from '../../components/Alert';
 
 import toCapitalize from '../../utils/toCapitalize';
 
-import { useAuth } from '../../hooks/AuthContext';
+import { useAuth } from '../../hooks/auth';
 
 import PermissionService from '../../services/PermissionService';
 import api from '../../services/api';

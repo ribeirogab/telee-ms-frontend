@@ -11,7 +11,7 @@ import { FiMenu, FiChevronLeft, FiLogOut } from 'react-icons/fi';
 
 import { Sidebar, Menu, SidebarHeader } from './styles';
 
-import { useAuth } from '../../hooks/AuthContext';
+import { useAuth } from '../../hooks/auth';
 
 import menuItems from '../../utils/menuItems';
 import getInitialLetters from '../../utils/getInitialLetters';
