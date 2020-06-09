@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FiUser, FiLock, FiAlertCircle } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
@@ -13,24 +13,25 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Loader from '../../components/Loader';
 
+import { AuthContext } from '../../context/AuthContext';
+
 import getValidationErrors from '../../utils/getValidationErrors';
 
-import api from '../../services/api';
-
-interface Submit {
-  email: string;
+interface SignInFormData {
+  username: string;
   password: string;
 }
 
-const Login: React.FC = () => {
+const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { signIn } = useContext(AuthContext);
   const history = useHistory();
 
   const [errorLogin, setErrorLogin] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = useCallback(
-    async (data: Submit): Promise<void> => {
+    async (data: SignInFormData): Promise<void> => {
       try {
         setErrorLogin(false);
         setLoading(true);
@@ -45,8 +46,7 @@ const Login: React.FC = () => {
           abortEarly: false,
         });
 
-        const response = await api.post('/sessions', data);
-        localStorage.setItem('token', response.data.token);
+        await signIn(data);
         history.push('/dashboard');
       } catch (err) {
         setLoading(false);
@@ -56,7 +56,7 @@ const Login: React.FC = () => {
         } else setErrorLogin(true);
       }
     },
-    [history],
+    [history, signIn],
   );
 
   return (
@@ -90,4 +90,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default SignIn;

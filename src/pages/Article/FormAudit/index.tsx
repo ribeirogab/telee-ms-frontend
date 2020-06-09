@@ -58,7 +58,7 @@ const FormAudit = ({ setOpen, taskId }: FormAuditProps): JSX.Element => {
 
         await api.patch(`/tasks/${taskId}`, data, {
           headers: {
-            authorization: `Bearer ${localStorage.getItem('token')}`,
+            authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
           },
         });
 

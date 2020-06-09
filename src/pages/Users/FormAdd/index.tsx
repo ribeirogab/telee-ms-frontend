@@ -71,7 +71,7 @@ const FormAdd = ({ setOpen, users, setUsers }: FormAddProps): JSX.Element => {
 
         const { data: writer } = await api.post('/users', data, {
           headers: {
-            authorization: `Bearer ${localStorage.getItem('token')}`,
+            authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
           },
         });
 

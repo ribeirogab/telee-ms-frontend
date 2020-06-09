@@ -66,7 +66,9 @@ const MyArticles: React.FC = () => {
   useEffect(() => {
     api
       .get('/articles/from/writer', {
-        headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
+        },
       })
       .then(response => setArticles(response.data));
   }, []);

@@ -63,7 +63,9 @@ const FormAddUpdates: React.FC<FormAddUpdatesProps> = ({
         });
 
         const response = await api.post('/updates', data, {
-          headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
+          },
         });
 
         setUpdates([response.data, ...updates]);

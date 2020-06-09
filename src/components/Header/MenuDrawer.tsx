@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -11,9 +11,10 @@ import { FiMenu, FiChevronLeft, FiLogOut } from 'react-icons/fi';
 
 import { Sidebar, Menu, SidebarHeader } from './styles';
 
+import { AuthContext } from '../../context/AuthContext';
+
 import menuItems from '../../utils/menuItems';
 import getInitialLetters from '../../utils/getInitialLetters';
-import getInfoUserByToken from '../../utils/getInfoUserByToken';
 import translateUserPermission from '../../utils/translateUserPermission';
 import PermissionService from '../../services/PermissionService';
 
@@ -23,14 +24,13 @@ interface MenuDrawerProps {
 
 const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
   const history = useHistory();
-  const userInfo = getInfoUserByToken();
+  const { user, signOut } = useContext(AuthContext);
   const [state, setState] = React.useState({ left: false });
   const [headerMenu, bodyMenu, footerMenu] = menuItems();
 
-  const handleLogout = useCallback(() => {
-    localStorage.clear();
-    history.push('/');
-  }, [history]);
+  const handleSignOut = useCallback(() => {
+    signOut(history);
+  }, [history, signOut]);
 
   const toggleDrawer = useCallback(
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -50,10 +50,10 @@ const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
   const list = (): JSX.Element => (
     <Sidebar>
       <SidebarHeader>
-        <div className="avatar">{getInitialLetters(userInfo.name)}</div>
+        <div className="avatar">{getInitialLetters(user.name)}</div>
         <div className="user-info">
-          <span>{userInfo.name}</span>
-          <small>{translateUserPermission(userInfo.permission)}</small>
+          <span>{user.name}</span>
+          <small>{translateUserPermission(user.permission)}</small>
         </div>
         <button type="button" onClick={toggleDrawer(false)}>
           <FiChevronLeft size={20} />
@@ -101,7 +101,7 @@ const MenuDrawer = ({ textPage }: MenuDrawerProps): JSX.Element => {
             ),
         )}
 
-        <ListItem button onClick={handleLogout}>
+        <ListItem button onClick={handleSignOut}>
           <ListItemIcon>
             <FiLogOut />
           </ListItemIcon>

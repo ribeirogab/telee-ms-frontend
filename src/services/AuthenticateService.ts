@@ -8,7 +8,7 @@ interface TokenPayload {
 }
 
 export default function AuthenticateService(permissions: string[]): boolean {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('@teleems:token');
 
   if (!token) {
     localStorage.clear();
