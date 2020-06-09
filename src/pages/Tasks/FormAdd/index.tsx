@@ -69,7 +69,7 @@ const FormAdd = ({ setOpen, tasks, setTasks }: FormAddProps): JSX.Element => {
 
         const { data: task } = await api.post('/tasks', data, {
           headers: {
-            authorization: `Bearer ${localStorage.getItem('token')}`,
+            authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
           },
         });
 

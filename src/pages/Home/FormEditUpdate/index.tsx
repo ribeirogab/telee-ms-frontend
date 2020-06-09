@@ -51,7 +51,9 @@ const FormEditUpdate: React.FC<FormEditUpdatesProps> = ({
   useEffect(() => {
     api
       .get(`/updates/${id}`, {
-        headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
+        },
       })
       .then(response => setDefaultValue(response.data));
   }, [setDefaultValue, id]);
@@ -74,7 +76,9 @@ const FormEditUpdate: React.FC<FormEditUpdatesProps> = ({
         });
 
         const response = await api.put(`/updates/${id}`, data, {
-          headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
+          },
         });
 
         setUpdates(

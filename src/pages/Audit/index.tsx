@@ -60,7 +60,7 @@ const Audit: React.FC = () => {
     api
       .get('/articles', {
         headers: {
-          authorization: `Bearer ${localStorage.getItem('token')}`,
+          authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
           status: 'pending',
         },
       })

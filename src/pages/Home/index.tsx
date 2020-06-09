@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
 import Container from '@material-ui/core/Container';
 import { FiPlus, FiEdit, FiDelete } from 'react-icons/fi';
 
@@ -8,8 +8,9 @@ import Header from '../../components/Header';
 import Modal from '../../components/Modal';
 import Alert from '../../components/Alert';
 
-import getInfoUserByToken from '../../utils/getInfoUserByToken';
 import toCapitalize from '../../utils/toCapitalize';
+
+import { AuthContext } from '../../context/AuthContext';
 
 import PermissionService from '../../services/PermissionService';
 import api from '../../services/api';
@@ -27,8 +28,8 @@ interface Update {
 }
 
 const Home: React.FC = () => {
-  const userInfo = getInfoUserByToken();
-  const userFirstName = userInfo.name.split(' ')[0];
+  const { user } = useContext(AuthContext);
+  const userFirstName = user.name.split(' ')[0];
   const [idForApiRequest, setIdForApiRequest] = useState<string>('');
   const [modalAddUpdatesOpen, setModalAddUpdatesOpen] = useState(false);
   const [modalEditUpdateOpen, setModalEditUpdateOpen] = useState(false);
@@ -38,7 +39,9 @@ const Home: React.FC = () => {
   useEffect(() => {
     api
       .get('/updates', {
-        headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
+        },
       })
       .then(response => setUpdates(response.data));
   }, []);
@@ -62,7 +65,7 @@ const Home: React.FC = () => {
   const handleDeleteUpdate = useCallback(async () => {
     await api.delete(`/updates/${idForApiRequest}`, {
       headers: {
-        authorization: `Bearer ${localStorage.getItem('token')}`,
+        authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
       },
     });
 

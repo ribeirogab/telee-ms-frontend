@@ -59,7 +59,9 @@ const Edit: React.FC = () => {
         `/articles/${params.articleId}`,
         { words, article },
         {
-          headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
+          headers: {
+            authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
+          },
         },
       );
     } else if (typeSave === 'deliver') {
@@ -71,7 +73,9 @@ const Edit: React.FC = () => {
       if (!confirmDeliver) return;
 
       await api.patch(`/articles/${params.articleId}`, null, {
-        headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
+        },
       });
 
       history.push('/artigos');
@@ -83,7 +87,9 @@ const Edit: React.FC = () => {
   useEffect(() => {
     api
       .get(`/articles/${params.articleId}`, {
-        headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
+        },
       })
       .then(response => setArticle(response.data.article || ''));
   }, [params.articleId]);

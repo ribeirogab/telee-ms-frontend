@@ -45,7 +45,7 @@ const ModalInfo = ({ setOpen, userId }: ModalInfoProps): JSX.Element => {
 
         const { data: user } = await api.get(`/users/${userId}`, {
           headers: {
-            authorization: `Bearer ${localStorage.getItem('token')}`,
+            authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
           },
         });
 

@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import PrivateRoute from './PrivateRoute';
 
-import Login from '../pages/Login';
+import SignIn from '../pages/SignIn';
 import Home from '../pages/Home';
 import Tasks from '../pages/Tasks';
 import MyArticles from '../pages/MyArticles';
@@ -16,7 +16,8 @@ const Routes: React.FC = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={Login} />
+        <Route exact path="/" component={SignIn} />
+
         <PrivateRoute
           path="/dashboard"
           permissions={['writer', 'editor', 'administrator', 'developer']}

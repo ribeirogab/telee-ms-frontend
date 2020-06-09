@@ -46,7 +46,7 @@ const Tasks: React.FC = () => {
   const handleDeleteTask = useCallback(async () => {
     await api.delete(`/tasks/${idForApiRequest}`, {
       headers: {
-        authorization: `Bearer ${localStorage.getItem('token')}`,
+        authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
       },
     });
 
@@ -56,7 +56,7 @@ const Tasks: React.FC = () => {
   const handleAssumeTask = useCallback(async () => {
     await api.post(`/articles/${idForApiRequest}`, null, {
       headers: {
-        authorization: `Bearer ${localStorage.getItem('token')}`,
+        authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
       },
     });
 
@@ -90,7 +90,7 @@ const Tasks: React.FC = () => {
     api
       .get('/tasks', {
         headers: {
-          authorization: `Bearer ${localStorage.getItem('token')}`,
+          authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
           status: 'available',
         },
       })

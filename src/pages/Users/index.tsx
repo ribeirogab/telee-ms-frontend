@@ -36,7 +36,9 @@ const Users: React.FC = () => {
 
   const handleDeleteUser = useCallback(async () => {
     await api.delete(`/users/${idForApiRequest}`, {
-      headers: { authorization: `Bearer ${localStorage.getItem('token')}` },
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
+      },
     });
 
     setUsers(users.filter(user => user.id !== idForApiRequest));
@@ -58,7 +60,7 @@ const Users: React.FC = () => {
     api
       .get('/users', {
         headers: {
-          authorization: `Bearer ${localStorage.getItem('token')}`,
+          authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
         },
       })
       .then(response => setUsers(response.data));
