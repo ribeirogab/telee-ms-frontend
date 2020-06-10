@@ -78,15 +78,17 @@ const FormAdd = ({ setOpen, taskId }: FormAddProps): JSX.Element => {
   }, [taskId]);
 
   return (
-    <>
-      {loading && <Loader />}
-      <Container>
-        <div>
-          <CloseButton onClick={handleCloseModal}>
-            <FiXCircle size={25} />
-          </CloseButton>
-          <h2>Detalhes da Tarefa</h2>
-        </div>
+    <Container>
+      <div>
+        <CloseButton onClick={handleCloseModal}>
+          <FiXCircle size={25} />
+        </CloseButton>
+        <h2>Detalhes da Tarefa</h2>
+      </div>
+
+      {loading ? (
+        <Loader />
+      ) : (
         <Form ref={formRef} onSubmit={handleSubmit}>
           <Input
             placeholder="Palavra-chave"
@@ -112,12 +114,12 @@ const FormAdd = ({ setOpen, taskId }: FormAddProps): JSX.Element => {
             disabled
           />
         </Form>
+      )}
 
-        <ErrorLoading error={errorLoading}>
-          <FiAlertCircle size={20} /> Erro ao carregar tarefa
-        </ErrorLoading>
-      </Container>
-    </>
+      <ErrorLoading error={errorLoading}>
+        <FiAlertCircle size={20} /> Erro ao carregar tarefa
+      </ErrorLoading>
+    </Container>
   );
 };
 

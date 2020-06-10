@@ -16,6 +16,7 @@ import {
 } from './styles';
 
 import Header from '../../components/Header';
+import Loader from '../../components/Loader';
 
 import {
   statusColor,
@@ -61,16 +62,23 @@ interface Article {
 }
 
 const MyArticles: React.FC = () => {
-  const [articles, setArticles] = useState<Article[] | null>(null);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    api
-      .get('/articles/from/writer', {
+    async function loadArticlesFromWriter(): Promise<void> {
+      setLoading(true);
+      const { data } = await api.get('/articles/from/writer', {
         headers: {
           authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
         },
-      })
-      .then(response => setArticles(response.data));
+      });
+
+      setArticles(data);
+      setLoading(false);
+    }
+
+    loadArticlesFromWriter();
   }, []);
 
   return (
@@ -78,7 +86,9 @@ const MyArticles: React.FC = () => {
       <Header textPage="Artigos" />
       <Container maxWidth="lg">
         <ArticlesContainer>
-          {articles ? (
+          {loading ? (
+            <Loader />
+          ) : (
             articles.map(article => (
               <ArticleBox key={article.id}>
                 <ArticleHeader color={statusColor(article.task.status)}>
@@ -150,8 +160,6 @@ const MyArticles: React.FC = () => {
                 </ArticleFooter>
               </ArticleBox>
             ))
-          ) : (
-            <h3>Carregando...</h3>
           )}
         </ArticlesContainer>
       </Container>

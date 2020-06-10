@@ -5,10 +5,6 @@ interface ValuesProps {
   open: boolean;
 }
 
-interface HeaderRightProps {
-  save: boolean;
-}
-
 interface UpdateArticleProps {
   isOpen: boolean;
 }
@@ -51,25 +47,10 @@ export const Status = styled.span`
   color: ${props => props.color};
 `;
 
-export const HeaderRight = styled.div<HeaderRightProps>`
+export const HeaderRight = styled.div`
   display: flex;
   padding: 15px 20px;
   align-items: center;
-
-  span {
-    color: #999;
-    font-size: 14px;
-    margin-right: 10px;
-    opacity: 0;
-    transition: opacity 0.5s;
-    ${props =>
-      props.save &&
-      css`
-        & {
-          opacity: 1;
-        }
-      `}
-  }
 
   button {
     font-size: 14px;
@@ -103,6 +84,7 @@ export const UpdateArticle = styled.div<UpdateArticleProps>`
   box-shadow: 2px 2px 8px #0003;
   border-radius: 8px;
   top: 50px;
+  right: 2%;
   padding: 10px 0;
 
   ${props =>

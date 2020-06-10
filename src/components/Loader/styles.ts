@@ -1,20 +1,30 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-export const Container = styled.div`
-  position: absolute;
+interface ContainerProps {
+  fullWidth?: boolean;
+}
+
+export const Container = styled.div<ContainerProps>`
   width: 100%;
-  height: 100vh;
-  background: #0005;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${props =>
+    props.fullWidth &&
+    css`
+      position: absolute;
+      height: 100vh;
+      background: #0005;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    `}
 
   div {
-    border: 6px solid #0003;
+    border: 4px solid #0003;
     border-left-color: #ee595a;
-    height: 40px;
-    width: 40px;
+    margin: 0 auto;
+    height: 30px;
+    width: 30px;
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }

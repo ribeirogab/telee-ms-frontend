@@ -11,7 +11,9 @@ import {
   FiAlertCircle,
 } from 'react-icons/fi';
 
-import { Container, CloseButton, ErrorEdit } from './styles';
+import { Container, CloseButton, ErrorLoading } from './styles';
+
+import { useToast } from '../../../hooks/toast';
 
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
@@ -49,12 +51,12 @@ const FormAdd = ({
   setTasks,
 }: FormAddProps): JSX.Element => {
   const formRef = useRef<FormHandles>(null);
-
-  const [errorEdit, setErrorEdit] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { addToast } = useToast();
   const [keyword, setKeyword] = useState('');
   const [website, setWebsite] = useState('');
   const [subKeywords, setSubKeywords] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorLoading, setErrorLoading] = useState(false);
 
   const handleCloseModal = useCallback(() => {
     setOpen(false);
@@ -63,7 +65,6 @@ const FormAdd = ({
   const handleSubmit = useCallback(
     async (data: SubmitFormData) => {
       try {
-        setErrorEdit(false);
         setLoading(true);
 
         const schema = Yup.object().shape({
@@ -76,29 +77,37 @@ const FormAdd = ({
           abortEarly: false,
         });
 
-        const { data: task } = await api.post('/tasks', data, {
+        const { data: editedTask } = await api.put(`/tasks/${taskId}`, data, {
           headers: {
             authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
           },
         });
 
-        setTasks([...tasks, task]);
+        setTasks(
+          tasks.map(task => {
+            if (task.id === editedTask.id) return editedTask;
+            return task;
+          }),
+        );
         handleCloseModal();
+        addToast({
+          type: 'success',
+          title: 'Tarefa editada com sucesso',
+        });
       } catch (err) {
         setLoading(false);
-        if (err.name === 'ValidationError') {
+        if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
           formRef.current?.setErrors(errors);
-        } else setErrorEdit(true);
+        } else setErrorLoading(true);
       }
     },
-    [handleCloseModal, setTasks, tasks],
+    [handleCloseModal, setTasks, tasks, addToast, taskId],
   );
 
   useEffect(() => {
     async function getTaskData(): Promise<void> {
       try {
-        setErrorEdit(false);
         setLoading(true);
 
         const { data: task } = await api.get(`/tasks/${taskId}`, {
@@ -112,23 +121,29 @@ const FormAdd = ({
         setSubKeywords(task.sub_keywords);
         setLoading(false);
       } catch (error) {
-        setErrorEdit(true);
+        addToast({
+          type: 'error',
+          title: 'Erro ao carregar tarefa',
+          description:
+            'Ocorreu um erro ao carregar esta tarefa, tente novamente mais tarde.',
+        });
       }
     }
 
     getTaskData();
-  }, [taskId]);
+  }, [taskId, addToast, handleCloseModal]);
 
   return (
-    <>
-      {loading && <Loader />}
-      <Container>
-        <div>
-          <CloseButton onClick={handleCloseModal}>
-            <FiXCircle size={25} />
-          </CloseButton>
-          <h2>Editar Tarefa</h2>
-        </div>
+    <Container>
+      <div>
+        <CloseButton onClick={handleCloseModal}>
+          <FiXCircle size={25} />
+        </CloseButton>
+        <h2>Editar Tarefa</h2>
+      </div>
+      {loading ? (
+        <Loader />
+      ) : (
         <Form ref={formRef} onSubmit={handleSubmit}>
           <Input
             placeholder="Palavra-chave"
@@ -159,12 +174,12 @@ const FormAdd = ({
           />
           <Button type="submit">Cadastrar</Button>
         </Form>
+      )}
 
-        <ErrorEdit error={errorEdit}>
-          <FiAlertCircle size={20} /> Erro ao editar tarefa
-        </ErrorEdit>
-      </Container>
-    </>
+      <ErrorLoading error={errorLoading}>
+        <FiAlertCircle size={20} /> Erro ao carregar tarefa
+      </ErrorLoading>
+    </Container>
   );
 };
 

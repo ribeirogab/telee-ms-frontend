@@ -10,12 +10,15 @@ import {
   FiCornerDownLeft,
 } from 'react-icons/fi';
 
+import { useToast } from '../../hooks/toast';
+
 import { ToolsBar, Table } from './styles';
 
 import Header from '../../components/Header';
 import Modal from '../../components/Modal';
 import Alert from '../../components/Alert';
 import Popover from '../../components/Popover';
+import Loader from '../../components/Loader';
 
 import FormAdd from './FormAdd';
 import FormEdit from './FormEdit';
@@ -34,7 +37,7 @@ interface Task {
 
 const Tasks: React.FC = () => {
   const history = useHistory();
-
+  const { addToast } = useToast();
   const [idForApiRequest, setIdForApiRequest] = useState<string>('');
   const [modalAddOpen, setModalAddOpen] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false);
@@ -42,27 +45,57 @@ const Tasks: React.FC = () => {
   const [alertDeleteOpen, setAlertDeleteOpen] = useState(false);
   const [alertAssumeOpen, setAlertAssumeOpen] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const handleDeleteTask = useCallback(async () => {
-    await api.delete(`/tasks/${idForApiRequest}`, {
-      headers: {
-        authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
-      },
-    });
+    try {
+      await api.delete(`/tasks/${idForApiRequest}`, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
+        },
+      });
 
-    setTasks(tasks.filter(task => task.id !== idForApiRequest));
-  }, [idForApiRequest, tasks]);
+      setTasks(tasks.filter(task => task.id !== idForApiRequest));
+      addToast({
+        type: 'success',
+        title: 'Tarefa deletada com sucesso',
+      });
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao deletar tarefa',
+        description:
+          'Ocorreu um erro ao deletar tarefa, tente novamente mais tarde.',
+      });
+    }
+  }, [idForApiRequest, tasks, addToast]);
 
   const handleAssumeTask = useCallback(async () => {
-    await api.post(`/articles/${idForApiRequest}`, null, {
-      headers: {
-        authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
-      },
-    });
+    try {
+      await api.post(`/articles/${idForApiRequest}`, null, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
+        },
+      });
 
-    setTasks(tasks.filter(task => task.id !== idForApiRequest));
-    history.push('/artigos');
-  }, [history, idForApiRequest, tasks]);
+      setTasks(tasks.filter(task => task.id !== idForApiRequest));
+
+      addToast({
+        type: 'success',
+        title: 'Tarefa assumida com sucesso',
+        description: 'Você será redirecionado para página de seus artigos.',
+      });
+
+      setTimeout(() => history.push('/artigos'), 5500);
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao assumir tarefa',
+        description:
+          'Ocorreu um erro ao assumir tarefa, tente novamente mais tarde.',
+      });
+    }
+  }, [history, idForApiRequest, tasks, addToast]);
 
   const openModallAdd = useCallback(() => setModalAddOpen(true), []);
 
@@ -87,14 +120,20 @@ const Tasks: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    api
-      .get('/tasks', {
+    async function loadTasks(): Promise<void> {
+      setLoading(true);
+      const { data } = await api.get('/tasks', {
         headers: {
           authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
           status: 'available',
         },
-      })
-      .then(response => setTasks(response.data));
+      });
+
+      setTasks(data);
+      setLoading(false);
+    }
+
+    loadTasks();
   }, []);
 
   return (
@@ -115,86 +154,90 @@ const Tasks: React.FC = () => {
           )}
         </ToolsBar>
 
-        <div style={{ overflowX: 'auto' }}>
-          <Table>
-            <thead>
-              <tr>
-                <th>Keyword</th>
-                <th>KW Secundárias</th>
-                <th>Site</th>
-                <th>Data</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tasks.map(task => (
-                <tr key={task.id}>
-                  <td>{task.keyword}</td>
-                  <td>{task.sub_keywords}</td>
-                  <td>{task.website}</td>
-                  <td>
-                    {new Date(task.created_at).toLocaleDateString('pt-br')}
-                  </td>
-                  <td>
-                    <Popover>
-                      {PermissionService([
-                        'editor',
-                        'administrator',
-                        'developer',
-                      ]) && (
-                        <button
-                          type="button"
-                          onClick={() => openModallEdit(task.id)}
-                        >
-                          <FiEdit3 />
-                          <span>Editar</span>
-                        </button>
-                      )}
-
-                      {PermissionService([
-                        'editor',
-                        'administrator',
-                        'developer',
-                      ]) && (
-                        <button
-                          type="button"
-                          onClick={() => openAlertDelete(task.id)}
-                        >
-                          <FiDelete />
-                          <span>Excluir</span>
-                        </button>
-                      )}
-
-                      {PermissionService([
-                        'writer',
-                        'editor',
-                        'administrator',
-                        'developer',
-                      ]) && (
-                        <button
-                          type="button"
-                          onClick={() => openModallInfo(task.id)}
-                        >
-                          <FiInfo />
-                          <span>Detalhes</span>
-                        </button>
-                      )}
-
-                      {PermissionService(['writer']) && (
-                        <button
-                          type="button"
-                          onClick={() => openAlertAssume(task.id)}
-                        >
-                          <FiCornerDownLeft />
-                          <span>Assumir</span>
-                        </button>
-                      )}
-                    </Popover>
-                  </td>
+        <div style={{ overflowX: loading ? undefined : 'auto' }}>
+          {loading ? (
+            <Loader />
+          ) : (
+            <Table>
+              <thead>
+                <tr>
+                  <th>Keyword</th>
+                  <th>KW Secundárias</th>
+                  <th>Site</th>
+                  <th>Data</th>
+                  <th>Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {tasks.map(task => (
+                  <tr key={task.id}>
+                    <td>{task.keyword}</td>
+                    <td>{task.sub_keywords}</td>
+                    <td>{task.website}</td>
+                    <td>
+                      {new Date(task.created_at).toLocaleDateString('pt-br')}
+                    </td>
+                    <td>
+                      <Popover>
+                        {PermissionService([
+                          'editor',
+                          'administrator',
+                          'developer',
+                        ]) && (
+                          <button
+                            type="button"
+                            onClick={() => openModallEdit(task.id)}
+                          >
+                            <FiEdit3 />
+                            <span>Editar</span>
+                          </button>
+                        )}
+
+                        {PermissionService([
+                          'editor',
+                          'administrator',
+                          'developer',
+                        ]) && (
+                          <button
+                            type="button"
+                            onClick={() => openAlertDelete(task.id)}
+                          >
+                            <FiDelete />
+                            <span>Excluir</span>
+                          </button>
+                        )}
+
+                        {PermissionService([
+                          'writer',
+                          'editor',
+                          'administrator',
+                          'developer',
+                        ]) && (
+                          <button
+                            type="button"
+                            onClick={() => openModallInfo(task.id)}
+                          >
+                            <FiInfo />
+                            <span>Detalhes</span>
+                          </button>
+                        )}
+
+                        {PermissionService(['writer']) && (
+                          <button
+                            type="button"
+                            onClick={() => openAlertAssume(task.id)}
+                          >
+                            <FiCornerDownLeft />
+                            <span>Assumir</span>
+                          </button>
+                        )}
+                      </Popover>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          )}
         </div>
 
         <Modal

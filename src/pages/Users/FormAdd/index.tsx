@@ -8,10 +8,11 @@ import {
   FiUser,
   FiCheckCircle,
   FiLock,
-  FiAlertCircle,
 } from 'react-icons/fi';
 
-import { Container, CloseButton, ErrorRegister } from './styles';
+import { useToast } from '../../../hooks/toast';
+
+import { Container, CloseButton } from './styles';
 
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
@@ -44,8 +45,7 @@ interface SubmitFormData {
 
 const FormAdd = ({ setOpen, users, setUsers }: FormAddProps): JSX.Element => {
   const formRef = useRef<FormHandles>(null);
-
-  const [errorRegister, setErrorRegister] = useState(false);
+  const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
 
   const handleCloseModal = useCallback(() => {
@@ -55,7 +55,6 @@ const FormAdd = ({ setOpen, users, setUsers }: FormAddProps): JSX.Element => {
   const handleSubmit = useCallback(
     async (data: SubmitFormData) => {
       try {
-        setErrorRegister(false);
         setLoading(true);
 
         const schema = Yup.object().shape({
@@ -77,15 +76,27 @@ const FormAdd = ({ setOpen, users, setUsers }: FormAddProps): JSX.Element => {
 
         setUsers([...users, writer]);
         handleCloseModal();
+        addToast({
+          type: 'success',
+          title: 'Usuário cadastrado com sucesso',
+        });
       } catch (err) {
         setLoading(false);
-        if (err.name === 'ValidationError') {
+        if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
           formRef.current?.setErrors(errors);
-        } else setErrorRegister(true);
+        } else {
+          handleCloseModal();
+          addToast({
+            type: 'error',
+            title: 'Erro ao cadastrar usuário',
+            description:
+              'Ocorreu um erro ao cadastrar usuário, tente novamente mais tarde.',
+          });
+        }
       }
     },
-    [handleCloseModal, setUsers, users],
+    [handleCloseModal, setUsers, users, addToast],
   );
 
   return (
@@ -126,10 +137,6 @@ const FormAdd = ({ setOpen, users, setUsers }: FormAddProps): JSX.Element => {
 
           <Button type="submit">Cadastrar</Button>
         </Form>
-
-        <ErrorRegister error={errorRegister}>
-          <FiAlertCircle size={20} /> Erro ao cadastrar usuário
-        </ErrorRegister>
       </Container>
     </>
   );

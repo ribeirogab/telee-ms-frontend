@@ -3,15 +3,11 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 
-import {
-  FiAperture,
-  FiKey,
-  FiList,
-  FiXCircle,
-  FiAlertCircle,
-} from 'react-icons/fi';
+import { FiAperture, FiKey, FiList, FiXCircle } from 'react-icons/fi';
 
-import { Container, CloseButton, ErrorRegister } from './styles';
+import { Container, CloseButton } from './styles';
+
+import { useToast } from '../../../hooks/toast';
 
 import Button from '../../../components/Button';
 import Input from '../../../components/Input';
@@ -43,8 +39,7 @@ interface SubmitFormData {
 
 const FormAdd = ({ setOpen, tasks, setTasks }: FormAddProps): JSX.Element => {
   const formRef = useRef<FormHandles>(null);
-
-  const [errorRegister, setErrorRegister] = useState(false);
+  const { addToast } = useToast();
   const [loading, setLoading] = useState(false);
 
   const handleCloseModal = useCallback(() => {
@@ -54,7 +49,6 @@ const FormAdd = ({ setOpen, tasks, setTasks }: FormAddProps): JSX.Element => {
   const handleSubmit = useCallback(
     async (data: SubmitFormData) => {
       try {
-        setErrorRegister(false);
         setLoading(true);
 
         const schema = Yup.object().shape({
@@ -75,15 +69,26 @@ const FormAdd = ({ setOpen, tasks, setTasks }: FormAddProps): JSX.Element => {
 
         setTasks([...tasks, task]);
         handleCloseModal();
+        addToast({
+          type: 'success',
+          title: 'Tarefa cadastrada com sucesso',
+        });
       } catch (err) {
         setLoading(false);
-        if (err.name === 'ValidationError') {
+        if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
           formRef.current?.setErrors(errors);
-        } else setErrorRegister(true);
+        } else {
+          addToast({
+            type: 'error',
+            title: 'Erro ao cadastrar tarefa',
+            description:
+              'Ocorreu um erro ao cadastrar tarefa, tente novamente mais tarde.',
+          });
+        }
       }
     },
-    [handleCloseModal, setTasks, tasks],
+    [handleCloseModal, setTasks, tasks, addToast],
   );
 
   return (
@@ -120,10 +125,6 @@ const FormAdd = ({ setOpen, tasks, setTasks }: FormAddProps): JSX.Element => {
           />
           <Button type="submit">Cadastrar</Button>
         </Form>
-
-        <ErrorRegister error={errorRegister}>
-          <FiAlertCircle size={20} /> Erro ao cadastrar tarefa
-        </ErrorRegister>
       </Container>
     </>
   );
