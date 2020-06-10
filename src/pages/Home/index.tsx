@@ -7,6 +7,7 @@ import { ToolsBar, News, ContainerNews, BoxNews } from './styles';
 import Header from '../../components/Header';
 import Modal from '../../components/Modal';
 import Alert from '../../components/Alert';
+import Loader from '../../components/Loader';
 
 import toCapitalize from '../../utils/toCapitalize';
 
@@ -35,15 +36,22 @@ const Home: React.FC = () => {
   const [modalEditUpdateOpen, setModalEditUpdateOpen] = useState(false);
   const [alertDeleteUpdateOpen, setAlertDeleteUpdateOpen] = useState(false);
   const [updates, setUpdates] = useState<Update[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    api
-      .get('/updates', {
+    async function loadUpdates(): Promise<void> {
+      setLoading(true);
+      const { data } = await api.get('/updates', {
         headers: {
           authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
         },
-      })
-      .then(response => setUpdates(response.data));
+      });
+
+      setUpdates(data);
+      setLoading(false);
+    }
+
+    loadUpdates();
   }, []);
 
   const handleIdForApiRequest = useCallback((id: string) => {
@@ -104,50 +112,59 @@ const Home: React.FC = () => {
         )}
 
         <News>
-          <h1>Novidades</h1>
-          <p>
-            Está no ar a versão{' '}
-            <span className="version">{updates[0]?.version || '0.0.0'}</span>.
-            Uma versão de testes, qualquer erro e/ou melhoria, comunicar o
-            desenvolvedor no email:{' '}
-            <a href="mailto:ribeirogabx@gmail.com">ribeirogabx@gmail.com</a>.
-            {/* com correções, melhorias e algumas novidades que você pode conferir
+          {loading ? (
+            <Loader />
+          ) : (
+            <>
+              <h1>Novidades</h1>
+              <p>
+                Está no ar a versão{' '}
+                <span className="version">
+                  {updates[0]?.version || '0.0.0'}
+                </span>
+                . Uma versão de testes, qualquer erro e/ou melhoria, comunicar o
+                desenvolvedor no email:{' '}
+                <a href="mailto:ribeirogabx@gmail.com">ribeirogabx@gmail.com</a>
+                .
+                {/* com correções, melhorias e algumas novidades que você pode conferir
             a baixo. */}
-          </p>
-          <ContainerNews>
-            {updates.map(update => (
-              <BoxNews key={update.version}>
-                <div className="box">
-                  <div>{update.title}</div>
-                  <p>{update.description}</p>
-                  {PermissionService(['developer']) && (
-                    <>
-                      <button
-                        className="edit"
-                        type="button"
-                        onClick={() => {
-                          handleIdForApiRequest(update.id);
-                          handleOpenModalEditUpdates();
-                        }}
-                      >
-                        <FiEdit />
-                      </button>
-                      <button
-                        className="delete"
-                        type="button"
-                        onClick={() => {
-                          handleIdForApiRequest(update.id);
-                          handleAlertDeleteUpdate();
-                        }}
-                      >
-                        <FiDelete />
-                      </button>
-                    </>
-                  )}
-                </div>
-              </BoxNews>
-            ))}
-          </ContainerNews>
+              </p>
+              <ContainerNews>
+                {updates.map(update => (
+                  <BoxNews key={update.version}>
+                    <div className="box">
+                      <div>{update.title}</div>
+                      <p>{update.description}</p>
+                      {PermissionService(['developer']) && (
+                        <>
+                          <button
+                            className="edit"
+                            type="button"
+                            onClick={() => {
+                              handleIdForApiRequest(update.id);
+                              handleOpenModalEditUpdates();
+                            }}
+                          >
+                            <FiEdit />
+                          </button>
+                          <button
+                            className="delete"
+                            type="button"
+                            onClick={() => {
+                              handleIdForApiRequest(update.id);
+                              handleAlertDeleteUpdate();
+                            }}
+                          >
+                            <FiDelete />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </BoxNews>
+                ))}
+              </ContainerNews>
+            </>
+          )}
         </News>
       </Container>
 

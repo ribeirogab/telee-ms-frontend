@@ -14,6 +14,7 @@ import Input from '../../components/Input';
 import Loader from '../../components/Loader';
 
 import { useAuth } from '../../hooks/auth';
+import { useToast } from '../../hooks/toast';
 
 import getValidationErrors from '../../utils/getValidationErrors';
 
@@ -25,6 +26,7 @@ interface SignInFormData {
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const { signIn } = useAuth();
+  const { addToast } = useToast();
   const history = useHistory();
 
   const [errorLogin, setErrorLogin] = useState(false);
@@ -50,18 +52,24 @@ const SignIn: React.FC = () => {
         history.push('/dashboard');
       } catch (err) {
         setLoading(false);
-        if (err.name === 'ValidationError') {
+        if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
           formRef.current?.setErrors(errors);
-        } else setErrorLogin(true);
+        } else {
+          addToast({
+            type: 'error',
+            title: 'Erro na autenticação',
+            description:
+              'Ocorreu um erro ao fazer login, cheque as credenciais.',
+          });
+        }
       }
     },
-    [history, signIn],
+    [history, signIn, addToast],
   );
 
   return (
     <Container>
-      {loading && <Loader />}
       <Content>
         <img src={logo} alt="Logo" />
 
@@ -76,7 +84,9 @@ const SignIn: React.FC = () => {
             placeholder="Senha"
           />
 
-          <Button type="submit">Entrar</Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? <Loader /> : 'Entrar'}
+          </Button>
 
           <ErrorLogin error={errorLogin}>
             <FiAlertCircle size={20} /> Usuário ou senha incorreto(s).

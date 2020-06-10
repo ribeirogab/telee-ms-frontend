@@ -2,9 +2,13 @@ import React from 'react';
 
 import { Container } from './styles';
 
-const Loader: React.FC = () => {
+interface LoaderProps {
+  fullWidth?: boolean;
+}
+
+const Loader: React.FC<LoaderProps> = ({ fullWidth }) => {
   return (
-    <Container>
+    <Container fullWidth={fullWidth}>
       <div />
     </Container>
   );

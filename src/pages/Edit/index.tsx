@@ -2,8 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useRouteMatch, useHistory } from 'react-router-dom';
 
 import { FiChevronLeft, FiChevronDown, FiChevronRight } from 'react-icons/fi';
+
 import Container from '@material-ui/core/Container';
+import { useToast } from '../../hooks/toast';
+
 import ReactQuill from '../../components/ReactQuill';
+import Loader from '../../components/Loader';
 
 import {
   Header,
@@ -25,6 +29,7 @@ interface EditParams {
 
 const Edit: React.FC = () => {
   const history = useHistory();
+  const { addToast } = useToast();
   const { params } = useRouteMatch<EditParams>();
   const [openValues, setOpenValues] = useState(true);
   const [boxUpdateOpen, setBoxUpdateOpen] = useState(false);
@@ -32,7 +37,7 @@ const Edit: React.FC = () => {
   const [article, setArticle] = useState('');
   const [words, setWords] = useState(0);
   const [money, setMoney] = useState(0);
-  const [save, setSave] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   window.onresize = useCallback(
     () => setOpenValues(window.innerWidth > 1350),
@@ -53,8 +58,8 @@ const Edit: React.FC = () => {
   const handleOpenValues = useCallback(() => setOpenValues(true), []);
   const handleCloseValues = useCallback(() => setOpenValues(false), []);
 
-  const handleUpdate = useCallback(async () => {
-    if (typeSave === 'update') {
+  const updateArticle = useCallback(async () => {
+    try {
       await api.put(
         `/articles/${params.articleId}`,
         { words, article },
@@ -64,7 +69,21 @@ const Edit: React.FC = () => {
           },
         },
       );
-    } else if (typeSave === 'deliver') {
+      addToast({
+        type: 'success',
+        title: 'Artigo atualizado com sucesso',
+      });
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao atualizar artigo',
+        description: 'Ocorreu um erro, tente novamente mais tarde.',
+      });
+    }
+  }, [params.articleId, words, article, addToast]);
+
+  const deliverArticle = useCallback(async () => {
+    try {
       // eslint-disable-next-line no-alert
       const confirmDeliver = window.confirm(
         'Após a entrega o artigo não podera mais ser editado. Deseja realmente entregar?',
@@ -78,20 +97,45 @@ const Edit: React.FC = () => {
         },
       });
 
-      history.push('/artigos');
+      addToast({
+        type: 'success',
+        title: 'Artigo entregue com sucesso',
+        description: 'Você será redirecionado para página dos seus artigos',
+      });
+
+      setBoxUpdateOpen(false);
+      setTimeout(() => history.push('/artigos'), 5500);
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao entregar artigo',
+        description: 'Ocorreu um erro, tente novamente mais tarde.',
+      });
     }
-    setSave(true);
-    setTimeout(() => setSave(false), 5000);
-  }, [article, history, params.articleId, typeSave, words]);
+  }, [history, params.articleId, addToast]);
+
+  const handleArticle = useCallback(async () => {
+    if (typeSave === 'update') {
+      await updateArticle();
+    } else if (typeSave === 'deliver') {
+      await deliverArticle();
+    }
+  }, [updateArticle, deliverArticle, typeSave]);
 
   useEffect(() => {
-    api
-      .get(`/articles/${params.articleId}`, {
+    async function loadArticle(): Promise<void> {
+      setLoading(true);
+      const { data } = await api.get(`/articles/${params.articleId}`, {
         headers: {
           authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
         },
-      })
-      .then(response => setArticle(response.data.article || ''));
+      });
+
+      setArticle(data.article);
+      setLoading(false);
+    }
+
+    loadArticle();
   }, [params.articleId]);
 
   return (
@@ -103,11 +147,7 @@ const Edit: React.FC = () => {
           </Link>
           <Status color="#999">Escrevendo</Status>
         </HeaderLeft>
-        <HeaderRight save={save}>
-          <span>
-            Artigo {typeSave === 'update' ? 'atualizado' : 'entregue'} com
-            sucesso!
-          </span>
+        <HeaderRight>
           <button type="button" onClick={handleBoxUpdate}>
             Atualizar
             <FiChevronDown size={18} />
@@ -156,7 +196,7 @@ const Edit: React.FC = () => {
               <button
                 type="button"
                 className="btn-update"
-                onClick={handleUpdate}
+                onClick={handleArticle}
               >
                 {typeSave === 'update' ? 'Atualizar' : 'Entregar'}
               </button>
@@ -167,12 +207,16 @@ const Edit: React.FC = () => {
       </Header>
 
       <Container maxWidth="md" style={{ padding: '58px 0 0 0' }}>
-        <ReactQuill
-          setWords={setWords}
-          setMoney={setMoney}
-          setValue={setArticle}
-          value={article}
-        />
+        {loading ? (
+          <Loader />
+        ) : (
+          <ReactQuill
+            setWords={setWords}
+            setMoney={setMoney}
+            setValue={setArticle}
+            value={article || ''}
+          />
+        )}
       </Container>
 
       <Values open={openValues}>

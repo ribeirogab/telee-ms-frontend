@@ -15,6 +15,7 @@ import {
 } from './styles';
 
 import Header from '../../components/Header';
+import Loader from '../../components/Loader';
 
 import { statusColor, statusIcon } from '../../utils/taskStatus';
 import formatValue from '../../utils/formatValue';
@@ -54,17 +55,24 @@ interface Article {
 }
 
 const Audit: React.FC = () => {
-  const [articles, setArticles] = useState<Article[] | null>(null);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    api
-      .get('/articles', {
+    async function LoadArticles(): Promise<void> {
+      setLoading(true);
+      const { data } = await api.get('/articles', {
         headers: {
           authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
           status: 'pending',
         },
-      })
-      .then(response => setArticles(response.data));
+      });
+
+      setArticles(data);
+      setLoading(false);
+    }
+
+    LoadArticles();
   }, []);
 
   return (
@@ -72,7 +80,9 @@ const Audit: React.FC = () => {
       <Header textPage="Auditoria" />
       <Container maxWidth="lg">
         <ArticlesContainer>
-          {articles ? (
+          {loading ? (
+            <Loader />
+          ) : (
             articles.map(article => (
               <ArticleBox key={article.id}>
                 <ArticleHeader color={statusColor(article.task.status)}>
@@ -134,8 +144,6 @@ const Audit: React.FC = () => {
                 </ArticleFooter>
               </ArticleBox>
             ))
-          ) : (
-            <h3>Carregando...</h3>
           )}
         </ArticlesContainer>
       </Container>

@@ -62,15 +62,16 @@ const ModalInfo = ({ setOpen, userId }: ModalInfoProps): JSX.Element => {
   }, [userId]);
 
   return (
-    <>
-      {loading && <Loader />}
-      <Container>
-        <div>
-          <CloseButton onClick={handleCloseModal}>
-            <FiXCircle size={25} />
-          </CloseButton>
-          <h2>Detalhes do usuário</h2>
-        </div>
+    <Container>
+      <div>
+        <CloseButton onClick={handleCloseModal}>
+          <FiXCircle size={25} />
+        </CloseButton>
+        <h2>Detalhes do usuário</h2>
+      </div>
+      {loading ? (
+        <Loader />
+      ) : (
         <Form ref={formRef} onSubmit={handleSubmit}>
           <Input
             name="name"
@@ -94,11 +95,12 @@ const ModalInfo = ({ setOpen, userId }: ModalInfoProps): JSX.Element => {
             disabled
           />
         </Form>
-        <ErrorLoading error={errorLoading}>
-          <FiAlertCircle size={20} /> Erro ao carregar usuário
-        </ErrorLoading>
-      </Container>
-    </>
+      )}
+
+      <ErrorLoading error={errorLoading}>
+        <FiAlertCircle size={20} /> Erro ao carregar usuário
+      </ErrorLoading>
+    </Container>
   );
 };
 

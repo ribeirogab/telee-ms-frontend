@@ -4,6 +4,7 @@ export const Container = styled.div`
   position: relative;
   span {
     width: 160px;
+    text-align: center;
     background: #ff9000;
     padding: 8px;
     border-radius: 4px;
@@ -17,6 +18,7 @@ export const Container = styled.div`
     left: 50%;
     transform: translateX(-50%);
     color: #312e38;
+
     &::before {
       content: '';
       border-style: solid;

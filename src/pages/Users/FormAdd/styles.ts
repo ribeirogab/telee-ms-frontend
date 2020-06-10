@@ -1,9 +1,5 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { shade } from 'polished';
-
-interface ErrorRegisterProps {
-  error: boolean;
-}
 
 export const Container = styled.div`
   display: flex;
@@ -39,28 +35,5 @@ export const CloseButton = styled.button`
 
   &:hover svg {
     color: ${shade(0.2, '#e54050')};
-  }
-`;
-
-export const ErrorRegister = styled.div<ErrorRegisterProps>`
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  color: #c53030;
-  opacity: 0;
-  transition: opacity 0.2s;
-
-  ${props =>
-    props.error &&
-    css`
-      & {
-        opacity: 1;
-      }
-    `}
-
-  svg {
-    margin-right: 8px;
   }
 `;

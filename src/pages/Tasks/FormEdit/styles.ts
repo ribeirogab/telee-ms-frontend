@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { shade } from 'polished';
 
-interface ErrorEditProps {
+interface ErrorLoadingProps {
   error: boolean;
 }
 
@@ -15,6 +15,7 @@ export const Container = styled.div`
   padding: 2% 4%;
   border-radius: 4px;
   box-shadow: 2px 2px 4px #0003;
+  z-index: 1;
 
   @media screen and (max-width: 500px) {
     height: 100vh;
@@ -42,7 +43,7 @@ export const CloseButton = styled.button`
   }
 `;
 
-export const ErrorEdit = styled.div<ErrorEditProps>`
+export const ErrorLoading = styled.div<ErrorLoadingProps>`
   margin-top: 20px;
   display: flex;
   justify-content: center;
