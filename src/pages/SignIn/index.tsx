@@ -1,13 +1,13 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { FiUser, FiLock, FiAlertCircle } from 'react-icons/fi';
+import { FiUser, FiLock } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 
 import logo from '../../assets/logo.png';
 
-import { Container, Content, Background, ErrorLogin } from './styles';
+import { Container, Content, Background } from './styles';
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -28,14 +28,11 @@ const SignIn: React.FC = () => {
   const { signIn } = useAuth();
   const { addToast } = useToast();
   const history = useHistory();
-
-  const [errorLogin, setErrorLogin] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = useCallback(
     async (data: SignInFormData): Promise<void> => {
       try {
-        setErrorLogin(false);
         setLoading(true);
         formRef.current?.setErrors({});
 
@@ -88,9 +85,6 @@ const SignIn: React.FC = () => {
             {loading ? <Loader /> : 'Entrar'}
           </Button>
 
-          <ErrorLogin error={errorLogin}>
-            <FiAlertCircle size={20} /> Usuário ou senha incorreto(s).
-          </ErrorLogin>
           {/* <a href="forgot">Esqueci minha senha</a> */}
         </Form>
       </Content>

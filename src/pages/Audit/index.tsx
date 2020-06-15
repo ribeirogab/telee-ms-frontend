@@ -16,6 +16,7 @@ import {
 
 import Header from '../../components/Header';
 import Loader from '../../components/Loader';
+import Anything from '../../components/Anything';
 
 import { statusColor, statusIcon } from '../../utils/taskStatus';
 import formatValue from '../../utils/formatValue';
@@ -144,6 +145,10 @@ const Audit: React.FC = () => {
                 </ArticleFooter>
               </ArticleBox>
             ))
+          )}
+
+          {!loading && articles.length === 0 && (
+            <Anything text="Nenhum artigo na auditoria, volte mais tarde! ;)" />
           )}
         </ArticlesContainer>
       </Container>

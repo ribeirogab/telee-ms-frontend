@@ -51,6 +51,23 @@ export const ToolsBar = styled.div<ToolsBarProps>`
     align-items: center;
 
     span {
+      color: #333;
+      transition: color 0.3s;
+    }
+
+    &:hover svg,
+    &:hover span {
+      color: #e75656;
+    }
+  }
+
+  .btn-edit {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+
+    span {
+      color: #333;
       transition: color 0.3s;
     }
 

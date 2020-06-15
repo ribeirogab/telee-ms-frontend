@@ -6,6 +6,8 @@ import * as Yup from 'yup';
 
 import { FiClipboard, FiAlertCircle, FiXCircle } from 'react-icons/fi';
 
+import { useToast } from '../../../hooks/toast';
+
 import { Container, CloseButton, ErrorAudit } from './styles';
 
 import Button from '../../../components/Button';
@@ -29,12 +31,13 @@ interface FormAuditProps {
 }
 
 interface SubmitFormData {
-  status: 'returned' | 'accepeted' | 'recused';
+  status: 'returned' | 'okay' | 'refused';
 }
 
 const FormAudit = ({ setOpen, taskId }: FormAuditProps): JSX.Element => {
   const formRef = useRef<FormHandles>(null);
   const history = useHistory();
+  const { addToast } = useToast();
   const [errorAudit, setErrorAudit] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -63,16 +66,28 @@ const FormAudit = ({ setOpen, taskId }: FormAuditProps): JSX.Element => {
         });
 
         handleCloseModal();
+
+        addToast({
+          type: 'success',
+          title: 'Artigo auditado com sucesso',
+        });
+
         history.push('/auditoria');
       } catch (err) {
         setLoading(false);
-        if (err.name === 'ValidationError') {
+        if (err instanceof Yup.ValidationError) {
           const errors = getValidationErrors(err);
           formRef.current?.setErrors(errors);
-        } else setErrorAudit(true);
+        } else {
+          addToast({
+            type: 'error',
+            title: 'Erro ao auditar artigo',
+            description: 'Ocorreu um erro, tente novamente mais tarde.',
+          });
+        }
       }
     },
-    [handleCloseModal, history, taskId],
+    [handleCloseModal, history, taskId, addToast],
   );
 
   return (
@@ -88,8 +103,8 @@ const FormAudit = ({ setOpen, taskId }: FormAuditProps): JSX.Element => {
         <Form ref={formRef} onSubmit={handleSubmit}>
           <Select name="status" icon={FiClipboard}>
             <option value="returned">Retornar</option>
-            <option value="accepted">Aceitar</option>
-            <option value="recused">Recusar</option>
+            <option value="okay">Aprovar</option>
+            <option value="refused">Recusar</option>
           </Select>
           <Button type="submit">Confirmar</Button>
         </Form>
