@@ -23,6 +23,7 @@ import Loader from '../../components/Loader';
 import FormAdd from './FormAdd';
 import FormEdit from './FormEdit';
 import ModalInfo from './ModalInfo';
+import Anything from '../../components/Anything';
 
 import api from '../../services/api';
 import PermissionService from '../../services/PermissionService';
@@ -83,10 +84,9 @@ const Tasks: React.FC = () => {
       addToast({
         type: 'success',
         title: 'Tarefa assumida com sucesso',
-        description: 'Você será redirecionado para página de seus artigos.',
       });
 
-      setTimeout(() => history.push('/artigos'), 5500);
+      history.push('/artigos');
     } catch (error) {
       addToast({
         type: 'error',
@@ -239,6 +239,15 @@ const Tasks: React.FC = () => {
             </Table>
           )}
         </div>
+        {!loading && tasks.length === 0 && (
+          <Anything
+            text={`Nenhuma tarefa cadastrada, ${
+              PermissionService(['editor', 'administrator', 'developer'])
+                ? 'adicione uma! o/'
+                : 'volte mais tarde! :)'
+            }`}
+          />
+        )}
 
         <Modal
           open={modalAddOpen}

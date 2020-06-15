@@ -100,11 +100,10 @@ const Edit: React.FC = () => {
       addToast({
         type: 'success',
         title: 'Artigo entregue com sucesso',
-        description: 'Você será redirecionado para página dos seus artigos',
       });
 
       setBoxUpdateOpen(false);
-      setTimeout(() => history.push('/artigos'), 5500);
+      history.push('/artigos');
     } catch (error) {
       addToast({
         type: 'error',

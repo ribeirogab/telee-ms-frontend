@@ -17,6 +17,7 @@ import {
 
 import Header from '../../components/Header';
 import Loader from '../../components/Loader';
+import Anything from '../../components/Anything';
 
 import {
   statusColor,
@@ -162,6 +163,10 @@ const MyArticles: React.FC = () => {
             ))
           )}
         </ArticlesContainer>
+
+        {!loading && articles.length === 0 && (
+          <Anything text="Você ainda não possui nenhum artigo! :(" />
+        )}
       </Container>
     </>
   );

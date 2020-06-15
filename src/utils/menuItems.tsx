@@ -6,6 +6,7 @@ import {
   FiBook,
   FiCheckSquare,
   FiUsers,
+  FiSend,
 } from 'react-icons/fi';
 
 interface MenuLabel {
@@ -43,6 +44,12 @@ const menuItems = (): Array<MenuLabel[]> => {
       icon: <FiCheckSquare size={18} />,
       text: 'Auditoria',
       path: '/auditoria',
+      permissions: ['editor', 'administrator', 'developer'],
+    },
+    {
+      icon: <FiSend size={18} />,
+      text: 'Homologação',
+      path: '/homologacao',
       permissions: ['editor', 'administrator', 'developer'],
     },
     {

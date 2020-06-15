@@ -139,6 +139,8 @@ export const ArticleFooter = styled.div`
 
 export const AuditButton = styled.button`
   width: 100%;
+  border: none;
+
   a {
     font-size: 15px;
     text-decoration: none;

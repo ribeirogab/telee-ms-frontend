@@ -127,13 +127,17 @@ const Article: React.FC = () => {
                   type="button"
                   onClick={openModalAudit}
                 >
-                  <span>AUDITAR</span>
+                  <span>AUDITAR ARTIGO</span>
                   <FiEdit3 size={23} />
                 </button>
               )}
               {article?.task.status === 'writing' ||
               article?.task.status === 'returned' ? (
-                <Link to={`/editar/artigo/${params.articleId}`}>
+                <Link
+                  className="btn-edit"
+                  to={`/editar/artigo/${params.articleId}`}
+                >
+                  <span>EDITAR ARTIGO</span>
                   <FiEdit size={25} />
                 </Link>
               ) : (
