@@ -9,6 +9,7 @@ import Tasks from '../pages/Tasks';
 import MyArticles from '../pages/MyArticles';
 import Audit from '../pages/Audit';
 import Homologation from '../pages/Homologation';
+import ItemHomologation from '../pages/Homologation/Item';
 import Users from '../pages/Users';
 import Article from '../pages/Article';
 import Edit from '../pages/Edit';
@@ -40,8 +41,14 @@ const Routes: React.FC = () => {
           permissions={['editor', 'administrator', 'developer']}
         />
         <PrivateRoute
+          exact
           path="/homologacao"
           component={Homologation}
+          permissions={['editor', 'administrator', 'developer']}
+        />
+        <PrivateRoute
+          path="/homologacao/:articleId"
+          component={ItemHomologation}
           permissions={['editor', 'administrator', 'developer']}
         />
         <PrivateRoute

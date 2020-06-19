@@ -39,7 +39,7 @@ interface Task {
 const Tasks: React.FC = () => {
   const history = useHistory();
   const { addToast } = useToast();
-  const [idForApiRequest, setIdForApiRequest] = useState<string>('');
+  const [idForApiRequest, setIdForApiRequest] = useState('');
   const [modalAddOpen, setModalAddOpen] = useState(false);
   const [modalEditOpen, setModalEditOpen] = useState(false);
   const [modalInfoOpen, setModalInfoOpen] = useState(false);

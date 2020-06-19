@@ -95,6 +95,11 @@ export const Table = styled.table`
     border-radius: 0 8px 0 0;
   }
 
+  tbody tr {
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
   td {
     padding: 13px 0;
     text-align: center;
@@ -103,19 +108,28 @@ export const Table = styled.table`
 
   tbody tr:nth-child(odd) {
     background: #fff;
+
+    &:hover {
+      background: ${shade(0.05, '#fff')};
+    }
   }
 
   tbody tr:nth-child(even) {
     background: #f9f9ff;
+
+    &:hover {
+      background: ${shade(0.05, '#f9f9ff')};
+    }
   }
 `;
 
-export const Status = styled.td<StatusProps>`
+export const Status = styled.div<StatusProps>`
   margin: 0 auto;
   max-width: 164px;
   display: flex;
   align-items: center;
   border-radius: 8px;
+  padding: 10px 0;
   background: ${props => (props.status === 'okay' ? '#5da3' : '#9bf3')};
 
   span {

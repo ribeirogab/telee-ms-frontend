@@ -1,14 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { FiFilter, FiSliders, FiMoreVertical } from 'react-icons/fi';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 
-import {
-  Container,
-  ContainerTable,
-  ToolsBar,
-  Filter,
-  Table,
-  Status,
-} from './styles';
+import { useToast } from '../../hooks/toast';
+
+import { Container, ContainerTable, ToolsBar, Table, Status } from './styles';
 
 import Header from '../../components/Header';
 import Anything from '../../components/Anything';
@@ -48,8 +43,46 @@ interface Article {
 }
 
 const Homologation: React.FC = () => {
+  const { addToast } = useToast();
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [articles, setArticles] = useState<Article[]>([]);
+
+  const handlePublishArticle = useCallback(async () => {
+    try {
+      await api.post(`/wp-pages/id`, null, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('@teleems:token')}`,
+        },
+      });
+
+      setArticles(
+        articles.map(article => {
+          if (article.task.id === 'id') {
+            article.task.status = 'published';
+          }
+          return article;
+        }),
+      );
+
+      addToast({
+        type: 'success',
+        title: 'Artigo publicado com sucesso',
+      });
+    } catch (error) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao publicar artigo',
+        description:
+          'Ocorreu um erro ao publicar artigo, tente novamente mais tarde.',
+      });
+    }
+  }, [articles, addToast]);
+
+  const handleRedirect = useCallback(
+    (id: string) => history.push(`/homologacao/${id}`),
+    [history],
+  );
 
   useEffect(() => {
     async function LoadArticles(): Promise<void> {
@@ -92,12 +125,14 @@ const Homologation: React.FC = () => {
                   <th>Qtd. palavras</th>
                   <th>Total</th>
                   <th>Data</th>
-                  <th> </th>
                 </tr>
               </thead>
               <tbody>
                 {articles.map(article => (
-                  <tr key={article.id}>
+                  <tr
+                    key={article.id}
+                    onClick={() => handleRedirect(article.id)}
+                  >
                     <td>{article.task.keyword}</td>
                     <td>{article.task.website}</td>
                     <td>
@@ -114,9 +149,6 @@ const Homologation: React.FC = () => {
                     <td>{article.words * 0.06}</td>
                     <td>
                       {new Date(article.updated_at).toLocaleDateString('pt-BR')}
-                    </td>
-                    <td>
-                      <FiMoreVertical />
                     </td>
                   </tr>
                 ))}
